@@ -2,7 +2,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Display extends Application {
-    Simulator sim = new AntSimulator(60);
+    Simulator sim = new AntSimulator(60); //Creates an ant simulator
 
     public static void main(String[] args) {
         launch(args);
@@ -10,12 +10,12 @@ public class Display extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(false); //Set Window size to be not resizeable
 
-        sim.initialize(primaryStage);
+        sim.initialize(primaryStage); //Initialise the stage
 
-        sim.beginSimulation();
+        sim.beginSimulation(); //begins the loop
 
-        primaryStage.show();
+        primaryStage.show(); //display the Stage
     }
 }

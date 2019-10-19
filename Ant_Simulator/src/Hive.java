@@ -3,8 +3,13 @@ import javafx.scene.shape.Circle;
 
 public class Hive extends Sprite {
 
-    public static final double rad = 2.5;
+    public static final double rad = 3;
 
+    /**
+     * Constructor for Hive
+     * @param x location in x-axis
+     * @param y location in y-axis
+     */
     public Hive(int x, int y) {
         super(x, y, ID.Hive);
 
@@ -12,7 +17,7 @@ public class Hive extends Sprite {
         circle.setCenterX(x);
         circle.setCenterY(y);
         circle.setRadius(rad);
-        circle.setFill(Color.GREENYELLOW);
+        circle.setFill(Color.BROWN);
 
         this.node = circle;
     }
