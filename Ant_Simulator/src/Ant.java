@@ -17,7 +17,7 @@ public class Ant extends Sprite {
      * @param velY speed in y-axis
      */
     public Ant(int x, int y, int velX, int velY) {
-        super(x,y,velX, velY, ID.Ant);
+        super(x,y,velX, velY);
         this.hasFoodItem = false;
         this.foundFood = false;
 
@@ -83,22 +83,22 @@ public class Ant extends Sprite {
 
         ((Circle)this.node).setFill(Color.RED);
 
-        if((this.x + this.node.getTranslateX()) < this.x){
+        if((this.c.getX() + this.node.getTranslateX()) < this.c.getX()){
             node.setTranslateX(getTranslateX() + velX);
         }
-        else if ((this.x + this.node.getTranslateX()) > this.x){
+        else if ((this.c.getX() + this.node.getTranslateX()) > this.c.getX()){
             node.setTranslateX(getTranslateX() - velX);
         }
 
-        if((this.y + this.node.getTranslateY()) < this.y){
+        if((this.c.getY() + this.node.getTranslateY()) < this.c.getY()){
             node.setTranslateY(getTranslateY() + velY);
         }
-        else if((this.y + this.node.getTranslateY()) > this.y){
+        else if((this.c.getY() + this.node.getTranslateY()) > this.c.getY()){
             node.setTranslateY(getTranslateY() - velY);
         }
 
-        if((this.x + node.getTranslateX()) == this.x
-                && (this.y + node.getTranslateY()) == this.y){
+        if((this.c.getX() + node.getTranslateX()) == this.c.getX()
+                && (this.c.getY() + node.getTranslateY()) == this.c.getY()){
             ((Circle)this.node).setFill(Color.DARKGREEN);
             hasFoodItem = false;
         }

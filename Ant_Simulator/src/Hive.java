@@ -11,7 +11,7 @@ public class Hive extends Sprite {
      * @param y location in y-axis
      */
     public Hive(int x, int y) {
-        super(x, y, ID.Hive);
+        super(x, y);
 
         Circle circle = new Circle();
         circle.setCenterX(x);

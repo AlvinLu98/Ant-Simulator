@@ -11,7 +11,7 @@ public class Food extends Sprite{
      * @param y location in y-axis
      */
     public Food(int x, int y) {
-        super(x, y, ID.Food);
+        super(x, y);
 
         Circle circle = new Circle();
         circle.setCenterX(x);

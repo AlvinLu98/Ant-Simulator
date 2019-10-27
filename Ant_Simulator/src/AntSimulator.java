@@ -4,12 +4,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class AntSimulator extends Simulator{
 
     private int numAnt; //number of ants to create
     private int homeX, homeY; //location of hive
+    public static HashMap<Coordinate, PheromoneData> pheromoneLoc;
 
     /**
      * Default constructor for Ant simulator
@@ -44,11 +47,13 @@ public class AntSimulator extends Simulator{
         Random r = new Random();
         this.homeX = r.nextInt(WIDTH); //generate random x location for hive
         this.homeY = r.nextInt(HEIGHT); //generate random y location for the hive
+        pheromoneLoc = new HashMap<>();
 
         //Generates the item in the simulator
         generateHive();
-        generateAnts(numAnt, this.homeX, this.homeY);
+        generateAnts(numAnt, this.homeX, this.homeY, 4, 4);
         generateFood();
+        generateMap(4,4);
     }
 
     /**
@@ -88,10 +93,10 @@ public class AntSimulator extends Simulator{
      * @param x location in x-axis
      * @param y location in y-axis
      */
-    public void generateAnts(int amt, int x, int y){
+    public void generateAnts(int amt, int x, int y, int velX, int velY){
         Ant ant;
         for(int i = 0; i < amt; i++){
-            ant = new Ant(x, y,5, 5);
+            ant = new Ant(x, y, velX, velY);
             this.handler.addObject(ant);
             this.root.getChildren().add(0, ant.getNode());
         }
@@ -116,6 +121,41 @@ public class AntSimulator extends Simulator{
 
         this.handler.addObject(food);
         this.root.getChildren().add(0, food.getNode());
+    }
+
+    /**
+     * Generates a HashMap containing pheromone data of the whole window
+     * @param velX speed of the ants in x
+     * @param velX speed of thr ants in y
+     */
+    public void  generateMap(int velX, int velY) {
+        for (int x = velX / 2; x <= Simulator.WIDTH; x += velX) {
+            for (int y = velY / 2; y <= Simulator.HEIGHT; y += velY) {
+                PheromoneData p = createPheromones(x, y, velX, velY);
+                Coordinate c = new Coordinate(x,y);
+                pheromoneLoc.put(c,p);
+            }
+        }
+    }
+
+    public PheromoneData createPheromones(int x, int y, int velX, int velY){
+        PheromoneData p = new PheromoneData(x, y);
+        p.addPheromone(new Pheromone(x,y,velX, velY,"Food",255,0,0));
+        p.addPheromone(new Pheromone(x,y,velX, velY,"Home",0,0,255));
+        //TODO add the shapes into the root
+        return p;
+    }
+
+    /**
+     * Returns the surrounding Pheromone value
+     * @param x location in x
+     * @param y location in y
+     * @return LinkedList of surrounding pheromones
+     */
+    public static LinkedList<PheromoneData> getSurrounding(int x, int y){
+        //TODO get the area around the given point;
+        //use divide to get the point?
+        return null;
     }
 
     /**

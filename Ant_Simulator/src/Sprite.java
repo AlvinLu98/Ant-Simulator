@@ -4,22 +4,18 @@ import javafx.scene.shape.Circle;
 public abstract class Sprite {
 
     protected Node node; //Node containing the shape definition of the sprite
-    protected int x, y; //Starting location of the sprite
+    protected Coordinate c; //Starting location of the sprite
     protected int velX, velY; //speed of the sprite
-    protected ID id; //type of the sprite
 
     /**
      * Constrcutor for Sprites that doesn't move
      * @param x location of x-axis
      * @param y location of y-axis
-     * @param id type of Sprite
      */
-    public Sprite(int x, int y, ID id){
-        this.x = x;
-        this.y = y;
+    public Sprite(int x, int y){
+        c = new Coordinate(x,y);
         this.velX = 0;
         this.velY = 0;
-        this.id = id;
     }
 
     /**
@@ -28,14 +24,11 @@ public abstract class Sprite {
      * @param y location of y-axis
      * @param velX speed of sprite in x
      * @param velY speed of sprite in y
-     * @param id type of sprite
      */
-    public Sprite(int x, int y, int velX, int velY, ID id) {
-        this.x = x;
-        this.y = y;
+    public Sprite(int x, int y, int velX, int velY) {
+        c = new Coordinate(x,y);
         this.velX = velX;
         this.velY = velY;
-        this.id = id;
     }
 
     /**
@@ -55,8 +48,8 @@ public abstract class Sprite {
      * Check if sprite is moving outside of screen in x-axis
      */
     public void boundaryX(){
-        if((this.x + node.getTranslateX()) < 0
-                || this.x + node.getTranslateX() > (AntSimulator.WIDTH - node.getBoundsInParent().getWidth()) ){
+        if((c.getX() + node.getTranslateX()) < 0
+                || c.getX() + node.getTranslateX() > (AntSimulator.WIDTH - node.getBoundsInParent().getWidth()) ){
             this.velX *= -1;
         }
     }
@@ -65,8 +58,9 @@ public abstract class Sprite {
      * Check if sprite is moving outside of screen in y-axis
      */
     public void boundaryY(){
-        if((this.y + node.getTranslateY()) < 0
-                || (this.y + node.getTranslateY()) > (AntSimulator.HEIGHT - node.getBoundsInParent().getHeight()) ){
+        if((this.c.getY() + node.getTranslateY()) < 0
+                || (this.c.getY() + node.getTranslateY()) >
+                (AntSimulator.HEIGHT - node.getBoundsInParent().getHeight()) ){
             this.velY *= -1;
         }
     }
@@ -91,7 +85,7 @@ public abstract class Sprite {
      * get the starting x-axis position of sprite
      * @return double
      */
-    public double getStartX(){return this.x;}
+    public double getStartX(){return this.c.getX();}
 
     /**
      *  Get the amount y-axis was translated from the starting point
@@ -113,7 +107,7 @@ public abstract class Sprite {
      * get the starting y-axis position of sprite
      * @return double
      */
-    public double getStartY(){return this.y;}
+    public double getStartY(){return this.c.getY();}
 
     /**
      * Get speed of sprite in the x-axis
@@ -148,14 +142,6 @@ public abstract class Sprite {
     }
 
     /**
-     * Get the ID of the sprite
-     * @return type of sprite in ID
-     */
-    public ID getId() {
-        return id;
-    }
-
-    /**
      * get the Node of the Sprite
      * @return Node
      */
@@ -177,6 +163,6 @@ public abstract class Sprite {
      * @return
      */
     public Circle getBounds(double rad){
-        return new Circle((x+ node.getTranslateX()), (y+node.getTranslateY()), rad);
+        return new Circle((this.c.getX()+ node.getTranslateX()), (this.c.getY()+node.getTranslateY()), rad);
     }
 }
