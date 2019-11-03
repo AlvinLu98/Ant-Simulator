@@ -1,5 +1,7 @@
 import javafx.scene.Node;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+
 
 public abstract class Sprite {
 
@@ -65,6 +67,33 @@ public abstract class Sprite {
         }
     }
 
+    public static Rectangle drawRectangle(int x, int y, int width, int height){
+        Rectangle rec = new Rectangle(x, y, width, height);
+        return rec;
+    }
+
+    public static Circle drawCircle(int x, int y, double rad){
+        Circle c = new Circle();
+        c.setCenterX(x);
+        c.setCenterY(y);
+        c.setRadius(rad);
+        return c;
+    }
+
+    public static double euclideanDist(int x1, int y1, int x2, int y2){
+        double distance = (y2 - y1)*(y2 - y1) + (x2 - x1)*(x2 - x1);
+        return Math.sqrt(distance);
+    }
+
+    /**
+     * Get the bounds of the sprite
+     * @param rad
+     * @return
+     */
+    public Circle getBounds(double rad){
+        return new Circle((this.c.getX()+ node.getTranslateX()), (this.c.getY()+node.getTranslateY()), rad);
+    }
+
     /**
      * Get the amount x-axis was translated from the starting point
      * @return translated value of x-axis in double
@@ -85,7 +114,9 @@ public abstract class Sprite {
      * get the starting x-axis position of sprite
      * @return double
      */
-    public double getStartX(){return this.c.getX();}
+    public int getStartX(){return this.c.getX();}
+
+    public int getCurX(){return this.c.getX() + (int)node.getTranslateX();}
 
     /**
      *  Get the amount y-axis was translated from the starting point
@@ -107,7 +138,9 @@ public abstract class Sprite {
      * get the starting y-axis position of sprite
      * @return double
      */
-    public double getStartY(){return this.c.getY();}
+    public int getStartY(){return this.c.getY();}
+
+    public int getCurY(){return this.c.getY() + (int)node.getTranslateY();}
 
     /**
      * Get speed of sprite in the x-axis
@@ -155,14 +188,5 @@ public abstract class Sprite {
      */
     public void setNode(Node node) {
         this.node = node;
-    }
-
-    /**
-     * Get the bounds of the sprite
-     * @param rad
-     * @return
-     */
-    public Circle getBounds(double rad){
-        return new Circle((this.c.getX()+ node.getTranslateX()), (this.c.getY()+node.getTranslateY()), rad);
     }
 }

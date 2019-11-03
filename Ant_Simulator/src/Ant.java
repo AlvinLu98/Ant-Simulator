@@ -1,10 +1,12 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Ant extends Sprite {
     private boolean hasFoodItem; //if ants has food
+    private boolean knowFood;
     private boolean foundFood;
 
     public static final double rad = 1.0; //radius of an ant
@@ -21,11 +23,8 @@ public class Ant extends Sprite {
         this.hasFoodItem = false;
         this.foundFood = false;
 
-        Circle circle = new Circle();
-        circle.setCenterX(x);
-        circle.setCenterY(y);
-        circle.setRadius(rad);
-
+        Circle circle = drawCircle(x, y, this.rad);
+        circle.setFill(Color.BLACK);
         this.node = circle;
     }
 
@@ -37,6 +36,9 @@ public class Ant extends Sprite {
         if(hasFoodItem){
             moveWithFood();
         }
+        else if(knowFood){
+            moveNoFood();
+        }
         else{
             moveNoFood();
         }
@@ -46,27 +48,73 @@ public class Ant extends Sprite {
      * Movement when the ant is not holding food
      */
     public void moveNoFood(){
-        Random r = new Random();
-        int x = r.nextInt()%3;
-        if(x == 2){
-            node.setTranslateX(getTranslateX() + this.velX);
-            boundaryX();
+        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = 4;
+        for (int i  = 0; i < surrounding.size(); i++) {
+            PheromoneData pd = surrounding.get(i);
+            if(pd != null){
+                for (Pheromone p : pd.getPheromones()) {
+                    if (p.getName().equals("Food") && p.getValue() > 0) {
+                        if (max == 0) {
+                            direction = i;
+                            moveX = pd.getStartX();
+                            moveY = pd.getStartY();
+                            max = p.getValue() * 10;
+                        }
+                        else if(p.getValue() * 10 >= max) {
+                            if(p.getValue() * 10 == max){
+                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                                        pd.getStartX(), pd.getStartY());
+                                if(current > prev){
+                                    direction = i;
+                                    moveX = pd.getStartX();
+                                    moveY = pd.getStartY();
+                                    max = p.getValue() * 10;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        else if(x == 1){
-            boundaryX();
-            node.setTranslateX(getTranslateX() - this.velX);
+        if(direction != 4){
+            switch(direction){
+                case 0:
+                    moveNW();
+                    break;
+                case 1:
+                    moveN();
+                    break;
+                case 2:
+                    moveNE();
+                    break;
+                case 3:
+                    moveW();
+                    break;
+                case 5:
+                    moveE();
+                    break;
+                case 6:
+                    moveSW();
+                    break;
+                case 7:
+                    moveS();
+                    break;
+                case 8:
+                    moveSE();
+                    break;
+                default:
+                    randomMovement();
+                    break;
+            }
         }
-
-        int y = r.nextInt()%3;
-
-        if(y == 2){
-            node.setTranslateY(getTranslateY() + this.velY);
-            boundaryY();
-        }
-
-        else if(y == 1){
-            boundaryY();
-            node.setTranslateY(getTranslateY() - this.velY);
+        else{
+            randomMovement();
         }
     }
 
@@ -101,7 +149,82 @@ public class Ant extends Sprite {
                 && (this.c.getY() + node.getTranslateY()) == this.c.getY()){
             ((Circle)this.node).setFill(Color.DARKGREEN);
             hasFoodItem = false;
+            knowFood = true;
         }
+    }
+
+
+    public void randomMovement(){
+        Random r = new Random();
+        int x = r.nextInt()%3;
+        if(x == 2){
+            node.setTranslateX(getTranslateX() + this.velX);
+            boundaryX();
+        }
+        else if(x == 1){
+            boundaryX();
+            node.setTranslateX(getTranslateX() - this.velX);
+        }
+
+        int y = r.nextInt()%3;
+
+        if(y == 2){
+            node.setTranslateY(getTranslateY() + this.velY);
+            boundaryY();
+        }
+
+        else if(y == 1){
+            boundaryY();
+            node.setTranslateY(getTranslateY() - this.velY);
+        }
+    }
+
+    public void moveNW(){
+        node.setTranslateX(getTranslateX() - velX);
+        boundaryX();
+        node.setTranslateY(getTranslateY() - velY);
+        boundaryY();
+    }
+
+    public void moveN(){
+        node.setTranslateY(getTranslateY() - velY);
+        boundaryY();
+    }
+
+    public void moveNE(){
+        node.setTranslateX(getTranslateX() + velX);
+        boundaryX();
+        node.setTranslateY(getTranslateY() - velY);
+        boundaryY();
+    }
+
+    public void moveW(){
+        node.setTranslateX(getTranslateX() - velX);
+        boundaryX();
+    }
+
+    public void moveE(){
+        node.setTranslateX(getTranslateX() + velX);
+        boundaryX();
+    }
+
+    public void moveSW(){
+        node.setTranslateX(getTranslateX() - velX);
+        boundaryX();
+        node.setTranslateY(getTranslateY() + velY);
+        boundaryY();
+    }
+
+    public void  moveS(){
+        node.setTranslateY(getTranslateY() + velY);
+        boundaryY();
+    }
+
+    public void  moveSE(){
+        node.setTranslateX(getTranslateX() + velX);
+        boundaryX();
+        node.setTranslateY(getTranslateY() + velY);
+        boundaryY();
     }
 
     /**
@@ -111,11 +234,11 @@ public class Ant extends Sprite {
      */
     @Override
     public boolean collision(Sprite other) {
-        /*if(other instanceof Ant){
-            return antCollision((Ant)other);
-        }*/
         if(other instanceof Food){
             return foodCollision((Food)other);
+        }
+        if(other instanceof Hive){
+            return hiveCollision((Hive)other);
         }
         return false;
     }
@@ -148,11 +271,24 @@ public class Ant extends Sprite {
         return false;
     }
 
+    public boolean hiveCollision(Hive other){
+        Circle thisAnt = this.getBounds(rad);
+        Circle hive = other.getBounds(Food.rad);
+        if(thisAnt.getBoundsInParent().intersects(hive.getBoundsInParent())){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Set hasFoodItem to true
      */
     public void obtainedFood(){
         this.hasFoodItem = true;
+    }
+
+    public void droppedFood(){
+        this.hasFoodItem = false;
     }
 
     /**

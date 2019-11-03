@@ -53,7 +53,7 @@ public abstract class Simulator{
      * Builds the game loop
      * Creates a timeline object that allows update of individual objects
      */
-    protected final void buildLoop(){
+    protected void buildLoop(){
 
         final Duration oneFrameAmt = Duration.millis(1000/fps);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
@@ -62,7 +62,6 @@ public abstract class Simulator{
                     @Override
                     public void handle(ActionEvent event) {
                         handler.tick();
-
                         checkCollision();
                     }
                 });

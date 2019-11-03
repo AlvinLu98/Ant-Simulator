@@ -22,6 +22,42 @@ public class Coordinate {
         this.y = y;
     }
 
+    /**
+     * https://stackoverflow.com/questions/17579634/java-hashmap-get-value-from-object-key
+     * https://www.journaldev.com/21095/java-equals-hashcode
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + x;
+        result = prime * result + y;
+        return result;
+    }
+
+    /**
+     * https://en.wikibooks.org/wiki/Java_Programming/Comparing_Objects
+     * @param obj
+     * @return
+     */
+    @Override
+    public boolean equals(Object obj){
+        if(this == obj){
+            return true;
+        }
+        else if(obj == null){
+            return false;
+        }
+        else if(obj instanceof Coordinate){
+            Coordinate c = (Coordinate)obj;
+            if(this.x == c.getX() && this.y == c.getY()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public String toString() {
         return "Coordinate:" +
