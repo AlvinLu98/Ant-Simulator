@@ -1,4 +1,5 @@
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -16,7 +17,7 @@ import java.util.Random;
 public class AntSimulator extends Simulator{
 
     private int numAnt; //number of ants to create
-    private int homeX, homeY;
+    private int homeX, homeY; //location of hive
     private static int velX = 4, velY = 4; //location of hive
     public static LinkedHashMap<Coordinate, PheromoneData> pheromoneLoc;
 
@@ -26,7 +27,7 @@ public class AntSimulator extends Simulator{
      */
     public AntSimulator(int fps){
         super(fps);
-        numAnt = 100;
+        this.numAnt = 1000;
     }
 
     /**
@@ -39,6 +40,20 @@ public class AntSimulator extends Simulator{
         this.numAnt = ants;
     }
 
+    public AntSimulator(int numAnt, int homeX, int homeY) {
+        this.numAnt = numAnt;
+        this.homeX = homeX;
+        this.homeY = homeY;
+    }
+
+    public AntSimulator(int numAnt, int homeX, int homeY, int velX, int velY) {
+        this.numAnt = numAnt;
+        this.homeX = homeX;
+        this.homeY = homeY;
+        AntSimulator.velX = velX;
+        AntSimulator.velY = velY;
+    }
+
     /**
      * Initialises the simulator
      * @param primaryStage
@@ -47,7 +62,6 @@ public class AntSimulator extends Simulator{
     public void initialize(final Stage primaryStage){
         primaryStage.setTitle("Ant simulator"); //Set the title of the window
         this.root = new Group(); //create a group to contain sprite objects
-        //TODO move all values into pheromoneVal
         this.scene = new Scene(this.root,WIDTH,HEIGHT,Color.WHITE); //creates a scene to display the objects
         primaryStage.setScene(this.scene); //add the scene to the stage
 
@@ -81,6 +95,15 @@ public class AntSimulator extends Simulator{
         Simulator.timeline.setCycleCount(Animation.INDEFINITE);
         Simulator.timeline.setAutoReverse(true);
         Simulator.timeline.getKeyFrames().add(oneFrame);
+
+        //http://www.java2s.com/Tutorials/Java/JavaFX/1010__JavaFX_Timeline_Animation.htm
+        Simulator.timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                long cur = System.currentTimeMillis();
+                currentTime = cur - startTime;
+            }
+        };
     }
 
     /**
@@ -125,12 +148,14 @@ public class AntSimulator extends Simulator{
         for (Sprite s : this.handler.getObjects()) {
             if (s instanceof Ant) {
                 Ant a = (Ant) s;
+                PheromoneData p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
+                if(p == null){
+                    System.out.println(a.getCurX() + " " + a.getCurY());
+                }
                 if (a.hasFood()) {
-                    PheromoneData p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
                     p.addFood();
                 } else {
-                    PheromoneData p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
-                    p.addHome();
+                    p.addHome(); //TODO figure out null pointer
                 }
             }
         }
@@ -167,7 +192,7 @@ public class AntSimulator extends Simulator{
         Random r = new Random();
         int x = r.nextInt(Simulator.WIDTH);
         int y = r.nextInt(Simulator.HEIGHT);
-        Food food = new Food(homeX + 20, homeY + 30);
+        Food food = new Food(x,  y);
 
         this.handler.addObject(food);
         this.root.getChildren().add(food.getNode());

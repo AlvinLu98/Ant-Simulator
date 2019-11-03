@@ -1,4 +1,5 @@
 import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
@@ -19,6 +20,8 @@ public abstract class Simulator{
     /** Sets the size of the window */
     public static final int WIDTH = 640;
     public static final int HEIGHT = WIDTH/12*9;
+    public static final long startTime = System.currentTimeMillis();
+    public static long currentTime = 0;
 
     /** JavaFX Scene */
     protected Scene scene;
@@ -28,6 +31,8 @@ public abstract class Simulator{
 
     /** loop for simulator */
     protected static Timeline timeline;
+
+    protected static AnimationTimer timer;
 
     /** Handler for all simulation objects */
     protected Handler handler;
@@ -69,6 +74,15 @@ public abstract class Simulator{
         Simulator.timeline.setCycleCount(Animation.INDEFINITE);
         Simulator.timeline.setAutoReverse(true);
         Simulator.timeline.getKeyFrames().add(oneFrame);
+
+        Simulator.timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                long cur = System.currentTimeMillis();
+                currentTime = cur - startTime;
+                System.out.println(currentTime);
+            }
+        };
     }
 
     /**
@@ -83,6 +97,7 @@ public abstract class Simulator{
      */
     public void beginSimulation(){
         Simulator.timeline.play();
+        Simulator.timer.start();
     }
 
     /**

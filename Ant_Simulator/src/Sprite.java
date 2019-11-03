@@ -51,7 +51,7 @@ public abstract class Sprite {
      */
     public void boundaryX(){
         if((c.getX() + node.getTranslateX()) < 0
-                || c.getX() + node.getTranslateX() > (AntSimulator.WIDTH - node.getBoundsInParent().getWidth()) ){
+                || c.getX() + node.getTranslateX() >= (AntSimulator.WIDTH) ){
             this.velX *= -1;
         }
     }
@@ -61,8 +61,8 @@ public abstract class Sprite {
      */
     public void boundaryY(){
         if((this.c.getY() + node.getTranslateY()) < 0
-                || (this.c.getY() + node.getTranslateY()) >
-                (AntSimulator.HEIGHT - node.getBoundsInParent().getHeight()) ){
+                || (this.c.getY() + node.getTranslateY()) >=
+                (AntSimulator.HEIGHT) ){
             this.velY *= -1;
         }
     }

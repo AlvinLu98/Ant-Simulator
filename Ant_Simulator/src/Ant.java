@@ -8,6 +8,7 @@ public class Ant extends Sprite {
     private boolean hasFoodItem; //if ants has food
     private boolean knowFood;
     private boolean foundFood;
+    private int lifespan;
 
     public static final double rad = 1.0; //radius of an ant
 
@@ -48,42 +49,8 @@ public class Ant extends Sprite {
      * Movement when the ant is not holding food
      */
     public void moveNoFood(){
-        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
-                .getInList();
-        int moveX = 0;
-        int moveY = 0;
-        double max = 0;
-        int direction = 4;
-        for (int i  = 0; i < surrounding.size(); i++) {
-            PheromoneData pd = surrounding.get(i);
-            if(pd != null){
-                for (Pheromone p : pd.getPheromones()) {
-                    if (p.getName().equals("Food") && p.getValue() > 0) {
-                        if (max == 0) {
-                            direction = i;
-                            moveX = pd.getStartX();
-                            moveY = pd.getStartY();
-                            max = p.getValue() * 10;
-                        }
-                        else if(p.getValue() * 10 >= max) {
-                            if(p.getValue() * 10 == max){
-                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
-                                double current = euclideanDist(this.getStartX(), this.getStartY(),
-                                        pd.getStartX(), pd.getStartY());
-                                if(current > prev){
-                                    direction = i;
-                                    moveX = pd.getStartX();
-                                    moveY = pd.getStartY();
-                                    max = p.getValue() * 10;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        if(direction != 4){
-            switch(direction){
+        int direction = findDirectionFood();
+        switch(direction){
                 case 0:
                     moveNW();
                     break;
@@ -112,16 +79,194 @@ public class Ant extends Sprite {
                     randomMovement();
                     break;
             }
+    }
+
+    public int findDirectionFood(){
+        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = 4;
+        for (int i  = 0; i < surrounding.size(); i++) {
+            PheromoneData pd = surrounding.get(i);
+            if(pd != null){
+                for (Pheromone p : pd.getPheromones()) {
+                    if (p.getName().equals("Food") && p.getValue() > 0) {
+                        if (max == 0) {
+                            direction = i;
+                            moveX = pd.getStartX();
+                            moveY = pd.getStartY();
+                            max = p.getValue() * 10;
+                        }
+                        else if(p.getValue() * 10 >= max) {
+                            if(p.getValue() * 10 == max){
+                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                                        pd.getStartX(), pd.getStartY());
+                                if(current > prev){
+                                    direction = i;
+                                    moveX = pd.getStartX();
+                                    moveY = pd.getStartY();
+                                    max = p.getValue() * 10;
+                                }
+                                else if(current == prev){
+                                    Random r = new Random();
+                                    if(r.nextInt()%2 == 0){
+                                        direction = i;
+                                        moveX = pd.getStartX();
+                                        moveY = pd.getStartY();
+                                        max = p.getValue() * 10;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-        else{
-            randomMovement();
+        return direction;
+    }
+
+    public int findDirectionHome(){
+        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = 4;
+        for (int i  = 0; i < surrounding.size(); i++) {
+            PheromoneData pd = surrounding.get(i);
+            if(pd != null){
+                for (Pheromone p : pd.getPheromones()) {
+                    if (p.getName().equals("Home") && p.getValue() > 0) {
+                        if (max == 0) {
+                            direction = i;
+                            moveX = pd.getStartX();
+                            moveY = pd.getStartY();
+                            max = p.getValue();
+                        }
+                        else if(p.getValue() >= max) {
+                            if(p.getValue() == max){
+                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                                        pd.getStartX(), pd.getStartY());
+                                if(current < prev){
+                                    direction = i;
+                                    moveX = pd.getStartX();
+                                    moveY = pd.getStartY();
+                                    max = p.getValue();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return direction;
+    }
+
+    public int findDirectionFoodHome(){
+        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = 4;
+        for (int i  = 0; i < surrounding.size(); i++) {
+            PheromoneData pd = surrounding.get(i);
+            if(pd != null){
+                for (Pheromone p : pd.getPheromones()) {
+                    if (p.getName().equals("Food") && p.getValue() > 0) {
+                        if (max == 0) {
+                            direction = i;
+                            moveX = pd.getStartX();
+                            moveY = pd.getStartY();
+                            max = p.getValue() * 10;
+                        }
+                        else if(p.getValue() * 10 >= max) {
+                            if(p.getValue() * 10 == max){
+                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                                        pd.getStartX(), pd.getStartY());
+                                if(current < prev){
+                                    direction = i;
+                                    moveX = pd.getStartX();
+                                    moveY = pd.getStartY();
+                                    max = p.getValue() * 10;
+                                }
+                            }
+                        }
+                    }
+                    else if (p.getName().equals("Home") && p.getValue() > 0) {
+                        if (max == 0) {
+                            direction = i;
+                            moveX = pd.getStartX();
+                            moveY = pd.getStartY();
+                            max = p.getValue();
+                        }
+                        else {
+                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                                        pd.getStartX(), pd.getStartY());
+                                if(current < prev){
+                                    direction = i;
+                                    moveX = pd.getStartX();
+                                    moveY = pd.getStartY();
+                                    max = p.getValue();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        return direction;
+    }
+
+    public void moveWithFood(){
+        int direction = findDirectionFoodHome();
+        switch(direction){
+            case 0:
+                moveNW();
+                break;
+            case 1:
+                moveN();
+                break;
+            case 2:
+                moveNE();
+                break;
+            case 3:
+                moveW();
+                break;
+            case 5:
+                moveE();
+                break;
+            case 6:
+                moveSW();
+                break;
+            case 7:
+                moveS();
+                break;
+            case 8:
+                moveSE();
+                break;
+            default:
+                randomMovement();
+                break;
+        }
+        if((this.c.getX() + node.getTranslateX()) == this.c.getX()
+                && (this.c.getY() + node.getTranslateY()) == this.c.getY()){
+            ((Circle)this.node).setFill(Color.DARKGREEN);
+            hasFoodItem = false;
+            knowFood = true;
         }
     }
 
     /**
-     * Movement when ant is holding food
+     * Movement pattern of ants with food to go back home
+     * Assumes ants know exactly the way back home
      */
-    public void moveWithFood(){
+    public void moveWithFoodHome(){
         if(velX < 0){
             velX *= -1;
         }
