@@ -11,7 +11,9 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class AntSimulator extends Simulator{
@@ -20,6 +22,7 @@ public class AntSimulator extends Simulator{
     private int homeX, homeY; //location of hive
     private static int velX = 4, velY = 4; //location of hive
     public static LinkedHashMap<Coordinate, PheromoneData> pheromoneLoc;
+    public long sec = 0;
 
     /**
      * Default constructor for Ant simulator
@@ -27,7 +30,7 @@ public class AntSimulator extends Simulator{
      */
     public AntSimulator(int fps){
         super(fps);
-        this.numAnt = 1000;
+        this.numAnt = 500;
     }
 
     /**
@@ -89,6 +92,7 @@ public class AntSimulator extends Simulator{
                         handler.tick();
                         updatePheromone();
                         checkCollision();
+                        handler.cleanUp();
                     }
                 });
         Simulator.timeline = new Timeline();
@@ -100,7 +104,7 @@ public class AntSimulator extends Simulator{
         Simulator.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long cur = System.currentTimeMillis();
+                long cur = System.currentTimeMillis()/1000;
                 currentTime = cur - startTime;
             }
         };
@@ -149,13 +153,28 @@ public class AntSimulator extends Simulator{
             if (s instanceof Ant) {
                 Ant a = (Ant) s;
                 PheromoneData p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
-                if(p == null){
+                if(p != null) {
+                    if (a.hasFood()) {
+                        p.addFood();
+                    } else {
+                        p.addHome();
+                    }
+                }
+                else{
                     System.out.println(a.getCurX() + " " + a.getCurY());
                 }
-                if (a.hasFood()) {
-                    p.addFood();
-                } else {
-                    p.addHome(); //TODO figure out null pointer
+            }
+        }
+
+        //https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
+        if(sec != currentTime) {
+            sec = currentTime;
+            Iterator it = pheromoneLoc.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+                PheromoneData pd = (PheromoneData) pair.getValue();
+                for (Pheromone p : pd.getPheromones()) {
+                    p.tick();
                 }
             }
         }
@@ -215,8 +234,8 @@ public class AntSimulator extends Simulator{
 
     public PheromoneData createPheromones(int x, int y, int velX, int velY){
         PheromoneData p = new PheromoneData(x, y, velX, velY);
-        Pheromone food = new Pheromone(x, y, velX, velY, "Food",255,0,0);
-        Pheromone home = new Pheromone(x, y, velX, velY, "Home",0,0,255);
+        Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.5,255,0,0, 10);
+        Pheromone home = new Pheromone(x, y, velX, velY, "Home",0.05, 0,0,255, 1);
 
         p.addPheromone(food);
         p.addPheromone(home);

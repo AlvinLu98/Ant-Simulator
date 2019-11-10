@@ -28,8 +28,8 @@ public class PheromoneData extends Sprite{
                 Rectangle r = (Rectangle)p.getNode();
                 Color c = (Color)r.getFill();
                 if(c.getOpacity() <= 0.5){
-                    p.addValue(0.1);
-                    Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity() + 0.1);
+                    p.addValue();
+                    Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity() + 0.5);
                     r.setFill(newC);
                 }
 
@@ -43,8 +43,8 @@ public class PheromoneData extends Sprite{
                 Rectangle r = (Rectangle)p.getNode();
                 Color c = (Color)r.getFill();
                 if(c.getOpacity() <= 0.3){
-                    p.addValue(0.02);
-                    Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity() + 0.02);
+                    p.addValue();
+                    Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity() + 0.05);
                     r.setFill(newC);
                 }
             }

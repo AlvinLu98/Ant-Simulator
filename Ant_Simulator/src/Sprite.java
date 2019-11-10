@@ -50,8 +50,15 @@ public abstract class Sprite {
      * Check if sprite is moving outside of screen in x-axis
      */
     public void boundaryX(){
-        if((c.getX() + node.getTranslateX()) < 0
-                || c.getX() + node.getTranslateX() >= (AntSimulator.WIDTH) ){
+        if((c.getX() + node.getTranslateX() + velX) < 0
+                || c.getX() + node.getTranslateX() +  velX > (AntSimulator.WIDTH) ){
+            this.velX *= -1;
+        }
+    }
+
+    public void boundaryNegX(){
+        if((c.getX() + node.getTranslateX() - velX) < 0
+                || c.getX() + node.getTranslateX() -  velX > (AntSimulator.WIDTH) ){
             this.velX *= -1;
         }
     }
@@ -60,8 +67,16 @@ public abstract class Sprite {
      * Check if sprite is moving outside of screen in y-axis
      */
     public void boundaryY(){
-        if((this.c.getY() + node.getTranslateY()) < 0
-                || (this.c.getY() + node.getTranslateY()) >=
+        if((this.c.getY() + node.getTranslateY() + velY) < 0
+                || (this.c.getY() + node.getTranslateY() + velY) >
+                (AntSimulator.HEIGHT) ){
+            this.velY *= -1;
+        }
+    }
+
+    public void boundaryNegY(){
+        if((this.c.getY() + node.getTranslateY() - velY) < 0
+                || (this.c.getY() + node.getTranslateY() - velY) >
                 (AntSimulator.HEIGHT) ){
             this.velY *= -1;
         }

@@ -20,7 +20,7 @@ public abstract class Simulator{
     /** Sets the size of the window */
     public static final int WIDTH = 640;
     public static final int HEIGHT = WIDTH/12*9;
-    public static final long startTime = System.currentTimeMillis();
+    public static final long startTime = System.currentTimeMillis()/1000;
     public static long currentTime = 0;
 
     /** JavaFX Scene */
@@ -78,7 +78,7 @@ public abstract class Simulator{
         Simulator.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long cur = System.currentTimeMillis();
+                long cur = System.currentTimeMillis()/1000;
                 currentTime = cur - startTime;
                 System.out.println(currentTime);
             }

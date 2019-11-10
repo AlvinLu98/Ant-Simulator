@@ -26,6 +26,11 @@ public class Handler {
     public void tick(){
         for(Sprite o:objects){
             o.tick();
+            if(o instanceof Ant){
+                if(((Ant)o).isDead()){
+                    addToRemove(o);
+                }
+            }
         }
     }
 
@@ -44,6 +49,8 @@ public class Handler {
     public void removeObject(Sprite o){
         this.objects.remove(o);
     }
+
+    public void addToRemove(Sprite o){this.cleanUp.add(o);}
 
     /**
      * Removes all Sprite object in cleanUp list

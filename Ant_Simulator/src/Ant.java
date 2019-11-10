@@ -1,3 +1,4 @@
+import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -5,10 +6,15 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Ant extends Sprite {
-    private boolean hasFoodItem; //if ants has food
+    private boolean hasFoodItem;
     private boolean knowFood;
     private boolean foundFood;
-    private int lifespan;
+    private boolean dead;
+    private long lifespan;
+    private Direction prevDirection;
+    private AnimationTimer timer;
+    private long startTime = System.currentTimeMillis()/1000;
+    private long elapsedTime = 0;
 
     public static final double rad = 1.0; //radius of an ant
 
@@ -23,10 +29,22 @@ public class Ant extends Sprite {
         super(x,y,velX, velY);
         this.hasFoodItem = false;
         this.foundFood = false;
+        this.prevDirection = Direction.C;
+        this.lifespan = 1000000;
+        this.dead = false;
 
         Circle circle = drawCircle(x, y, this.rad);
         circle.setFill(Color.BLACK);
         this.node = circle;
+
+        this.timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                long cur = System.currentTimeMillis()/1000;
+                elapsedTime = cur - startTime;
+            }
+        };
+        this.timer.start();
     }
 
     /**
@@ -34,6 +52,7 @@ public class Ant extends Sprite {
      */
     @Override
     public void tick() {
+        //TODO remember previous location
         if(hasFoodItem){
             moveWithFood();
         }
@@ -43,6 +62,10 @@ public class Ant extends Sprite {
         else{
             moveNoFood();
         }
+        if(elapsedTime > lifespan){
+            dead = true;
+            this.node.setOpacity(0);
+        }
     }
 
     /**
@@ -50,216 +73,7 @@ public class Ant extends Sprite {
      */
     public void moveNoFood(){
         int direction = findDirectionFood();
-        switch(direction){
-                case 0:
-                    moveNW();
-                    break;
-                case 1:
-                    moveN();
-                    break;
-                case 2:
-                    moveNE();
-                    break;
-                case 3:
-                    moveW();
-                    break;
-                case 5:
-                    moveE();
-                    break;
-                case 6:
-                    moveSW();
-                    break;
-                case 7:
-                    moveS();
-                    break;
-                case 8:
-                    moveSE();
-                    break;
-                default:
-                    randomMovement();
-                    break;
-            }
-    }
-
-    public int findDirectionFood(){
-        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
-                .getInList();
-        int moveX = 0;
-        int moveY = 0;
-        double max = 0;
-        int direction = 4;
-        for (int i  = 0; i < surrounding.size(); i++) {
-            PheromoneData pd = surrounding.get(i);
-            if(pd != null){
-                for (Pheromone p : pd.getPheromones()) {
-                    if (p.getName().equals("Food") && p.getValue() > 0) {
-                        if (max == 0) {
-                            direction = i;
-                            moveX = pd.getStartX();
-                            moveY = pd.getStartY();
-                            max = p.getValue() * 10;
-                        }
-                        else if(p.getValue() * 10 >= max) {
-                            if(p.getValue() * 10 == max){
-                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
-                                double current = euclideanDist(this.getStartX(), this.getStartY(),
-                                        pd.getStartX(), pd.getStartY());
-                                if(current > prev){
-                                    direction = i;
-                                    moveX = pd.getStartX();
-                                    moveY = pd.getStartY();
-                                    max = p.getValue() * 10;
-                                }
-                                else if(current == prev){
-                                    Random r = new Random();
-                                    if(r.nextInt()%2 == 0){
-                                        direction = i;
-                                        moveX = pd.getStartX();
-                                        moveY = pd.getStartY();
-                                        max = p.getValue() * 10;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return direction;
-    }
-
-    public int findDirectionHome(){
-        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
-                .getInList();
-        int moveX = 0;
-        int moveY = 0;
-        double max = 0;
-        int direction = 4;
-        for (int i  = 0; i < surrounding.size(); i++) {
-            PheromoneData pd = surrounding.get(i);
-            if(pd != null){
-                for (Pheromone p : pd.getPheromones()) {
-                    if (p.getName().equals("Home") && p.getValue() > 0) {
-                        if (max == 0) {
-                            direction = i;
-                            moveX = pd.getStartX();
-                            moveY = pd.getStartY();
-                            max = p.getValue();
-                        }
-                        else if(p.getValue() >= max) {
-                            if(p.getValue() == max){
-                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
-                                double current = euclideanDist(this.getStartX(), this.getStartY(),
-                                        pd.getStartX(), pd.getStartY());
-                                if(current < prev){
-                                    direction = i;
-                                    moveX = pd.getStartX();
-                                    moveY = pd.getStartY();
-                                    max = p.getValue();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return direction;
-    }
-
-    public int findDirectionFoodHome(){
-        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
-                .getInList();
-        int moveX = 0;
-        int moveY = 0;
-        double max = 0;
-        int direction = 4;
-        for (int i  = 0; i < surrounding.size(); i++) {
-            PheromoneData pd = surrounding.get(i);
-            if(pd != null){
-                for (Pheromone p : pd.getPheromones()) {
-                    if (p.getName().equals("Food") && p.getValue() > 0) {
-                        if (max == 0) {
-                            direction = i;
-                            moveX = pd.getStartX();
-                            moveY = pd.getStartY();
-                            max = p.getValue() * 10;
-                        }
-                        else if(p.getValue() * 10 >= max) {
-                            if(p.getValue() * 10 == max){
-                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
-                                double current = euclideanDist(this.getStartX(), this.getStartY(),
-                                        pd.getStartX(), pd.getStartY());
-                                if(current < prev){
-                                    direction = i;
-                                    moveX = pd.getStartX();
-                                    moveY = pd.getStartY();
-                                    max = p.getValue() * 10;
-                                }
-                            }
-                        }
-                    }
-                    else if (p.getName().equals("Home") && p.getValue() > 0) {
-                        if (max == 0) {
-                            direction = i;
-                            moveX = pd.getStartX();
-                            moveY = pd.getStartY();
-                            max = p.getValue();
-                        }
-                        else {
-                                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
-                                double current = euclideanDist(this.getStartX(), this.getStartY(),
-                                        pd.getStartX(), pd.getStartY());
-                                if(current < prev){
-                                    direction = i;
-                                    moveX = pd.getStartX();
-                                    moveY = pd.getStartY();
-                                    max = p.getValue();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        return direction;
-    }
-
-    public void moveWithFood(){
-        int direction = findDirectionFoodHome();
-        switch(direction){
-            case 0:
-                moveNW();
-                break;
-            case 1:
-                moveN();
-                break;
-            case 2:
-                moveNE();
-                break;
-            case 3:
-                moveW();
-                break;
-            case 5:
-                moveE();
-                break;
-            case 6:
-                moveSW();
-                break;
-            case 7:
-                moveS();
-                break;
-            case 8:
-                moveSE();
-                break;
-            default:
-                randomMovement();
-                break;
-        }
-        if((this.c.getX() + node.getTranslateX()) == this.c.getX()
-                && (this.c.getY() + node.getTranslateY()) == this.c.getY()){
-            ((Circle)this.node).setFill(Color.DARKGREEN);
-            hasFoodItem = false;
-            knowFood = true;
-        }
+        move(direction);
     }
 
     /**
@@ -299,77 +113,292 @@ public class Ant extends Sprite {
     }
 
 
+    public void moveWithFood(){
+        int direction = findDirectionHome();
+        move(direction);
+        if((this.c.getX() + node.getTranslateX()) == this.c.getX()
+                && (this.c.getY() + node.getTranslateY()) == this.c.getY()){
+            ((Circle)this.node).setFill(Color.DARKGREEN);
+            hasFoodItem = false;
+            knowFood = true;
+        }
+    }
+
+    private void move(int direction){
+        switch(direction){
+            case 0:
+                moveNW();
+                prevDirection = Direction.NW;
+                break;
+            case 1:
+                moveN();
+                prevDirection = Direction.N;
+                break;
+            case 2:
+                moveNE();
+                prevDirection = Direction.NE;
+                break;
+            case 3:
+                moveW();
+                prevDirection = Direction.W;
+                break;
+            case 5:
+                moveE();
+                prevDirection = Direction.E;
+                break;
+            case 6:
+                moveSW();
+                prevDirection = Direction.SW;
+                break;
+            case 7:
+                moveS();
+                prevDirection = Direction.S;
+                break;
+            case 8:
+                moveSE();
+                prevDirection = Direction.SE;
+                break;
+            default:
+                randomMovement();
+                break;
+        }
+    }
+
+    public int findDirectionFood(){
+        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = 4;
+        ArrayList<Integer> d = prevDirection.getSide(prevDirection);
+        for (int i  = 0; i < surrounding.size(); i++) {
+            PheromoneData pd = surrounding.get(i);
+            if(pd != null){
+                for (Pheromone p : pd.getPheromones()) {
+                    if (p.getName().equals("Food") && p.getValue() > 0) {
+                        direction = compareSurroundingFoodForage(pd, p, direction, i, moveX, moveY, max, d);
+                        if(direction == i){
+                            moveX = surrounding.get(direction).getStartX();
+                            moveY = surrounding.get(direction).getStartY();
+                            max = p.getValue();
+                        }
+                    }
+                }
+            }
+        }
+        return direction;
+    }
+
+    public int findDirectionHome(){
+        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = prevDirection.getNum();
+        ArrayList<Integer> d = prevDirection.getSide(prevDirection);
+        for (int i  = 0; i < surrounding.size(); i++) {
+            PheromoneData pd = surrounding.get(i);
+            if(pd != null){
+                for (Pheromone p : pd.getPheromones()) {
+                    if (p.getName().equals("Home") && p.getValue() > 0) {
+                        direction = compareSurroundingHome(pd, p, direction, i, moveX, moveY, max, d);
+                        moveX = surrounding.get(direction).getStartX();
+                        moveY =surrounding.get(direction).getStartY();
+                        max = p.getValue();
+                    }
+                }
+            }
+        }
+        return direction;
+    }
+
+    public int findDirectionFoodHome(){
+        ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = prevDirection.getNum();
+        ArrayList<Integer> d = prevDirection.getSide(prevDirection);
+        for (int i  = 0; i < surrounding.size(); i++) {
+            PheromoneData pd = surrounding.get(i);
+            if(pd != null){
+                for (Pheromone p : pd.getPheromones()) {
+                    if (p.getName().equals("Food") && p.getValue() > 0) {
+                        direction = compareSurroundingFoodHome(pd, p, direction, i, moveX, moveY, max, d);
+                        moveX = surrounding.get(direction).getStartX();
+                        moveY =surrounding.get(direction).getStartY();
+                        max = p.getValue() * 10;
+                    }
+                    else if (p.getName().equals("Home") && p.getValue() > 0) {
+                        direction = compareSurroundingHome(pd, p, direction, i, moveX, moveY, max, d);
+                        moveX = surrounding.get(direction).getStartX();
+                        moveY =surrounding.get(direction).getStartY();
+                        max = p.getValue();
+                    }
+                }
+            }
+        }
+        return direction;
+    }
+
+    private int compareSurroundingFoodForage(PheromoneData pd, Pheromone p, int curD, int i, int moveX, int moveY,
+                                             double max, ArrayList<Integer> d)
+    {
+        int direction = curD;
+        if (max == 0) { //if ant currently has no selected direction
+            direction = i;
+        }
+        //if new direction has equal or greater pheromone value
+        else if(p.getValue() >= (max - (p.getValue()*p.getEvaporation()))) {
+            //if new direction has equal pheromone value
+            if(p.getValue() == (max - (p.getValue()*p.getEvaporation()))){
+                //Calculate the euclidean distance of new and old direction to home
+                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                        p.getStartX(), p.getStartY());
+                if(current >= prev){ //if new direction is further away from home
+                    direction = i;
+                }
+                else if(current == prev){
+                    if(d.contains(i)){
+                        direction = i;
+                    }
+                }
+            }
+            else{ //if new direction has greater pheromone value
+                direction = i;
+            }
+        }
+        return direction;
+    }
+
+    private int compareSurroundingFoodHome(PheromoneData pd, Pheromone p, int curD, int i, int moveX, int moveY,
+                                           double max, ArrayList<Integer> d)
+    {
+        int direction = curD;
+        if (max == 0) {
+            direction = i;
+        }
+        else if(p.getValue() >= max) {
+            if(p.getValue() == max){
+                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                        pd.getStartX(), pd.getStartY());
+                if(current < prev){
+                    direction = i;
+                }
+                else if(current == prev){
+                    if(d.contains(i)){
+                        direction = i;
+                    }
+                }
+            }
+            else{
+                direction = i;
+            }
+        }
+        return direction;
+    }
+
+    private int compareSurroundingHome(PheromoneData pd, Pheromone p, int curD, int i, int moveX, int moveY, double max,
+                                       ArrayList<Integer> d)
+    {
+        int direction = curD;
+        if (max == 0) {
+            direction = i;
+        }
+//        else if(p.getValue() >= max) {
+//            if(p.getValue() == max){
+                double prev = euclideanDist(this.getStartX(), this.getStartY(), moveX, moveY);
+                double current = euclideanDist(this.getStartX(), this.getStartY(),
+                        pd.getStartX(), pd.getStartY());
+                if(current < prev){
+                    direction = i;
+                }
+                else if(current == prev){
+                    if(d.contains(i)){
+                        direction = i;
+                    }
+                }
+//            }
+//            else{
+//                direction = i;
+//            }
+//        }
+        return direction;
+    }
+
     public void randomMovement(){
         Random r = new Random();
-        int x = r.nextInt()%3;
-        if(x == 2){
+        int x = r.nextInt() % 3;
+        if (x == 2) {
+            boundaryX();
             node.setTranslateX(getTranslateX() + this.velX);
-            boundaryX();
-        }
-        else if(x == 1){
-            boundaryX();
+        } else if (x == 1) {
+            boundaryNegX();
             node.setTranslateX(getTranslateX() - this.velX);
         }
 
-        int y = r.nextInt()%3;
+        int y = r.nextInt() % 3;
 
-        if(y == 2){
+        if (y == 2) {
+            boundaryY();
             node.setTranslateY(getTranslateY() + this.velY);
-            boundaryY();
-        }
-
-        else if(y == 1){
-            boundaryY();
+        } else if (y == 1) {
+            boundaryNegY();
             node.setTranslateY(getTranslateY() - this.velY);
         }
     }
 
     public void moveNW(){
+        boundaryNegX();
         node.setTranslateX(getTranslateX() - velX);
-        boundaryX();
+        boundaryNegY();
         node.setTranslateY(getTranslateY() - velY);
-        boundaryY();
     }
 
     public void moveN(){
+        boundaryNegY();
         node.setTranslateY(getTranslateY() - velY);
-        boundaryY();
     }
 
     public void moveNE(){
-        node.setTranslateX(getTranslateX() + velX);
         boundaryX();
+        node.setTranslateX(getTranslateX() + velX);
+        boundaryNegY();
         node.setTranslateY(getTranslateY() - velY);
-        boundaryY();
     }
 
     public void moveW(){
+        boundaryNegX();
         node.setTranslateX(getTranslateX() - velX);
-        boundaryX();
     }
 
     public void moveE(){
-        node.setTranslateX(getTranslateX() + velX);
         boundaryX();
+        node.setTranslateX(getTranslateX() + velX);
     }
 
     public void moveSW(){
+        boundaryNegX();
         node.setTranslateX(getTranslateX() - velX);
-        boundaryX();
-        node.setTranslateY(getTranslateY() + velY);
         boundaryY();
+        node.setTranslateY(getTranslateY() + velY);
     }
 
     public void  moveS(){
-        node.setTranslateY(getTranslateY() + velY);
         boundaryY();
+        node.setTranslateY(getTranslateY() + velY);
     }
 
     public void  moveSE(){
-        node.setTranslateX(getTranslateX() + velX);
         boundaryX();
-        node.setTranslateY(getTranslateY() + velY);
+        node.setTranslateX(getTranslateX() + velX);
         boundaryY();
+        node.setTranslateY(getTranslateY() + velY);
     }
 
     /**
@@ -442,5 +471,9 @@ public class Ant extends Sprite {
      */
     public boolean hasFood(){
         return this.hasFoodItem;
+    }
+
+    public boolean isDead(){
+        return this.dead;
     }
 }
