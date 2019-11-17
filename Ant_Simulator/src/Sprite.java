@@ -49,37 +49,45 @@ public abstract class Sprite {
     /**
      * Check if sprite is moving outside of screen in x-axis
      */
-    public void boundaryX(){
+    public boolean boundaryX(){
         if((c.getX() + node.getTranslateX() + velX) < 0
                 || c.getX() + node.getTranslateX() +  velX > (AntSimulator.WIDTH) ){
-            this.velX *= -1;
+//            this.velX *= -1;
+            return true;
         }
+        return false;
     }
 
-    public void boundaryNegX(){
+    public boolean boundaryNegX(){
         if((c.getX() + node.getTranslateX() - velX) < 0
                 || c.getX() + node.getTranslateX() -  velX > (AntSimulator.WIDTH) ){
-            this.velX *= -1;
+//            this.velX *= -1;
+            return true;
         }
+        return false;
     }
 
     /**
      * Check if sprite is moving outside of screen in y-axis
      */
-    public void boundaryY(){
+    public boolean boundaryY(){
         if((this.c.getY() + node.getTranslateY() + velY) < 0
                 || (this.c.getY() + node.getTranslateY() + velY) >
                 (AntSimulator.HEIGHT) ){
-            this.velY *= -1;
+//            this.velY *= -1;
+            return true;
         }
+        return false;
     }
 
-    public void boundaryNegY(){
+    public boolean boundaryNegY(){
         if((this.c.getY() + node.getTranslateY() - velY) < 0
                 || (this.c.getY() + node.getTranslateY() - velY) >
                 (AntSimulator.HEIGHT) ){
-            this.velY *= -1;
+//            this.velY *= -1;
+            return true;
         }
+        return false;
     }
 
     public static Rectangle drawRectangle(int x, int y, int width, int height){
@@ -97,6 +105,7 @@ public abstract class Sprite {
 
     public static double euclideanDist(int x1, int y1, int x2, int y2){
         double distance = (y2 - y1)*(y2 - y1) + (x2 - x1)*(x2 - x1);
+//        System.out.println(x2 +"-"+x1+"^2 " + y2+"-"+y1+"^2 = "+ distance);
         return Math.sqrt(distance);
     }
 

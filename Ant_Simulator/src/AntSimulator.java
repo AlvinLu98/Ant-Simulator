@@ -77,7 +77,7 @@ public class AntSimulator extends Simulator{
         generateMap(velX, velY);
         generateHive();
         generateAnts(numAnt, this.homeX, this.homeY, velX, velY);
-        generateFood();
+        generateFood(2);
     }
 
     @Override
@@ -156,7 +156,8 @@ public class AntSimulator extends Simulator{
                 if(p != null) {
                     if (a.hasFood()) {
                         p.addFood();
-                    } else {
+                    }
+                    else if(!a.isFollowingFood()) {
                         p.addHome();
                     }
                 }
@@ -173,7 +174,7 @@ public class AntSimulator extends Simulator{
             while (it.hasNext()) {
                 Map.Entry pair = (Map.Entry) it.next();
                 PheromoneData pd = (PheromoneData) pair.getValue();
-                for (Pheromone p : pd.getPheromones()) {
+                for (GroundData p : pd.getPheromones()) {
                     p.tick();
                 }
             }
@@ -207,14 +208,16 @@ public class AntSimulator extends Simulator{
     /**
      * Generate food item at a random location
      */
-    public void generateFood(){
-        Random r = new Random();
-        int x = r.nextInt(Simulator.WIDTH);
-        int y = r.nextInt(Simulator.HEIGHT);
-        Food food = new Food(x,  y);
+    public void generateFood(int amt){
+        for(int i = 0; i < amt; i++) {
+            Random r = new Random();
+            int x = r.nextInt(Simulator.WIDTH);
+            int y = r.nextInt(Simulator.HEIGHT);
+            Food food = new Food(x, y);
 
-        this.handler.addObject(food);
-        this.root.getChildren().add(food.getNode());
+            this.handler.addObject(food);
+            this.root.getChildren().add(food.getNode());
+        }
     }
 
     /**
@@ -223,9 +226,18 @@ public class AntSimulator extends Simulator{
      * @param velX speed of thr ants in y
      */
     public void  generateMap(int velX, int velY) {
+        ObstacleData od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
+        od.oneObstacle();
+        int[][] points = od.getPoints();
         for (int x = 0; x <= Simulator.WIDTH + velX; x += velX) {
             for (int y = 0; y <= Simulator.HEIGHT + velY; y += velY) {
-                PheromoneData p = createPheromones(x, y, velX, velY);
+                PheromoneData p = new PheromoneData(x, y, velX, velY);
+                p = createPheromones(x, y, velX, velY);
+                if(points[getKeyX(x)/velX][getKeyY(y)/velY] == 1){
+                    Obstacle o = new Obstacle(x, y, velX, velY, 205, 133, 63);
+                    p.addData(o);
+                    this.root.getChildren().add(o.getNode());
+                }
                 Coordinate c = new Coordinate(x,y);
                 pheromoneLoc.put(c,p);
             }
@@ -234,11 +246,11 @@ public class AntSimulator extends Simulator{
 
     public PheromoneData createPheromones(int x, int y, int velX, int velY){
         PheromoneData p = new PheromoneData(x, y, velX, velY);
-        Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.5,255,0,0, 10);
+        Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.3,255,0,0, 10);
         Pheromone home = new Pheromone(x, y, velX, velY, "Home",0.05, 0,0,255, 1);
 
-        p.addPheromone(food);
-        p.addPheromone(home);
+        p.addData(food);
+        p.addData(home);
 
         this.root.getChildren().add(food.getNode());
         this.root.getChildren().add(home.getNode());

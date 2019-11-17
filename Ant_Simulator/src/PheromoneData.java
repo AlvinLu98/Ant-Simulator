@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 //create a square according to size?
 public class PheromoneData extends Sprite{
-    public LinkedList<Pheromone> pheromones;
+    private LinkedList<GroundData> pheromones;
 
 
     public PheromoneData(int x, int y, int width, int height) {
@@ -18,17 +18,18 @@ public class PheromoneData extends Sprite{
 
     }
 
-    public void addPheromone(Pheromone p){
+    public void addData(GroundData p){
         this.pheromones.add(p);
     }
 
     public void addFood(){
-        for(Pheromone p: this.pheromones){
+        for(GroundData p: this.pheromones){
             if(p.getName().equals("Food")){
+                Pheromone food = (Pheromone)p;
                 Rectangle r = (Rectangle)p.getNode();
                 Color c = (Color)r.getFill();
                 if(c.getOpacity() <= 0.5){
-                    p.addValue();
+                    food.addValue();
                     Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity() + 0.5);
                     r.setFill(newC);
                 }
@@ -38,12 +39,13 @@ public class PheromoneData extends Sprite{
     }
 
     public void addHome(){
-        for(Pheromone p: this.pheromones){
+        for(GroundData p: this.pheromones){
             if(p.getName().equals("Home")){
+                Pheromone home = (Pheromone)p;
                 Rectangle r = (Rectangle)p.getNode();
                 Color c = (Color)r.getFill();
                 if(c.getOpacity() <= 0.3){
-                    p.addValue();
+                    home.addValue();
                     Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), c.getOpacity() + 0.05);
                     r.setFill(newC);
                 }
@@ -51,7 +53,7 @@ public class PheromoneData extends Sprite{
         }
     }
 
-    public LinkedList<Pheromone> getPheromones() {
+    public LinkedList<GroundData> getPheromones() {
         return pheromones;
     }
 }

@@ -1,44 +1,31 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Pheromone extends Sprite{
-    private String name;
-    private int r, g, b;
+public class Pheromone extends GroundData{
     private double evaporation;
     private double value;
     private double increment;
     private int reward;
+    private int extRew;
 
     public Pheromone(int x, int y, int width, int height, String name, double increment, int r, int g, int b, int reward) {
-        super(x,y);
-        this.name = name;
+        super(name, x,y, width, height, r, g, b);
         this.r = r;
         this.g = g;
         this.b = b;
         this.value = 0;
         this.increment = increment;
-        this.evaporation = 0.99; //TODO figure out what this means
+        this.evaporation = 0.99;
         this.reward = reward;
-
-        Rectangle rec = drawRectangle(x, y, width, height);
-        Color c = Color.rgb( r, g, b, 0);
-        rec.setFill(c);
-        this.node = rec;
     }
 
     public Pheromone(int x, int y, int width, int height, String name, int r, int g, int b, double evaporation) {
-        super(x,y);
-        this.name = name;
+        super(name, x,y, width, height, r, g, b);
         this.r = r;
         this.g = g;
         this.b = b;
         this.value = 0;
         this.evaporation = evaporation;
-
-        Rectangle rec = drawRectangle(x, y, width, height);
-        Color c = new Color(r, g, b, 0);
-        rec.setFill(c);
-        this.node = rec;
     }
 
     @Override
@@ -55,6 +42,11 @@ public class Pheromone extends Sprite{
             Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), this.value);
             r.setFill(newC);
         }
+        if(c.getOpacity() < 0.00001){
+            this.value = 0;
+            Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), this.value);
+            r.setFill(newC);
+        }
     }
 
     public void addValue(){
@@ -63,38 +55,6 @@ public class Pheromone extends Sprite{
 
     public void evaporate(Color c){
         this.value *= evaporation;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getRed() {
-        return r;
-    }
-
-    public void setRed(int r) {
-        this.r = r;
-    }
-
-    public int getGreen() {
-        return g;
-    }
-
-    public void setGreen(int g) {
-        this.g = g;
-    }
-
-    public int getBlue() {
-        return b;
-    }
-
-    public void setBlue(int b) {
-        this.b = b;
     }
 
     public double getEvaporation() {
