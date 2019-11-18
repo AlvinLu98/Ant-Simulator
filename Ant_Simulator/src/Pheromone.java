@@ -42,7 +42,7 @@ public class Pheromone extends GroundData{
             Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), this.value);
             r.setFill(newC);
         }
-        if(c.getOpacity() < 0.00001){
+        if(c.getOpacity() < 0.001){
             this.value = 0;
             Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), this.value);
             r.setFill(newC);
@@ -53,7 +53,7 @@ public class Pheromone extends GroundData{
         this.value += increment;
     }
 
-    public void evaporate(Color c){
+    private void evaporate(Color c){
         this.value *= evaporation;
     }
 

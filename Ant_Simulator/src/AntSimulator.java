@@ -2,8 +2,6 @@ import javafx.animation.Animation;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -11,7 +9,6 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
@@ -21,32 +18,36 @@ public class AntSimulator extends Simulator{
     private int numAnt; //number of ants to create
     private int homeX, homeY; //location of hive
     private static int velX = 4, velY = 4; //location of hive
-    public static LinkedHashMap<Coordinate, PheromoneData> pheromoneLoc;
+    private static LinkedHashMap<Coordinate, PheromoneData> pheromoneLoc;
     public long sec = 0;
+    private ObstacleData od;
 
     /**
      * Default constructor for Ant simulator
      * @param fps frames per second
      */
-    public AntSimulator(int fps){
+    AntSimulator(int fps){
         super(fps);
         this.numAnt = 500;
+        this.od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     /**
-     * Contructor that defines the number of ants
-     * @param fps
-     * @param ants
+     * Creates an ant simulator specified number of ants and fps
+     * @param fps frames per second
+     * @param ants number of ants
      */
     public AntSimulator(int fps, int ants){
         super(fps);
         this.numAnt = ants;
+        this.od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     public AntSimulator(int numAnt, int homeX, int homeY) {
         this.numAnt = numAnt;
         this.homeX = homeX;
         this.homeY = homeY;
+        od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     public AntSimulator(int numAnt, int homeX, int homeY, int velX, int velY) {
@@ -55,6 +56,7 @@ public class AntSimulator extends Simulator{
         this.homeY = homeY;
         AntSimulator.velX = velX;
         AntSimulator.velY = velY;
+        od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     /**
@@ -69,8 +71,10 @@ public class AntSimulator extends Simulator{
         primaryStage.setScene(this.scene); //add the scene to the stage
 
         Random r = new Random();
-        this.homeX = getKeyX(r.nextInt(WIDTH)); //generate random x location for hive
-        this.homeY = getKeyY(r.nextInt(HEIGHT)); //generate random y location for the hive
+        do {
+            this.homeX = getKeyX(r.nextInt(WIDTH)); //generate random x location for hive
+            this.homeY = getKeyY(r.nextInt(HEIGHT)); //generate random y location for the hive
+        }while(isWithinObstacle(this.homeX, this.homeY));
         pheromoneLoc = new LinkedHashMap<>();
 
         //Generates the item in the simulator
@@ -85,15 +89,11 @@ public class AntSimulator extends Simulator{
 
         final Duration oneFrameAmt = Duration.millis(1000/fps);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
-                new EventHandler<ActionEvent>() {
-
-                    @Override
-                    public void handle(ActionEvent event) {
-                        handler.tick();
-                        updatePheromone();
-                        checkCollision();
-                        handler.cleanUp();
-                    }
+                event -> {
+                    handler.tick();
+                    updatePheromone();
+                    checkCollision();
+                    handler.cleanUp();
                 });
         Simulator.timeline = new Timeline();
         Simulator.timeline.setCycleCount(Animation.INDEFINITE);
@@ -115,7 +115,7 @@ public class AntSimulator extends Simulator{
      * Checks ants to different sprites
      * @param s current sprite
      * @param c sprite to check collision against
-     * @return
+     * @return true if the sprites collides
      */
     @Override
     public boolean handleCollision(Sprite s, Sprite c){
@@ -148,7 +148,7 @@ public class AntSimulator extends Simulator{
         return false;
     }
 
-    public void updatePheromone() {
+    private void updatePheromone() {
         for (Sprite s : this.handler.getObjects()) {
             if (s instanceof Ant) {
                 Ant a = (Ant) s;
@@ -168,17 +168,15 @@ public class AntSimulator extends Simulator{
         }
 
         //https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
-        if(sec != currentTime) {
-            sec = currentTime;
-            Iterator it = pheromoneLoc.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pair = (Map.Entry) it.next();
-                PheromoneData pd = (PheromoneData) pair.getValue();
-                for (GroundData p : pd.getPheromones()) {
-                    p.tick();
-                }
+//        if(sec != currentTime) {
+//            sec = currentTime;
+        for (Map.Entry<Coordinate, PheromoneData> coordinatePheromoneDataEntry : pheromoneLoc.entrySet()) {
+            PheromoneData pd = (PheromoneData) ((Map.Entry) coordinatePheromoneDataEntry).getValue();
+            for (GroundData p : pd.getPheromones()) {
+                p.tick();
             }
         }
+//        }
     }
 
     /**
@@ -187,7 +185,7 @@ public class AntSimulator extends Simulator{
      * @param x location in x-axis
      * @param y location in y-axis
      */
-    public void generateAnts(int amt, int x, int y, int velX, int velY){
+    private void generateAnts(int amt, int x, int y, int velX, int velY){
         Ant ant;
         for(int i = 0; i < amt; i++){
             ant = new Ant(x, y, velX, velY);
@@ -199,7 +197,7 @@ public class AntSimulator extends Simulator{
     /**
      * Generates the hive at the selected point
      */
-    public void generateHive(){
+    private void generateHive(){
         Hive hive = new Hive(this.homeX, this.homeY);
         this.handler.addObject(hive);
         this.root.getChildren().add(hive.getNode());
@@ -208,11 +206,14 @@ public class AntSimulator extends Simulator{
     /**
      * Generate food item at a random location
      */
-    public void generateFood(int amt){
+    private void generateFood(int amt){
         for(int i = 0; i < amt; i++) {
             Random r = new Random();
-            int x = r.nextInt(Simulator.WIDTH);
-            int y = r.nextInt(Simulator.HEIGHT);
+            int x, y;
+            do{
+                x = r.nextInt(Simulator.WIDTH);
+                y = r.nextInt(Simulator.HEIGHT);
+            }while(isWithinObstacle(x,y));
             Food food = new Food(x, y);
 
             this.handler.addObject(food);
@@ -220,20 +221,22 @@ public class AntSimulator extends Simulator{
         }
     }
 
+    private boolean isWithinObstacle(int x, int y){
+        boolean[][] points = od.getPoints();
+        return points[getKeyX(x)/velX][getKeyY(y)/velY];
+    }
+
     /**
      * Generates a HashMap containing pheromone data of the whole window
      * @param velX speed of the ants in x
-     * @param velX speed of thr ants in y
+     * @param velY speed of thr ants in y
      */
-    public void  generateMap(int velX, int velY) {
-        ObstacleData od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
-        od.oneObstacle();
-        int[][] points = od.getPoints();
+    private void  generateMap(int velX, int velY) {
+        od.twoObstacle();
         for (int x = 0; x <= Simulator.WIDTH + velX; x += velX) {
             for (int y = 0; y <= Simulator.HEIGHT + velY; y += velY) {
-                PheromoneData p = new PheromoneData(x, y, velX, velY);
-                p = createPheromones(x, y, velX, velY);
-                if(points[getKeyX(x)/velX][getKeyY(y)/velY] == 1){
+                PheromoneData p = createPheromones(x, y, velX, velY);
+                if(isWithinObstacle(x,y)){
                     Obstacle o = new Obstacle(x, y, velX, velY, 205, 133, 63);
                     p.addData(o);
                     this.root.getChildren().add(o.getNode());
@@ -244,7 +247,7 @@ public class AntSimulator extends Simulator{
         }
     }
 
-    public PheromoneData createPheromones(int x, int y, int velX, int velY){
+    private PheromoneData createPheromones(int x, int y, int velX, int velY){
         PheromoneData p = new PheromoneData(x, y, velX, velY);
         Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.3,255,0,0, 10);
         Pheromone home = new Pheromone(x, y, velX, velY, "Home",0.05, 0,0,255, 1);
@@ -263,10 +266,10 @@ public class AntSimulator extends Simulator{
      * @param y location in y
      * @return LinkedList of surrounding pheromones
      */
-    public static Surrounding getSurrounding(int x, int y){
+    static Surrounding getSurrounding(int x, int y){
         Surrounding surrounding = new Surrounding();
-        int keyX = (int)(x/velX)*4;
-        int keyY = (int)(y/velY)*4;
+        int keyX = (x/velX) *4;
+        int keyY = (y/velY) *4;
 
         if(keyY - velY >= 0){
             if(keyX - velX >= 0){
@@ -304,8 +307,8 @@ public class AntSimulator extends Simulator{
         return surrounding;
     }
 
-    public static int getKeyX(int x){
-        int smaller = (int)(x/velX)*velX;
+    private static int getKeyX(int x){
+        int smaller = (x/velX) *velX;
         int bigger = smaller + velX;
         if(smaller < 0){
             return bigger;
@@ -314,8 +317,8 @@ public class AntSimulator extends Simulator{
 
     }
 
-    public static int getKeyY(int y){
-        int smaller = (int)(y/velY)*velY;
+    private static int getKeyY(int y){
+        int smaller = (y/velY) *velY;
         int bigger = smaller + velY;
         if(smaller < 0){
             return bigger;
@@ -325,7 +328,7 @@ public class AntSimulator extends Simulator{
 
     /**
      * Set the number of ants
-     * @param ants
+     * @param ants Number of ants
      */
     public void setNumAnt(int ants){
         this.numAnt = ants;

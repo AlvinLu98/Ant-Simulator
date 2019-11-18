@@ -50,44 +50,32 @@ public abstract class Sprite {
      * Check if sprite is moving outside of screen in x-axis
      */
     public boolean boundaryX(){
-        if((c.getX() + node.getTranslateX() + velX) < 0
-                || c.getX() + node.getTranslateX() +  velX > (AntSimulator.WIDTH) ){
-//            this.velX *= -1;
-            return true;
-        }
-        return false;
+        //            this.velX *= -1;
+        return (c.getX() + node.getTranslateX() + velX) < 0
+                || c.getX() + node.getTranslateX() + velX > (AntSimulator.WIDTH);
     }
 
     public boolean boundaryNegX(){
-        if((c.getX() + node.getTranslateX() - velX) < 0
-                || c.getX() + node.getTranslateX() -  velX > (AntSimulator.WIDTH) ){
-//            this.velX *= -1;
-            return true;
-        }
-        return false;
+        //            this.velX *= -1;
+        return (c.getX() + node.getTranslateX() - velX) < 0
+                || c.getX() + node.getTranslateX() - velX > (AntSimulator.WIDTH);
     }
 
     /**
      * Check if sprite is moving outside of screen in y-axis
      */
     public boolean boundaryY(){
-        if((this.c.getY() + node.getTranslateY() + velY) < 0
+        //            this.velY *= -1;
+        return (this.c.getY() + node.getTranslateY() + velY) < 0
                 || (this.c.getY() + node.getTranslateY() + velY) >
-                (AntSimulator.HEIGHT) ){
-//            this.velY *= -1;
-            return true;
-        }
-        return false;
+                (AntSimulator.HEIGHT);
     }
 
     public boolean boundaryNegY(){
-        if((this.c.getY() + node.getTranslateY() - velY) < 0
+        //            this.velY *= -1;
+        return (this.c.getY() + node.getTranslateY() - velY) < 0
                 || (this.c.getY() + node.getTranslateY() - velY) >
-                (AntSimulator.HEIGHT) ){
-//            this.velY *= -1;
-            return true;
-        }
-        return false;
+                (AntSimulator.HEIGHT);
     }
 
     public static Rectangle drawRectangle(int x, int y, int width, int height){

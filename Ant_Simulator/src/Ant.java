@@ -36,7 +36,7 @@ public class Ant extends Sprite {
         this.dead = false;
         this.blocked = new ArrayList<>();
 
-        Circle circle = drawCircle(x, y, this.rad);
+        Circle circle = drawCircle(x, y, rad);
         circle.setFill(Color.BLACK);
         this.node = circle;
 
@@ -93,6 +93,10 @@ public class Ant extends Sprite {
         }
     }
 
+    /**
+     *
+     * @param direction
+     */
     private void move(int direction){
         Random r = new Random();
         int i = 100;
@@ -267,6 +271,7 @@ public class Ant extends Sprite {
         return direction;
     }
 
+    //TODO fix with obstacles
     public int findDirectionHomeNoPheromone(){
         ArrayList<PheromoneData> surrounding = (AntSimulator.getSurrounding(this.getCurX(), this.getCurY()))
                 .getInList();
@@ -537,10 +542,7 @@ public class Ant extends Sprite {
     public boolean antCollision(Ant other){
         Circle thisAnt = this.getBounds(rad);
         Circle otherAnt = other.getBounds(rad);
-        if(thisAnt.getBoundsInParent().intersects(otherAnt.getBoundsInParent())){
-            return true;
-        }
-        return false;
+        return thisAnt.getBoundsInParent().intersects(otherAnt.getBoundsInParent());
     }
 
     /**
@@ -551,19 +553,13 @@ public class Ant extends Sprite {
     public boolean foodCollision(Food other){
         Circle thisAnt = this.getBounds(rad);
         Circle food = other.getBounds(Food.rad);
-        if(thisAnt.getBoundsInParent().intersects(food.getBoundsInParent())){
-            return true;
-        }
-        return false;
+        return thisAnt.getBoundsInParent().intersects(food.getBoundsInParent());
     }
 
     public boolean hiveCollision(Hive other){
         Circle thisAnt = this.getBounds(rad);
         Circle hive = other.getBounds(Food.rad);
-        if(thisAnt.getBoundsInParent().intersects(hive.getBoundsInParent())){
-            return true;
-        }
-        return false;
+        return thisAnt.getBoundsInParent().intersects(hive.getBoundsInParent());
     }
 
     /**

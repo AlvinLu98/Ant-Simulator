@@ -13,7 +13,7 @@ public enum Direction {
 
     private int d;
 
-    private Direction(int i){
+    Direction(int i){
         this.d = i;
     }
 

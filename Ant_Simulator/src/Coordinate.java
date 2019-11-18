@@ -51,9 +51,7 @@ public class Coordinate {
         }
         else if(obj instanceof Coordinate){
             Coordinate c = (Coordinate)obj;
-            if(this.x == c.getX() && this.y == c.getY()){
-                return true;
-            }
+            return this.x == c.getX() && this.y == c.getY();
         }
         return false;
     }
