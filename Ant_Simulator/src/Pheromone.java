@@ -8,14 +8,15 @@ public class Pheromone extends GroundData{
     private int reward;
     private int extRew;
 
-    public Pheromone(int x, int y, int width, int height, String name, double increment, int r, int g, int b, int reward) {
+    public Pheromone(int x, int y, int width, int height, String name, double increment, int r, int g, int b, int reward,
+                     double evaporation) {
         super(name, x,y, width, height, r, g, b);
         this.r = r;
         this.g = g;
         this.b = b;
         this.value = 0;
         this.increment = increment;
-        this.evaporation = 0.99;
+        this.evaporation = evaporation;
         this.reward = reward;
     }
 
