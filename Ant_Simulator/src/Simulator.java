@@ -48,6 +48,10 @@ public abstract class Simulator{
         buildLoop();
     }
 
+    /**
+     * Constructor with specificed fps
+     * @param fps frames per second
+     */
     public Simulator(final int fps) {
         this.fps = fps;
         this.handler = new Handler();
@@ -60,27 +64,27 @@ public abstract class Simulator{
      */
     protected void buildLoop(){
 
-        final Duration oneFrameAmt = Duration.millis(1000/fps);
+        final Duration oneFrameAmt = Duration.millis(1000/fps); //How often frame is updated
+        /* Method for updating frames */
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                 new EventHandler<ActionEvent>() {
-
                     @Override
                     public void handle(ActionEvent event) {
-                        handler.tick();
-                        checkCollision();
+                        handler.tick(); //updates values for all sprites using overloaded tick method
+                        checkCollision(); //check for collision between sprites
                     }
                 });
-        Simulator.timeline = new Timeline();
+        Simulator.timeline = new Timeline(); //time counter
         Simulator.timeline.setCycleCount(Animation.INDEFINITE);
         Simulator.timeline.setAutoReverse(true);
         Simulator.timeline.getKeyFrames().add(oneFrame);
 
+        //Counts time elapsed
         Simulator.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
                 long cur = System.currentTimeMillis()/1000;
                 currentTime = cur - startTime;
-                System.out.println(currentTime);
             }
         };
     }
@@ -89,7 +93,7 @@ public abstract class Simulator{
      * Initialize game world by updating the JavaFX Stage
      * @param primaryStage
      */
-   public abstract void initialize(final Stage primaryStage);
+    public abstract void initialize(final Stage primaryStage);
 
 
     /**

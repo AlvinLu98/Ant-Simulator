@@ -22,14 +22,21 @@ import java.util.Random;
 
 public class AntSimulator extends Simulator{
 
+    /* ------------------------------ Simulator data ------------------------------*/
+
     private int numAnt, numFood = 1; //number of ants to create
     private int homeX, homeY; //location of hive
     private double evaporationRate = 0.9;
     private static int velX = 4, velY = 4; //location of hive
     private static LinkedHashMap<Coordinate, PheromoneData> pheromoneLoc;
-    public long sec = 0;
     private ObstacleData od;
     private String obstacleType;
+
+    private boolean setUpHive = true, setUpFood = false;
+
+    /* ---------------------------------------------------------------------------*/
+
+    /* ------------------------------ Constructors ------------------------------*/
 
     /**
      * Default constructor for Ant simulator
@@ -52,6 +59,12 @@ public class AntSimulator extends Simulator{
         this.od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
+    /**
+     * Creates an ant simulator with a given home location and number of ants;
+     * @param numAnt number of ants for the simulator
+     * @param homeX x location of the hive
+     * @param homeY y location of the hive
+     */
     public AntSimulator(int numAnt, int homeX, int homeY) {
         this.numAnt = numAnt;
         this.homeX = homeX;
@@ -59,6 +72,14 @@ public class AntSimulator extends Simulator{
         od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
+    /**
+     * Creates an ant simulator with specified home location, number of ants and their velocity
+     * @param numAnt number of ants
+     * @param homeX x location of home
+     * @param homeY y location of home
+     * @param velX x velocity
+     * @param velY y velocity
+     */
     public AntSimulator(int numAnt, int homeX, int homeY, int velX, int velY) {
         this.numAnt = numAnt;
         this.homeX = homeX;
@@ -68,9 +89,13 @@ public class AntSimulator extends Simulator{
         od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
+    /* ---------------------------------------------------------------------------*/
+
+    /* ------------------------------ Overridden methods ------------------------------*/
+
     /**
-     * Initialises the simulator
-     * @param primaryStage
+     * Initialises the scene
+     * @param primaryStage stage where the scene will be initialised
      */
     @Override
     public void initialize(final Stage primaryStage){
@@ -97,9 +122,12 @@ public class AntSimulator extends Simulator{
         generateMap(velX, velY);
         generateHive();
         generateAnts(numAnt, this.homeX, this.homeY, velX, velY);
-        generateFood(numFood);
+        generateRandomFood(numFood);
     }
 
+    /**
+     * Builds the frame loop
+     */
     @Override
     protected void buildLoop(){
 
@@ -127,11 +155,10 @@ public class AntSimulator extends Simulator{
     }
 
     /**
-     * Overridden method
-     * Checks ants to different sprites
+     * Handles collision detection and collision pre-processing
      * @param s current sprite
      * @param c sprite to check collision against
-     * @return true if the sprites collides
+     * @return true if there is collision between the sprites
      */
     @Override
     public boolean handleCollision(Sprite s, Sprite c){
@@ -164,12 +191,28 @@ public class AntSimulator extends Simulator{
         return false;
     }
 
+    /* --------------------------------------------------------------------------------*/
+
     private void createEvents(){
         root.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println(event.getSceneX());
                 System.out.println(event.getSceneY());
+
+                int x = getKeyX((int)event.getSceneX());
+                int y = getKeyY((int)event.getSceneY());
+                Coordinate c = new Coordinate(x, y);
+
+                if(setUpHive){
+                    homeX = x;
+                    homeY = y;
+                }
+                else if(setUpFood){
+                    if(!generateFood(x, y)){
+                        System.out.println("Invalid location!");
+                    }
+                }
             }
         });
     }
@@ -244,7 +287,7 @@ public class AntSimulator extends Simulator{
     /**
      * Generate food item at a random location
      */
-    private void generateFood(int amt){
+    private void generateRandomFood(int amt){
         for(int i = 0; i < amt; i++) {
             Random r = new Random();
             int x, y;
@@ -257,6 +300,17 @@ public class AntSimulator extends Simulator{
             this.handler.addObject(food);
             this.root.getChildren().add(food.getNode());
         }
+    }
+
+    public boolean generateFood(int x, int y){
+        if(!isWithinObstacle(x, y)){
+            Food food = new Food(x, y);
+
+            this.handler.addObject(food);
+            this.root.getChildren().add(food.getNode());
+            return true;
+        }
+        return false;
     }
 
     private boolean isWithinObstacle(int x, int y){

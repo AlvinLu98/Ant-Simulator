@@ -1,4 +1,9 @@
+import javafx.animation.Animation;
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -8,14 +13,20 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Display extends Application {
+    public static AnimationTimer timer;
+    public static Timeline timeline;
+    public static long startTime = 0;
+    public static long currentTime = 0;
+    public static Label time;
+
     private Simulator sim = new AntSimulator(60); //Creates an ant simulator
     private GridPane grid;
     private Scene scene;
@@ -165,13 +176,21 @@ public class Display extends Application {
 
     private void beginSimulation(Stage primaryStage){
         sim.initialize(primaryStage);
-        sim.buildLoop();
-        sim.beginSimulation();
         createMenu();
+
+        sim.buildLoop();
+        buildMenuLoop();
+
         primaryStage.show();
+        menuStage.show();
+
+        sim.beginSimulation();
+        beginMenuTimer();
     }
 
     private void createMenu(){
+        startTime = System.currentTimeMillis();
+
         //https://coderanch.com/t/620036/java/Stage-corner-screen
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
 
@@ -181,20 +200,69 @@ public class Display extends Application {
         menuStage.setY(screenSize.getMinY() + 20);
 
         TabPane tabs = new TabPane();
+        //https://stackoverflow.com/questions/31531059/how-to-remove-close-button-from-tabs-in-javafx
+        tabs.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
         Scene menuScene = new Scene(tabs, 500,500);
 
         Tab controls = new Tab();
         controls.setText("Controls");
 
-        VBox controlBox = new VBox();
+        GridPane controlBox = new GridPane();
+        controlBox.setHgap(10);
+        controlBox.setVgap(10);
+        controlBox.setPadding(new Insets(25,25,25,25));
+
+        time = new Label(String.valueOf(currentTime));
+        controlBox.add(time, 0,0);
 
         controls.setContent(controlBox);
 
-
         tabs.getTabs().add(controls);
 
+        createMenuEvents();
         menuStage.setScene(menuScene);
-        menuStage.show();
+    }
+
+    private void buildSetUp(){
+        //https://coderanch.com/t/620036/java/Stage-corner-screen
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+
+        menuStage = new Stage();
+        menuStage.setTitle("Set up");
+        menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 700);
+        menuStage.setY(screenSize.getMinY() + 20);
+    }
+
+    private void buildMenuLoop(){
+        //https://asgteach.com/2011/10/javafx-animation-and-binding-simple-countdown-timer-2/
+        final Duration oneFrameAmt = Duration.millis(1000/60);
+        final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
+                event -> {
+                        time.setText(String.valueOf(currentTime));
+                });
+        timeline = new Timeline();
+        timeline.setCycleCount(Animation.INDEFINITE);
+        timeline.setAutoReverse(true);
+        timeline.getKeyFrames().add(oneFrame);
+
+        timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                currentTime = System.currentTimeMillis() - startTime;
+            }
+        };
+    }
+
+    private void beginMenuTimer(){
+        Display.timeline.play();
+        Display.timer.start();
+    }
+
+    private void createMenuEvents(){
+        //https://www.programcreek.com/java-api-examples/?class=javafx.stage.Stage&method=setOnCloseRequest
+        menuStage.setOnCloseRequest(event -> {
+            Platform.exit();
+        });
     }
 
     //https://www.geeksforgeeks.org/program-check-input-integer-string/
