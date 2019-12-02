@@ -3,26 +3,31 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class AntSimulator extends Simulator{
 
-    /* ------------------------------ Simulator data ------------------------------*/
+    /* ---------------------------------- Simulator data ----------------------------------*/
 
     private int numAnt, numFood = 1; //number of ants to create
     private int homeX, homeY; //location of hive
@@ -32,11 +37,13 @@ public class AntSimulator extends Simulator{
     private ObstacleData od;
     private String obstacleType;
 
-    private boolean setUpHive = true, setUpFood = false;
+    private boolean setUpHive = false, setUpFood = false;
+    private int foodCount = 0;
+    private Parent message;
 
-    /* ---------------------------------------------------------------------------*/
+    /* ------------------------------------------------------------------------------------*/
 
-    /* ------------------------------ Constructors ------------------------------*/
+    /* ----------------------------------- Constructors -----------------------------------*/
 
     /**
      * Default constructor for Ant simulator
@@ -89,9 +96,9 @@ public class AntSimulator extends Simulator{
         od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
-    /* ---------------------------------------------------------------------------*/
+    /* -------------------------------------------------------------------------------------*/
 
-    /* ------------------------------ Overridden methods ------------------------------*/
+    /* -------------------------------- Overridden methods ---------------------------------*/
 
     /**
      * Initialises the scene
@@ -99,30 +106,25 @@ public class AntSimulator extends Simulator{
      */
     @Override
     public void initialize(final Stage primaryStage){
+        /* ------------------------------ Load from XML ------------------------------ */
+        try{
+            message = FXMLLoader.load(getClass().getResource("SetUp.fxml"));
+        }catch (IOException e){
+            System.out.println("Failed to load Set up fxml file");
+        }
+        /* --------------------------------------------------------------------------- */
+
+        this.rootNode = new Group();
+        this.scene = new Scene(this.rootNode,WIDTH,HEIGHT,Color.WHITE); //creates a scene to display the objects
+        primaryStage.setScene(this.scene); //add the scene to the stage
         primaryStage.setTitle("Ant simulator"); //Set the title of the window
 
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
         primaryStage.setX(screenSize.getMinX() + 20);
         primaryStage.setY(screenSize.getMinY() + 20);
 
-        this.root = new Group(); //create a group to contain sprite objects
-        this.scene = new Scene(this.root,WIDTH,HEIGHT,Color.WHITE); //creates a scene to display the objects
-        primaryStage.setScene(this.scene); //add the scene to the stage
-
-        createEvents();
-
-        Random r = new Random();
-        do {
-            this.homeX = getKeyX(r.nextInt(WIDTH)); //generate random x location for hive
-            this.homeY = getKeyY(r.nextInt(HEIGHT)); //generate random y location for the hive
-        }while(isWithinObstacle(this.homeX, this.homeY));
         pheromoneLoc = new LinkedHashMap<>();
-        //Generates the item in the simulator
-//        generateMenuBar();
         generateMap(velX, velY);
-        generateHive();
-        generateAnts(numAnt, this.homeX, this.homeY, velX, velY);
-        generateRandomFood(numFood);
     }
 
     /**
@@ -191,10 +193,32 @@ public class AntSimulator extends Simulator{
         return false;
     }
 
-    /* --------------------------------------------------------------------------------*/
+    /* -------------------------------------------------------------------------------------*/
 
-    private void createEvents(){
-        root.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    /* ------------------------------------ Setting up -------------------------------------*/
+    public void setUp(){
+        selectLocation();
+
+        final Duration oneFrameAmt = Duration.millis(1000/fps);
+        final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
+                event -> {
+                    if(setUpFood && setUpFood){
+
+                        Simulator.timeline.stop();
+                    }
+                });
+        Simulator.timeline = new Timeline();
+        Simulator.timeline.setCycleCount(Animation.INDEFINITE);
+        Simulator.timeline.setAutoReverse(true);
+        Simulator.timeline.getKeyFrames().add(oneFrame);
+        Simulator.timeline.play();
+
+        //Generates ants in the simulator
+        generateAnts(numAnt, this.homeX, this.homeY, velX, velY);
+    }
+
+    public void selectLocation(){
+        rootNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 System.out.println(event.getSceneX());
@@ -202,20 +226,34 @@ public class AntSimulator extends Simulator{
 
                 int x = getKeyX((int)event.getSceneX());
                 int y = getKeyY((int)event.getSceneY());
-                Coordinate c = new Coordinate(x, y);
 
-                if(setUpHive){
-                    homeX = x;
-                    homeY = y;
-                }
-                else if(setUpFood){
-                    if(!generateFood(x, y)){
-                        System.out.println("Invalid location!");
+                if(!isWithinObstacle(x,y)){
+                    if(!setUpHive) {
+                        homeX = x;
+                        homeY = y;
+                        generateHive();
+                        setUpHive = true;
+                        Text t = (Text)message.lookup("#instruction");
+                        t.setText("Please select food location");
+                        System.out.println(t.getText());
                     }
+                    else if(!setUpFood && foodCount < numFood){
+                        generateFood(x,y);
+                        foodCount++;
+                    }
+                    else{
+                        setUpFood = true;
+                    }
+                }
+                else{
+                    Alert a = new Alert(Alert.AlertType.WARNING);
+                    a.setContentText("Invalid location!");
                 }
             }
         });
     }
+
+    /* --------------------------------------------------------------------------------*/
 
     private void updatePheromone() {
         for (Sprite s : this.handler.getObjects()) {
@@ -236,16 +274,12 @@ public class AntSimulator extends Simulator{
             }
         }
 
-        //https://stackoverflow.com/questions/1066589/iterate-through-a-hashmap
-//        if(sec != currentTime) {
-//            sec = currentTime;
         for (Map.Entry<Coordinate, PheromoneData> coordinatePheromoneDataEntry : pheromoneLoc.entrySet()) {
             PheromoneData pd = (PheromoneData) ((Map.Entry) coordinatePheromoneDataEntry).getValue();
             for (GroundData p : pd.getPheromones()) {
                 p.tick();
             }
         }
-//        }
     }
 
     private void generateMenuBar(){
@@ -257,7 +291,7 @@ public class AntSimulator extends Simulator{
 
         menu.getMenus().addAll(file, edit, view);
         VBox box = new VBox(menu);
-        this.root.getChildren().add(box);
+        this.rootNode.getChildren().add(box);
     }
 
     /**
@@ -271,7 +305,7 @@ public class AntSimulator extends Simulator{
         for(int i = 0; i < amt; i++){
             ant = new Ant(x, y, velX, velY);
             this.handler.addObject(ant);
-            this.root.getChildren().add(ant.getNode());
+            this.rootNode.getChildren().add(ant.getNode());
         }
     }
 
@@ -281,7 +315,7 @@ public class AntSimulator extends Simulator{
     private void generateHive(){
         Hive hive = new Hive(this.homeX, this.homeY);
         this.handler.addObject(hive);
-        this.root.getChildren().add(hive.getNode());
+        this.rootNode.getChildren().add(hive.getNode());
     }
 
     /**
@@ -298,7 +332,7 @@ public class AntSimulator extends Simulator{
             Food food = new Food(x, y);
 
             this.handler.addObject(food);
-            this.root.getChildren().add(food.getNode());
+            this.rootNode.getChildren().add(food.getNode());
         }
     }
 
@@ -307,7 +341,7 @@ public class AntSimulator extends Simulator{
             Food food = new Food(x, y);
 
             this.handler.addObject(food);
-            this.root.getChildren().add(food.getNode());
+            this.rootNode.getChildren().add(food.getNode());
             return true;
         }
         return false;
@@ -336,7 +370,7 @@ public class AntSimulator extends Simulator{
                 if(isWithinObstacle(x,y)){
                     Obstacle o = new Obstacle(x, y, velX, velY, 205, 133, 63);
                     p.addData(o);
-                    this.root.getChildren().add(o.getNode());
+                    this.rootNode.getChildren().add(o.getNode());
                 }
                 else{
                     p = createPheromones(x, y, velX, velY);
@@ -357,8 +391,8 @@ public class AntSimulator extends Simulator{
         p.addData(food);
         p.addData(home);
 
-        this.root.getChildren().add(food.getNode());
-        this.root.getChildren().add(home.getNode());
+        this.rootNode.getChildren().add(food.getNode());
+        this.rootNode.getChildren().add(home.getNode());
         return p;
     }
 

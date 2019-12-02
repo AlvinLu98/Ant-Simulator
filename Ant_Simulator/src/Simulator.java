@@ -4,6 +4,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -27,7 +28,7 @@ public abstract class Simulator{
     protected Scene scene;
 
     /** Contains all nodes to be displayed on screen */
-    protected Group root;
+    protected Group rootNode;
 
     /** loop for simulator */
     protected static Timeline timeline;
@@ -93,6 +94,7 @@ public abstract class Simulator{
      * Initialize game world by updating the JavaFX Stage
      * @param primaryStage
      */
+    @FXML
     public abstract void initialize(final Stage primaryStage);
 
 
@@ -151,7 +153,7 @@ public abstract class Simulator{
      * @return javafx.scene.Group
      */
     public Group getGroup() {
-        return root;
+        return rootNode;
     }
 
     /**
@@ -159,7 +161,7 @@ public abstract class Simulator{
      * @param root
      */
     public void setGroup(Group root) {
-        this.root = root;
+        this.rootNode = root;
     }
 
     /**
