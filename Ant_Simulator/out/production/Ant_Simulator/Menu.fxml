@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--https://stackoverflow.com/questions/31531059/how-to-remove-close-button-from-tabs-in-javafx -->
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
+<?import java.lang.String?>
 <TabPane xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          fx:controller="Menu_Controller"
@@ -14,18 +14,39 @@
     <Tab text="Control">
         <GridPane hgap="10" vgap="10">
             <padding><Insets top="25" right="25" bottom="25" left="25"/> </padding>
-            <Text fx:id="time" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Label text="No. of Ants: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="antNoTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-            <HBox fx:id="playBox" spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="31" GridPane.rowIndex="39" prefWidth="200">
-                <Button text="Play" onAction="#play"/>
+            <Label text="Evaporation rate: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="evaporationBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Number of food item: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField fx:id="foodAmtBox" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+            <Label text="Type of obstacle: " GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <ComboBox fx:id="obstacleType" promptText="--- Choose an Obstacle ---" minWidth="200.0" GridPane.columnIndex="1"
+                      GridPane.rowIndex="4">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="No Obstacle"/>
+                        <String fx:value="One Obstacle"/>
+                        <String fx:value="Two Obstacle"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+
+            <Text fx:id="time" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+
+            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="25" prefWidth="100">
+                <Button text="Play" onAction="#play" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="32" GridPane.rowIndex="39" prefWidth="200">
-                <Button text="Pause" onAction="#pause"/>
+            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="25" prefWidth="100">
+                <Button text="Pause" onAction="#pause" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="stopBox" spacing="10" alignment="CENTER_RIGHT" GridPane.columnIndex="33" GridPane.rowIndex="39" prefWidth="200">
-                <Button text="Stop" onAction="#stop"/>
+            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="25" prefWidth="100">
+                <Button text="Stop" onAction="#stop"  minWidth="80"/>
             </HBox>
         </GridPane>
     </Tab>

@@ -71,6 +71,7 @@ public class Menu_Controller {
     }
 
     public void stop(){
+        paused = false;
         stopped = true;
         Display.timeline.stop();
         Ant_Simulator.timeline.stop();

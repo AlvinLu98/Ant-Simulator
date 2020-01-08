@@ -145,5 +145,7 @@ public class Initial_Form_Controller {
         Display.menuStage.setOnCloseRequest(event -> {
             Platform.exit();
         });
+
+        Display.menuStage.setResizable(false);
     }
 }
