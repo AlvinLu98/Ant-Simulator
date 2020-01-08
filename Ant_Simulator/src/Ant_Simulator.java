@@ -21,11 +21,12 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class AntSimulator extends Simulator{
+public class Ant_Simulator extends Simulator{
 
     /* ---------------------------------- Simulator data ----------------------------------*/
 
@@ -33,8 +34,9 @@ public class AntSimulator extends Simulator{
     private int homeX, homeY; //location of hive
     private double evaporationRate = 0.9;
     private static int velX = 4, velY = 4; //location of hive
-    private static LinkedHashMap<Coordinate, PheromoneData> pheromoneLoc;
-    private ObstacleData od;
+    private static LinkedHashMap<Coordinate, Pheromone_Data> pheromoneLoc;
+    private ArrayList<Coordinate> foodCoordinate = new ArrayList<>();
+    private Obstacle_Data od;
     private String obstacleType;
 
     private boolean setUpHive = false, setUpFood = false;
@@ -49,10 +51,10 @@ public class AntSimulator extends Simulator{
      * Default constructor for Ant simulator
      * @param fps frames per second
      */
-    AntSimulator(int fps){
+    Ant_Simulator(int fps){
         super(fps);
         this.numAnt = 500;
-        this.od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
+        this.od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     /**
@@ -60,10 +62,10 @@ public class AntSimulator extends Simulator{
      * @param fps frames per second
      * @param ants number of ants
      */
-    public AntSimulator(int fps, int ants){
+    public Ant_Simulator(int fps, int ants){
         super(fps);
         this.numAnt = ants;
-        this.od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
+        this.od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     /**
@@ -72,11 +74,11 @@ public class AntSimulator extends Simulator{
      * @param homeX x location of the hive
      * @param homeY y location of the hive
      */
-    public AntSimulator(int numAnt, int homeX, int homeY) {
+    public Ant_Simulator(int numAnt, int homeX, int homeY) {
         this.numAnt = numAnt;
         this.homeX = homeX;
         this.homeY = homeY;
-        od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
+        od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     /**
@@ -87,13 +89,13 @@ public class AntSimulator extends Simulator{
      * @param velX x velocity
      * @param velY y velocity
      */
-    public AntSimulator(int numAnt, int homeX, int homeY, int velX, int velY) {
+    public Ant_Simulator(int numAnt, int homeX, int homeY, int velX, int velY) {
         this.numAnt = numAnt;
         this.homeX = homeX;
         this.homeY = homeY;
-        AntSimulator.velX = velX;
-        AntSimulator.velY = velY;
-        od = new ObstacleData((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
+        Ant_Simulator.velX = velX;
+        Ant_Simulator.velY = velY;
+        od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     /* -------------------------------------------------------------------------------------*/
@@ -108,7 +110,7 @@ public class AntSimulator extends Simulator{
     public void initialize(final Stage primaryStage){
         /* ------------------------------ Load from XML ------------------------------ */
         try{
-            message = FXMLLoader.load(getClass().getResource("SetUp.fxml"));
+            message = FXMLLoader.load(getClass().getResource("Map_Creation.fxml"));
         }catch (IOException e){
             System.out.println("Failed to load Set up fxml file");
         }
@@ -171,7 +173,7 @@ public class AntSimulator extends Simulator{
                     ((Circle)s.getNode()).setRadius(3.0);
                     ((Circle)s.getNode()).setFill(Color.RED);
                     a.obtainedFood();
-                    PheromoneData p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
+                    Pheromone_Data p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
                     p.addFood();
                     return true;
                 }
@@ -182,7 +184,7 @@ public class AntSimulator extends Simulator{
                         ((Circle)s.getNode()).setFill(Color.DARKGREEN);
                         ((Circle)s.getNode()).setRadius(1.0);
                         a.droppedFood();
-                        PheromoneData p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
+                        Pheromone_Data p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
                         p.addFood();
                     }
                     return true;
@@ -202,27 +204,19 @@ public class AntSimulator extends Simulator{
         final Duration oneFrameAmt = Duration.millis(1000/fps);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                 event -> {
-                    if(setUpFood && setUpFood){
 
-                        Simulator.timeline.stop();
-                    }
                 });
         Simulator.timeline = new Timeline();
         Simulator.timeline.setCycleCount(Animation.INDEFINITE);
         Simulator.timeline.setAutoReverse(true);
         Simulator.timeline.getKeyFrames().add(oneFrame);
         Simulator.timeline.play();
-
-        //Generates ants in the simulator
-        generateAnts(numAnt, this.homeX, this.homeY, velX, velY);
     }
 
     public void selectLocation(){
         rootNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                System.out.println(event.getSceneX());
-                System.out.println(event.getSceneY());
 
                 int x = getKeyX((int)event.getSceneX());
                 int y = getKeyY((int)event.getSceneY());
@@ -233,16 +227,17 @@ public class AntSimulator extends Simulator{
                         homeY = y;
                         generateHive();
                         setUpHive = true;
-                        Text t = (Text)message.lookup("#instruction");
-                        t.setText("Please select food location");
-                        System.out.println(t.getText());
+                        ((Text)message.lookup("#instruction")).setText("Please select Food location(s)");
                     }
-                    else if(!setUpFood && foodCount < numFood){
+                    else if(!setUpFood){
+                        Coordinate foodLoc = new Coordinate(x,y);
+                        foodCoordinate.add(foodLoc);
                         generateFood(x,y);
                         foodCount++;
-                    }
-                    else{
-                        setUpFood = true;
+                        if(foodCount == numFood){
+                            setUpFood = true;
+                            begin();
+                        }
                     }
                 }
                 else{
@@ -253,13 +248,56 @@ public class AntSimulator extends Simulator{
         });
     }
 
+    public void begin(){
+        timeline.stop();
+        generateAnts(numAnt, homeX, homeY, velX, velY);
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
+
+            Rectangle2D screenSize = Screen.getPrimary().getBounds();
+            Scene scene = new Scene(root, 500, 500);
+            Display.menuStage.setTitle("Settings");
+            Display.menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 700);
+            Display.menuStage.setY(screenSize.getMinY() + 20);
+            Display.menuStage.setScene(scene);
+            Display.menuStage.show();
+
+            Menu_Controller.start();
+
+        }catch (IOException e){
+            System.out.println("Failed to load Menu fxml file");
+        }
+        buildLoop();
+        beginSimulation();
+    }
+
+    public void reset(Stage primaryStage){
+        this.handler.emptySprites();
+        this.rootNode = new Group();
+        this.scene = new Scene(this.rootNode,WIDTH,HEIGHT,Color.WHITE); //creates a scene to display the objects
+        primaryStage.setScene(this.scene); //add the scene to the stage
+        primaryStage.setTitle("Ant simulator"); //Set the title of the window
+
+        Rectangle2D screenSize = Screen.getPrimary().getBounds();
+        primaryStage.setX(screenSize.getMinX() + 20);
+        primaryStage.setY(screenSize.getMinY() + 20);
+
+        pheromoneLoc = new LinkedHashMap<>();
+        generateMap(velX, velY);
+        generateHive();
+        for(Coordinate c: foodCoordinate){
+            generateFood(c.getX(), c.getY());
+        }
+        generateAnts(numAnt, homeX, homeY, velX, velY);
+    }
+
     /* --------------------------------------------------------------------------------*/
 
     private void updatePheromone() {
         for (Sprite s : this.handler.getObjects()) {
             if (s instanceof Ant) {
                 Ant a = (Ant) s;
-                PheromoneData p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
+                Pheromone_Data p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
                 if(p != null) {
                     if (a.hasFood()) {
                         p.addFood();
@@ -274,9 +312,9 @@ public class AntSimulator extends Simulator{
             }
         }
 
-        for (Map.Entry<Coordinate, PheromoneData> coordinatePheromoneDataEntry : pheromoneLoc.entrySet()) {
-            PheromoneData pd = (PheromoneData) ((Map.Entry) coordinatePheromoneDataEntry).getValue();
-            for (GroundData p : pd.getPheromones()) {
+        for (Map.Entry<Coordinate, Pheromone_Data> coordinatePheromoneDataEntry : pheromoneLoc.entrySet()) {
+            Pheromone_Data pd = (Pheromone_Data) ((Map.Entry) coordinatePheromoneDataEntry).getValue();
+            for (Ground_Data p : pd.getPheromones()) {
                 p.tick();
             }
         }
@@ -366,7 +404,7 @@ public class AntSimulator extends Simulator{
         }
         for (int x = 0; x <= Simulator.WIDTH + velX; x += velX) {
             for (int y = 0; y <= Simulator.HEIGHT + velY; y += velY) {
-                PheromoneData p = new PheromoneData(x,y,velX,velY);
+                Pheromone_Data p = new Pheromone_Data(x,y,velX,velY);
                 if(isWithinObstacle(x,y)){
                     Obstacle o = new Obstacle(x, y, velX, velY, 205, 133, 63);
                     p.addData(o);
@@ -381,8 +419,8 @@ public class AntSimulator extends Simulator{
         }
     }
 
-    private PheromoneData createPheromones(int x, int y, int velX, int velY){
-        PheromoneData p = new PheromoneData(x, y, velX, velY);
+    private Pheromone_Data createPheromones(int x, int y, int velX, int velY){
+        Pheromone_Data p = new Pheromone_Data(x, y, velX, velY);
         Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.3,255,0,0, 10,
                 evaporationRate);
         Pheromone home = new Pheromone(x, y, velX, velY, "Home",0.05, 0,0,255, 1,

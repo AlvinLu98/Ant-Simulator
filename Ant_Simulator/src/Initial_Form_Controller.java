@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * https://www.callicoder.com/javafx-fxml-form-gui-tutorial/
  */
-public class SimulatorFormController {
+public class Initial_Form_Controller {
     @FXML
     private TextField antNoTextField;
 
@@ -29,12 +29,9 @@ public class SimulatorFormController {
     private ComboBox<String> obstacleType;
 
     private static boolean ready = false;
-    private Scene scene;
-    private Stage menuStage;
-    private static Stage primaryStage;
 
     public static void setStage(Stage stage){
-        primaryStage = stage;
+        Display.primaryStage = stage;
     }
 
     @FXML
@@ -42,7 +39,7 @@ public class SimulatorFormController {
         boolean valid = true;
         Alert a = new Alert(Alert.AlertType.NONE);
         String errorMes = "";
-        AntSimulator ant = (AntSimulator)Display.sim;
+        Ant_Simulator ant = (Ant_Simulator)Display.sim;
         if(!antNoTextField.getText().isEmpty() && Display.isDigit(antNoTextField.getText())){
             ant.setNumAnt(Integer.parseInt(antNoTextField.getText()));
         }
@@ -97,7 +94,7 @@ public class SimulatorFormController {
         }
 
         if(valid) {
-            setUpSimulation(primaryStage);
+            setUpSimulation(Display.primaryStage);
         }
         else{
             a.setContentText(errorMes);
@@ -116,9 +113,9 @@ public class SimulatorFormController {
         Display.sim.buildLoop();
 
         primaryStage.show();
-        menuStage.show();
+        Display.menuStage.show();
 
-        ((AntSimulator)Display.sim).setUp();
+        ((Ant_Simulator)Display.sim).setUp();
     }
 
     private void setUpMenu(){
@@ -126,18 +123,18 @@ public class SimulatorFormController {
         //https://coderanch.com/t/620036/java/Stage-corner-screen
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
 
-        menuStage = new Stage();
-        menuStage.setTitle("Settings");
-        menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 700);
-        menuStage.setY(screenSize.getMinY() + 20);
+        Display.menuStage = new Stage();
+        Display.menuStage.setTitle("Set up");
+        Display.menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 700);
+        Display.menuStage.setY(screenSize.getMinY() + 20);
 
         Scene menuScene;
 
         try {
-            Parent menu = FXMLLoader.load(getClass().getResource("SetUp.fxml"));
+            Parent menu = FXMLLoader.load(getClass().getResource("Map_Creation.fxml"));
             menuScene = new Scene(menu, 500, 500);
             createMenuEvents();
-            menuStage.setScene(menuScene);
+            Display.menuStage.setScene(menuScene);
         }catch (IOException e){
             System.out.println("Failed to load set up fxml file");
         }
@@ -145,7 +142,7 @@ public class SimulatorFormController {
 
     private void createMenuEvents(){
         //https://www.programcreek.com/java-api-examples/?class=javafx.stage.Stage&method=setOnCloseRequest
-        menuStage.setOnCloseRequest(event -> {
+        Display.menuStage.setOnCloseRequest(event -> {
             Platform.exit();
         });
     }

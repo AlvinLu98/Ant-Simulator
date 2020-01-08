@@ -1,13 +1,13 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class GroundData extends Sprite{
+public class Ground_Data extends Sprite{
     protected String name;
     protected int r,g,b;
 
 
 
-    public GroundData(String name, int x, int y, int width, int height, int r, int g, int b) {
+    public Ground_Data(String name, int x, int y, int width, int height, int r, int g, int b) {
         super(x, y);
         this.name = name;
         this.r = r;
@@ -20,7 +20,7 @@ public class GroundData extends Sprite{
         this.node = rec;
     }
 
-    public GroundData(String name, int x, int y, int width, int height, int r, int g, int b, double opacity) {
+    public Ground_Data(String name, int x, int y, int width, int height, int r, int g, int b, double opacity) {
         super(x, y);
         this.name = name;
         this.r = r;

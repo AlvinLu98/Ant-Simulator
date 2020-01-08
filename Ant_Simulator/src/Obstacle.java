@@ -1,4 +1,4 @@
-public class Obstacle extends GroundData {
+public class Obstacle extends Ground_Data {
 
     private int height;
 

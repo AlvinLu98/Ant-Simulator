@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <GridPane xmlns="http://javafx.com/javafx"
           xmlns:fx="http://javafx.com/fxml"
-          fx:controller="SetUpController"
+          fx:controller="Map_Creation_Controller"
           alignment="CENTER">
 
     <Text fx:id="instruction" text="Please select home location" GridPane.columnIndex="0" GridPane.rowIndex="0">

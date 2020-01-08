@@ -1,7 +1,7 @@
-public class ObstacleData {
+public class Obstacle_Data {
     private boolean[][] points;
 
-    public ObstacleData(int w, int h) {
+    public Obstacle_Data(int w, int h) {
         this.points = new boolean[w][h];
         for(int x = 0; x < w; x++){
             for(int y = 0; y < h; y++){

@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Surrounding {
-    private PheromoneData NW, N, NE, W, C, E, SW, S, SE;
+    private Pheromone_Data NW, N, NE, W, C, E, SW, S, SE;
 
     public Surrounding(){
         this.NW = null;
@@ -15,8 +15,8 @@ public class Surrounding {
         this.SE = null;
     }
 
-    public Surrounding(PheromoneData NW, PheromoneData n, PheromoneData NE, PheromoneData w, PheromoneData c,
-                       PheromoneData e, PheromoneData SW, PheromoneData s, PheromoneData SE) {
+    public Surrounding(Pheromone_Data NW, Pheromone_Data n, Pheromone_Data NE, Pheromone_Data w, Pheromone_Data c,
+                       Pheromone_Data e, Pheromone_Data SW, Pheromone_Data s, Pheromone_Data SE) {
         this.NW = NW;
         this.N = n;
         this.NE = NE;
@@ -28,12 +28,12 @@ public class Surrounding {
         this.SE = SE;
     }
 
-    public PheromoneData getNW() {
+    public Pheromone_Data getNW() {
         return NW;
     }
 
-    public ArrayList<PheromoneData> getInList(){
-        ArrayList<PheromoneData> list = new ArrayList<>(9);
+    public ArrayList<Pheromone_Data> getInList(){
+        ArrayList<Pheromone_Data> list = new ArrayList<>(9);
         list.add(NW);
         list.add(N);
         list.add(NE);
@@ -46,71 +46,71 @@ public class Surrounding {
         return list;
     }
 
-    public void setNW(PheromoneData NW) {
+    public void setNW(Pheromone_Data NW) {
         this.NW = NW;
     }
 
-    public PheromoneData getN() {
+    public Pheromone_Data getN() {
         return N;
     }
 
-    public void setN(PheromoneData n) {
+    public void setN(Pheromone_Data n) {
         N = n;
     }
 
-    public PheromoneData getNE() {
+    public Pheromone_Data getNE() {
         return NE;
     }
 
-    public void setNE(PheromoneData NE) {
+    public void setNE(Pheromone_Data NE) {
         this.NE = NE;
     }
 
-    public PheromoneData getW() {
+    public Pheromone_Data getW() {
         return W;
     }
 
-    public void setW(PheromoneData w) {
+    public void setW(Pheromone_Data w) {
         W = w;
     }
 
-    public PheromoneData getC() {
+    public Pheromone_Data getC() {
         return C;
     }
 
-    public void setC(PheromoneData c) {
+    public void setC(Pheromone_Data c) {
         C = c;
     }
 
-    public PheromoneData getE() {
+    public Pheromone_Data getE() {
         return E;
     }
 
-    public void setE(PheromoneData e) {
+    public void setE(Pheromone_Data e) {
         E = e;
     }
 
-    public PheromoneData getSW() {
+    public Pheromone_Data getSW() {
         return SW;
     }
 
-    public void setSW(PheromoneData SW) {
+    public void setSW(Pheromone_Data SW) {
         this.SW = SW;
     }
 
-    public PheromoneData getS() {
+    public Pheromone_Data getS() {
         return S;
     }
 
-    public void setS(PheromoneData s) {
+    public void setS(Pheromone_Data s) {
         S = s;
     }
 
-    public PheromoneData getSE() {
+    public Pheromone_Data getSE() {
         return SE;
     }
 
-    public void setSE(PheromoneData SE) {
+    public void setSE(Pheromone_Data SE) {
         this.SE = SE;
     }
 }

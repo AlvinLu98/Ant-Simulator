@@ -1,7 +1,7 @@
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Pheromone extends GroundData{
+public class Pheromone extends Ground_Data {
     private double evaporation;
     private double value;
     private double increment;

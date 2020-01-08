@@ -52,13 +52,13 @@ public abstract class Sprite {
     public boolean boundaryX(){
         //            this.velX *= -1;
         return (c.getX() + node.getTranslateX() + velX) < 0
-                || c.getX() + node.getTranslateX() + velX > (AntSimulator.WIDTH);
+                || c.getX() + node.getTranslateX() + velX > (Ant_Simulator.WIDTH);
     }
 
     public boolean boundaryNegX(){
         //            this.velX *= -1;
         return (c.getX() + node.getTranslateX() - velX) < 0
-                || c.getX() + node.getTranslateX() - velX > (AntSimulator.WIDTH);
+                || c.getX() + node.getTranslateX() - velX > (Ant_Simulator.WIDTH);
     }
 
     /**
@@ -68,14 +68,14 @@ public abstract class Sprite {
         //            this.velY *= -1;
         return (this.c.getY() + node.getTranslateY() + velY) < 0
                 || (this.c.getY() + node.getTranslateY() + velY) >
-                (AntSimulator.HEIGHT);
+                (Ant_Simulator.HEIGHT);
     }
 
     public boolean boundaryNegY(){
         //            this.velY *= -1;
         return (this.c.getY() + node.getTranslateY() - velY) < 0
                 || (this.c.getY() + node.getTranslateY() - velY) >
-                (AntSimulator.HEIGHT);
+                (Ant_Simulator.HEIGHT);
     }
 
     public static Rectangle drawRectangle(int x, int y, int width, int height){

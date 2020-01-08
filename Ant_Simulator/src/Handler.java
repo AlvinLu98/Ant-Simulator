@@ -96,4 +96,8 @@ public class Handler {
     public LinkedList<Sprite> getCleanUp() {
         return cleanUp;
     }
+
+    public void emptySprites(){
+        this.objects.clear();
+    }
 }

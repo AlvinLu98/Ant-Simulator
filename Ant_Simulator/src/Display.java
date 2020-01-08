@@ -18,11 +18,12 @@ public class Display extends Application {
     public static Label time;
     public static Text instruction = new Text("Setting up....");
     public static Text warning =  new Text("");
+    public static Stage menuStage;
+    public static Stage primaryStage;
 
-    public static Simulator sim = new AntSimulator(60); //Creates an ant simulator
+    public static Simulator sim = new Ant_Simulator(60); //Creates an ant simulator
     private Parent root;
     private Scene scene;
-    private Stage menuStage;
 
     public static void main(String[] args) {
         Application.launch(args);
@@ -47,8 +48,8 @@ public class Display extends Application {
 
     private void createAntForm(Stage primaryStage){
         try {
-            this.root = FXMLLoader.load(getClass().getResource("SimulatorForm.fxml"));
-            SimulatorFormController.setStage(primaryStage);
+            this.root = FXMLLoader.load(getClass().getResource("Initial_Form.fxml"));
+            Initial_Form_Controller.setStage(primaryStage);
         }catch (IOException e){
             System.out.println("Failed to load fxml file");
         }
