@@ -28,7 +28,7 @@ public abstract class Simulator{
     protected Scene scene;
 
     /** Contains all nodes to be displayed on screen */
-    protected Group rootNode;
+    protected static Group rootNode;
 
     /** loop for simulator */
     protected static Timeline timeline;

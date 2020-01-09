@@ -29,6 +29,7 @@ public class Handler {
             if(o instanceof Ant){
                 if(((Ant)o).isDead()){
                     addToRemove(o);
+                    Simulator.rootNode.getChildren().remove(o.node);
                 }
             }
         }

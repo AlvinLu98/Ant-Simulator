@@ -19,6 +19,7 @@ public class Ant extends Sprite {
     private AnimationTimer timer;
     private long startTime = System.currentTimeMillis()/1000;
     private long elapsedTime = 0;
+    private long prevSec = 0;
     private Instant birthTime;
     public int scale = 1;
     public ArrayList<Integer> blocked;
@@ -38,7 +39,7 @@ public class Ant extends Sprite {
         this.hasFoodItem = false;
         this.foundFood = false;
         this.prevDirection = Direction.C;
-        this.lifespan = 1000000;
+        this.lifespan = 100;
         this.dead = false;
         this.blocked = new ArrayList<>();
 
@@ -62,10 +63,12 @@ public class Ant extends Sprite {
         else{
             moveNoFood();
         }
-        if(elapsedTime > lifespan){
-            elapsedTime = Duration.between(Display.current, this.birthTime).toMillis()/1000;
-            double probability = elapsedTime/lifespan;
-            if(Math.random() < probability){
+        elapsedTime = Duration.between(this.birthTime, Display.current).toMillis()/1000;
+        double probability = (double)elapsedTime/(double)lifespan;
+        if(elapsedTime != prevSec) {
+            prevSec = elapsedTime;
+            double d = Math.random();
+            if (d < probability) {
                 dead = true;
             }
         }
