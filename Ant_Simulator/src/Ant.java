@@ -2,6 +2,8 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,6 +19,8 @@ public class Ant extends Sprite {
     private AnimationTimer timer;
     private long startTime = System.currentTimeMillis()/1000;
     private long elapsedTime = 0;
+    private Instant birthTime;
+    public int scale = 1;
     public ArrayList<Integer> blocked;
     private ArrayList<Integer> clear = new ArrayList<>();
 
@@ -41,15 +45,7 @@ public class Ant extends Sprite {
         Circle circle = drawCircle(x, y, rad);
         circle.setFill(Color.BLACK);
         this.node = circle;
-
-        this.timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                long cur = System.currentTimeMillis()/1000;
-                elapsedTime = cur - startTime;
-            }
-        };
-        this.timer.start();
+        birthTime = Instant.now();
     }
 
     /**
@@ -66,9 +62,12 @@ public class Ant extends Sprite {
         else{
             moveNoFood();
         }
-        if(elapsedTime > lifespan){ //TODO create death probability
-            dead = true;
-            this.node.setOpacity(0);
+        if(elapsedTime > lifespan){
+            elapsedTime = Duration.between(Display.current, this.birthTime).toMillis()/1000;
+            double probability = elapsedTime/lifespan;
+            if(Math.random() < probability){
+                dead = true;
+            }
         }
     }
 
@@ -623,4 +622,13 @@ public class Ant extends Sprite {
     public void goingToFood(){
         this.followFood = true;
     }
+
+    public long getLifespan() {
+        return lifespan;
+    }
+
+    public void setLifespan(long lifespan) {
+        this.lifespan = lifespan * 30 * 24 * 60;
+    }
+
 }

@@ -11,6 +11,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.Instant;
 
 /**
  * https://www.callicoder.com/javafx-fxml-form-gui-tutorial/
@@ -119,7 +120,7 @@ public class Initial_Form_Controller {
     }
 
     private void setUpMenu(){
-        Display.startTime = System.currentTimeMillis();
+        Display.start = Instant.now();
         //https://coderanch.com/t/620036/java/Stage-corner-screen
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
 

@@ -9,12 +9,13 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.Instant;
 
 public class Display extends Application {
     public static AnimationTimer timer;
     public static Timeline timeline;
-    public static long startTime = 0;
-    public static long currentTime = 0;
+    public static Instant start = Instant.now();
+    public static Instant current = Instant.now();
     public static Label time;
     public static Text instruction = new Text("Setting up....");
     public static Text warning =  new Text("");

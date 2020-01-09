@@ -38,6 +38,7 @@ public class Ant_Simulator extends Simulator{
     private ArrayList<Coordinate> foodCoordinate = new ArrayList<>();
     private Obstacle_Data od;
     private String obstacleType;
+    private double birthRate;
 
     private boolean setUpHive = false, setUpFood = false;
     private int foodCount = 0;

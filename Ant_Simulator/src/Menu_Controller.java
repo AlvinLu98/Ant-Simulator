@@ -6,11 +6,13 @@ import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.time.Instant;
+
 public class Menu_Controller {
     @FXML
     Text time;
     private boolean stopped = false, paused = false, play = false;
-    long pauseStartTime;
+    Instant pauseStartTime;
     long totalPauseTime;
 
     //https://stackoverflow.com/questions/32806068/how-to-change-fxml-lable-text-by-id
@@ -20,20 +22,19 @@ public class Menu_Controller {
         final Duration oneFrameAmt = Duration.millis(1000/60);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                 event -> {
-                    time.setText(String.valueOf(Display.currentTime));
+                    time.setText(String.valueOf(java.time.Duration.between(Display.start, Display.current).toMillis()));
                 });
         Display.timeline = new Timeline();
         Display.timeline.setCycleCount(Animation.INDEFINITE);
         Display.timeline.setAutoReverse(true);
         Display.timeline.getKeyFrames().add(oneFrame);
-        pauseStartTime = 0;
-        totalPauseTime = 0;
         play = true;
+        totalPauseTime = 0;
 
         Display.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                Display.currentTime = (System.currentTimeMillis() - Display.startTime - totalPauseTime)/1000;
+                Display.current = Instant.now().plusMillis(totalPauseTime);
             }
         };
     }
@@ -47,12 +48,12 @@ public class Menu_Controller {
         if(stopped){
             initialize();
             stopped = false;
-            Display.startTime = System.currentTimeMillis();
+            Display.start = Instant.now();
             Display.timeline.play();
             Display.sim.beginSimulation();
         }
         if(paused){
-            totalPauseTime += System.currentTimeMillis() - pauseStartTime;
+            totalPauseTime += java.time.Duration.between(Instant.now(), pauseStartTime).toMillis();
             Display.timeline.play();
             Display.sim.beginSimulation();
             paused = false;
@@ -63,7 +64,7 @@ public class Menu_Controller {
     public void pause(){
         paused = true;
         if(play) {
-            pauseStartTime = System.currentTimeMillis();
+            pauseStartTime = Instant.now();
         }
         Display.timeline.pause();
         Ant_Simulator.timeline.pause();
