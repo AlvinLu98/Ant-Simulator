@@ -11,6 +11,13 @@ import java.time.Instant;
 public class Menu_Controller {
     @FXML
     Text time;
+
+    @FXML
+    Text scaledTime;
+
+    @FXML
+    Text antPop;
+
     private boolean stopped = false, paused = false, play = false;
     Instant pauseStartTime;
     long totalPauseTime;
@@ -22,7 +29,10 @@ public class Menu_Controller {
         final Duration oneFrameAmt = Duration.millis(1000/60);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                 event -> {
-                    time.setText(String.valueOf(java.time.Duration.between(Display.start, Display.current).toMillis()));
+                    Ant_Simulator ant = (Ant_Simulator)Display.sim;
+                    time.setText(String.valueOf(java.time.Duration.between(Simulator.start, Display.current).toMillis()/1000));
+                    scaledTime.setText(java.time.Duration.between(ant.start, ant.current).toDays() + " days");
+                    antPop.setText(String.valueOf(Ant_Simulator.getAntPop()));
                 });
         Display.timeline = new Timeline();
         Display.timeline.setCycleCount(Animation.INDEFINITE);
@@ -48,7 +58,7 @@ public class Menu_Controller {
         if(stopped){
             initialize();
             stopped = false;
-            Display.start = Instant.now();
+            Simulator.start = Instant.now();
             Display.timeline.play();
             Display.sim.beginSimulation();
         }

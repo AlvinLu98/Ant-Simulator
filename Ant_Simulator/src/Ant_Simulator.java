@@ -15,12 +15,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class Ant_Simulator extends Simulator{
 
     /* ---------------------------------- Simulator data ----------------------------------*/
 
-    private int numAnt, numFood = 1; //number of ants to create
+    private int initAntAmt, numFood = 1; //number of ants to create
     private int homeX, homeY; //location of hive
     private double evaporationRate = 0.9;
     private static int velX = 4, velY = 4; //location of hive
@@ -38,9 +38,11 @@ public class Ant_Simulator extends Simulator{
     private ArrayList<Coordinate> foodCoordinate = new ArrayList<>();
     private Obstacle_Data od;
     private String obstacleType;
-    private double birthRate;
+    private static int birthRate, lifespan;
+    private static int scale;
+    private static int antPop = 0;
 
-    private boolean setUpHive = false, setUpFood = false;
+    public static boolean setUpHive = false, setUpFood = false;
     private int foodCount = 0;
     private Parent message;
 
@@ -54,7 +56,7 @@ public class Ant_Simulator extends Simulator{
      */
     Ant_Simulator(int fps){
         super(fps);
-        this.numAnt = 500;
+        this.initAntAmt = 500;
         this.od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
@@ -65,18 +67,18 @@ public class Ant_Simulator extends Simulator{
      */
     public Ant_Simulator(int fps, int ants){
         super(fps);
-        this.numAnt = ants;
+        this.initAntAmt = ants;
         this.od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
     /**
      * Creates an ant simulator with a given home location and number of ants;
-     * @param numAnt number of ants for the simulator
+     * @param initAntAmt number of ants for the simulator
      * @param homeX x location of the hive
      * @param homeY y location of the hive
      */
-    public Ant_Simulator(int numAnt, int homeX, int homeY) {
-        this.numAnt = numAnt;
+    public Ant_Simulator(int initAntAmt, int homeX, int homeY) {
+        this.initAntAmt = initAntAmt;
         this.homeX = homeX;
         this.homeY = homeY;
         od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
@@ -84,14 +86,14 @@ public class Ant_Simulator extends Simulator{
 
     /**
      * Creates an ant simulator with specified home location, number of ants and their velocity
-     * @param numAnt number of ants
+     * @param initAntAmt number of ants
      * @param homeX x location of home
      * @param homeY y location of home
      * @param velX x velocity
      * @param velY y velocity
      */
-    public Ant_Simulator(int numAnt, int homeX, int homeY, int velX, int velY) {
-        this.numAnt = numAnt;
+    public Ant_Simulator(int initAntAmt, int homeX, int homeY, int velX, int velY) {
+        this.initAntAmt = initAntAmt;
         this.homeX = homeX;
         this.homeY = homeY;
         Ant_Simulator.velX = velX;
@@ -130,6 +132,15 @@ public class Ant_Simulator extends Simulator{
         generateMap(velX, velY);
     }
 
+    @Override
+    public void beginSimulation(){
+        Simulator.timeline.play();
+        Simulator.timer.start();
+        initialiseAnts();
+        Simulator.start = Instant.now();
+        Simulator.current = Instant.now();
+    }
+
     /**
      * Builds the frame loop
      */
@@ -153,8 +164,13 @@ public class Ant_Simulator extends Simulator{
         Simulator.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long cur = System.currentTimeMillis()/1000;
-                currentTime = cur - startTime;
+                long diff = java.time.Duration.between(Simulator.start, Instant.now()).toMillis();
+                Simulator.current = Simulator.start.plusMillis(diff*scale);
+                long daysPassed = java.time.Duration.between(Simulator.start, Simulator.current).toDays();
+                if(elapsedTime != daysPassed){
+                    elapsedTime = daysPassed;
+                    generateAnts(birthRate, homeX, homeY, velX, velY);
+                }
             }
         };
     }
@@ -228,7 +244,6 @@ public class Ant_Simulator extends Simulator{
                         homeY = y;
                         generateHive();
                         setUpHive = true;
-                        ((Text)message.lookup("#instruction")).setText("Please select Food location(s)");
                     }
                     else if(!setUpFood){
                         Coordinate foodLoc = new Coordinate(x,y);
@@ -237,6 +252,7 @@ public class Ant_Simulator extends Simulator{
                         foodCount++;
                         if(foodCount == numFood){
                             setUpFood = true;
+                            buildLoop();
                             begin();
                         }
                     }
@@ -251,7 +267,7 @@ public class Ant_Simulator extends Simulator{
 
     public void begin(){
         timeline.stop();
-        generateAnts(numAnt, homeX, homeY, velX, velY);
+        generateAnts(initAntAmt, homeX, homeY, velX, velY);
         try {
             Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 
@@ -289,7 +305,7 @@ public class Ant_Simulator extends Simulator{
         for(Coordinate c: foodCoordinate){
             generateFood(c.getX(), c.getY());
         }
-        generateAnts(numAnt, homeX, homeY, velX, velY);
+        generateAnts(initAntAmt, homeX, homeY, velX, velY);
     }
 
     /* --------------------------------------------------------------------------------*/
@@ -342,9 +358,19 @@ public class Ant_Simulator extends Simulator{
     private void generateAnts(int amt, int x, int y, int velX, int velY){
         Ant ant;
         for(int i = 0; i < amt; i++){
+            antPop += 1;
             ant = new Ant(x, y, velX, velY);
+            ant.setLifespan(Ant_Simulator.lifespan);
             this.handler.addObject(ant);
             this.rootNode.getChildren().add(ant.getNode());
+        }
+    }
+
+    private void initialiseAnts(){
+        for(Sprite s: this.handler.getObjects()){
+            if(s instanceof Ant){
+                ((Ant)s).setBirthTime();
+            }
         }
     }
 
@@ -505,8 +531,8 @@ public class Ant_Simulator extends Simulator{
      * Set the number of ants
      * @param ants Number of ants
      */
-    public void setNumAnt(int ants){
-        this.numAnt = ants;
+    public void setInitAntAmt(int ants){
+        this.initAntAmt = ants;
     }
 
     public double getEvaporationRate() {
@@ -531,5 +557,37 @@ public class Ant_Simulator extends Simulator{
 
     public void setObstacleType(String obstacleType) {
         this.obstacleType = obstacleType;
+    }
+
+    public static int getBirthRate() {
+        return  Ant_Simulator.birthRate;
+    }
+
+    public static void setBirthRate(int birthRate) {
+        Ant_Simulator.birthRate = birthRate;
+    }
+
+    public static int getLifespan() {
+        return lifespan;
+    }
+
+    public static void setLifespan(int lifespan) {
+        Ant_Simulator.lifespan = lifespan;
+    }
+
+    public int getScale() {
+        return  Ant_Simulator.scale;
+    }
+
+    public static void setScale(int scale) {
+        Ant_Simulator.scale = scale;
+    }
+
+    public static int getAntPop() {
+        return antPop;
+    }
+
+    public static void modifyAntPop(int val) {
+        antPop += val;
     }
 }

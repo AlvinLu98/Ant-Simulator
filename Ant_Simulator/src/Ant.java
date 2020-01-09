@@ -21,7 +21,6 @@ public class Ant extends Sprite {
     private long elapsedTime = 0;
     private long prevSec = 0;
     private Instant birthTime;
-    public int scale = 1;
     public ArrayList<Integer> blocked;
     private ArrayList<Integer> clear = new ArrayList<>();
 
@@ -39,7 +38,6 @@ public class Ant extends Sprite {
         this.hasFoodItem = false;
         this.foundFood = false;
         this.prevDirection = Direction.C;
-        this.lifespan = 100;
         this.dead = false;
         this.blocked = new ArrayList<>();
 
@@ -64,7 +62,7 @@ public class Ant extends Sprite {
             moveNoFood();
         }
         elapsedTime = Duration.between(this.birthTime, Display.current).toMillis()/1000;
-        double probability = (double)elapsedTime/(double)lifespan;
+        double probability = (double)elapsedTime/((double)lifespan * 1.20);
         if(elapsedTime != prevSec) {
             prevSec = elapsedTime;
             double d = Math.random();
@@ -631,7 +629,10 @@ public class Ant extends Sprite {
     }
 
     public void setLifespan(long lifespan) {
-        this.lifespan = lifespan * 30 * 24 * 60;
+        this.lifespan = lifespan * 24 * 60;
     }
 
+    public void setBirthTime(){
+        this.birthTime = Instant.now();
+    }
 }

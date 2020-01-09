@@ -36,6 +36,8 @@
             </ComboBox>
 
             <Text fx:id="time" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
+            <Text fx:id="scaledTime" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
+            <Text fx:id="antPop" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
 
             <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="25" prefWidth="100">
                 <Button text="Play" onAction="#play" minWidth="80"/>

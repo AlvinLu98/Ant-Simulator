@@ -30,6 +30,7 @@ public class Handler {
                 if(((Ant)o).isDead()){
                     addToRemove(o);
                     Simulator.rootNode.getChildren().remove(o.node);
+                    Ant_Simulator.modifyAntPop(-1);
                 }
             }
         }

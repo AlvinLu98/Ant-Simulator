@@ -11,7 +11,6 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.Instant;
 
 /**
  * https://www.callicoder.com/javafx-fxml-form-gui-tutorial/
@@ -29,6 +28,12 @@ public class Initial_Form_Controller {
     @FXML
     private ComboBox<String> obstacleType;
 
+    @FXML
+    private TextField birthRateBox, lifespanBox;
+
+    @FXML
+    private TextField timeScaleBox;
+
     private static boolean ready = false;
 
     public static void setStage(Stage stage){
@@ -42,7 +47,7 @@ public class Initial_Form_Controller {
         String errorMes = "";
         Ant_Simulator ant = (Ant_Simulator)Display.sim;
         if(!antNoTextField.getText().isEmpty() && Display.isDigit(antNoTextField.getText())){
-            ant.setNumAnt(Integer.parseInt(antNoTextField.getText()));
+            ant.setInitAntAmt(Integer.parseInt(antNoTextField.getText()));
         }
         else{
             a.setAlertType(Alert.AlertType.ERROR);
@@ -90,7 +95,34 @@ public class Initial_Form_Controller {
         }
         else{
             a.setAlertType(Alert.AlertType.ERROR);
-            errorMes += "Select an Obstacle type";
+            errorMes += "Select an Obstacle type\n";
+            valid = false;
+        }
+
+        if(!birthRateBox.getText().isEmpty() && Display.isDigit(birthRateBox.getText())){
+            ant.setBirthRate(Integer.valueOf(birthRateBox.getText()));
+        }
+        else{
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Birth rate should be a number!\n";
+            valid = false;
+        }
+
+        if(!lifespanBox.getText().isEmpty() && Display.isDigit(lifespanBox.getText())){
+            ant.setLifespan(Integer.valueOf(lifespanBox.getText()));
+        }
+        else{
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Birth rate should be a number!\n";
+            valid = false;
+        }
+
+        if(!timeScaleBox.getText().isEmpty() && Display.isDigit(timeScaleBox.getText())){
+            ant.setScale(Integer.valueOf(timeScaleBox.getText()));
+        }
+        else{
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Birth rate should be a number!\n";
             valid = false;
         }
 
@@ -120,7 +152,6 @@ public class Initial_Form_Controller {
     }
 
     private void setUpMenu(){
-        Display.start = Instant.now();
         //https://coderanch.com/t/620036/java/Stage-corner-screen
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
 

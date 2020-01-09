@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.time.Instant;
+
 /**
  * An abstract class defining the base of a simulator
  * This class initialises a window and updates it using frame updates
@@ -21,8 +23,9 @@ public abstract class Simulator{
     /** Sets the size of the window */
     public static final int WIDTH = 640;
     public static final int HEIGHT = WIDTH/12*9;
-    public static final long startTime = System.currentTimeMillis()/1000;
-    public static long currentTime = 0;
+    public static Instant start = Instant.now();
+    public static Instant current = Instant.now();
+    public static long elapsedTime = 0;
 
     /** JavaFX Scene */
     protected Scene scene;
@@ -84,8 +87,8 @@ public abstract class Simulator{
         Simulator.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long cur = System.currentTimeMillis()/1000;
-                currentTime = cur - startTime;
+                Simulator.current = Instant.now();
+                Simulator.elapsedTime = java.time.Duration.between(Simulator.start, Simulator.current).toMillis()/1000;
             }
         };
     }

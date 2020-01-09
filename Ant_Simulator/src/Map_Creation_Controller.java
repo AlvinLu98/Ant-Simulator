@@ -14,6 +14,12 @@ public class Map_Creation_Controller {
         final Duration oneFrameAmt = Duration.millis(1000/60);
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                 event -> {
+                    if(!Ant_Simulator.setUpHive){
+                        instruction.setText("Please select home location");
+                    }
+                    else if(!Ant_Simulator.setUpFood){
+                        instruction.setText("Please select food location");
+                    }
                 });
         Display.timeline = new Timeline();
         Display.timeline.setCycleCount(Animation.INDEFINITE);

@@ -42,7 +42,16 @@
         </items>
     </ComboBox>
 
-    <HBox fx:id="hbBtn" spacing="10" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="5">
+    <Label text="Birth rate of ants: " GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+    <TextField fx:id="birthRateBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+    <Label text="Lifespan: " GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+    <TextField fx:id="lifespanBox" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+    <Label text="Time scale: " GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+    <TextField fx:id="timeScaleBox" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+    <HBox fx:id="hbBtn" spacing="10" alignment="BOTTOM_RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="8">
         <Button text="Start simulation" onAction="#setUpStartButton"/>
     </HBox>
 

@@ -14,7 +14,6 @@ import java.time.Instant;
 public class Display extends Application {
     public static AnimationTimer timer;
     public static Timeline timeline;
-    public static Instant start = Instant.now();
     public static Instant current = Instant.now();
     public static Label time;
     public static Text instruction = new Text("Setting up....");
