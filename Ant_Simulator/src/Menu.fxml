@@ -35,19 +35,28 @@
                 </items>
             </ComboBox>
 
+            <Label text="Birth rate of ants: " GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <TextField fx:id="birthRateBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+            <Label text="Lifespan: " GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <TextField fx:id="lifespanBox" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+            <Label text="Time scale: " GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <TextField fx:id="timeScaleBox" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
             <Text fx:id="time" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
             <Text fx:id="scaledTime" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
             <Text fx:id="antPop" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
 
-            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="25" prefWidth="100">
+            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="15" prefWidth="100">
                 <Button text="Play" onAction="#play" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="25" prefWidth="100">
+            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="15" prefWidth="100">
                 <Button text="Pause" onAction="#pause" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="25" prefWidth="100">
+            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="15" prefWidth="100">
                 <Button text="Stop" onAction="#stop"  minWidth="80"/>
             </HBox>
         </GridPane>

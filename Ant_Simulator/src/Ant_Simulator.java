@@ -30,9 +30,9 @@ public class Ant_Simulator extends Simulator{
 
     /* ---------------------------------- Simulator data ----------------------------------*/
 
-    private int initAntAmt, numFood = 1; //number of ants to create
-    private int homeX, homeY; //location of hive
-    private double evaporationRate = 0.9;
+    private static int initAntAmt, numFood = 1; //number of ants to create
+    private static int homeX, homeY; //location of hive
+    private static double evaporationRate = 0.9;
     private static int velX = 4, velY = 4; //location of hive
     private static LinkedHashMap<Coordinate, Pheromone_Data> pheromoneLoc;
     private ArrayList<Coordinate> foodCoordinate = new ArrayList<>();
@@ -216,6 +216,9 @@ public class Ant_Simulator extends Simulator{
 
     /* ------------------------------------ Setting up -------------------------------------*/
     public void setUp(){
+        setUpHive = false;
+        setUpFood = false;
+        foodCoordinate = new ArrayList<>();
         selectLocation();
 
         final Duration oneFrameAmt = Duration.millis(1000/fps);
@@ -300,12 +303,15 @@ public class Ant_Simulator extends Simulator{
         primaryStage.setY(screenSize.getMinY() + 20);
 
         pheromoneLoc = new LinkedHashMap<>();
+        this.od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
+
         generateMap(velX, velY);
-        generateHive();
-        for(Coordinate c: foodCoordinate){
-            generateFood(c.getX(), c.getY());
-        }
-        generateAnts(initAntAmt, homeX, homeY, velX, velY);
+
+        this.foodCoordinate = new ArrayList<>();
+        setUpHive = false;
+        setUpFood = false;
+        foodCount = 0;
+        selectLocation();
     }
 
     /* --------------------------------------------------------------------------------*/
@@ -527,6 +533,11 @@ public class Ant_Simulator extends Simulator{
         return smaller;
     }
 
+
+    public int getInitAntAmt() {
+        return initAntAmt;
+    }
+
     /**
      * Set the number of ants
      * @param ants Number of ants
@@ -575,7 +586,7 @@ public class Ant_Simulator extends Simulator{
         Ant_Simulator.lifespan = lifespan;
     }
 
-    public int getScale() {
+    public static int getScale() {
         return  Ant_Simulator.scale;
     }
 
