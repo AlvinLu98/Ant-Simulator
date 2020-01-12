@@ -23,7 +23,6 @@ public enum Direction {
 
     public ArrayList<Integer> getSide(Direction d){
         ArrayList<Integer> sides = new ArrayList<>();
-
         switch(d){
             case NW:
                 sides.add(W.getNum());
@@ -68,5 +67,15 @@ public enum Direction {
         }
 
         return sides;
+    }
+
+    public ArrayList<Integer> getSurrounding(Direction d){
+        ArrayList<Integer> front = getSide(d);
+        ArrayList<Integer> surrounding = new ArrayList<>();
+        for(int i = 0; i < 9; i++){
+            surrounding.add(i);
+        }
+        surrounding.removeAll(front);
+        return surrounding;
     }
 }

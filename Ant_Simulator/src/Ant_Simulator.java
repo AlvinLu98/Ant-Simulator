@@ -570,7 +570,7 @@ public class Ant_Simulator extends Simulator{
      * @param ants Number of ants
      */
     public void setInitAntAmt(int ants){
-        this.initAntAmt = ants;
+        initAntAmt = ants;
     }
 
     public double getEvaporationRate() {
@@ -623,6 +623,10 @@ public class Ant_Simulator extends Simulator{
 
     public static int getAntPop() {
         return antPop;
+    }
+
+    public static void setAntPop(int ant) {
+        antPop = ant;
     }
 
     public static void modifyAntPop(int val) {

@@ -77,7 +77,7 @@ public class Menu_Controller {
 
         Ant_Simulator ant = (Ant_Simulator)Display.sim;
         antNoTextField.setText(String.valueOf(ant.getInitAntAmt()));
-        evaporationBox.setText(String.valueOf(ant.getEvaporationRate()));
+        evaporationBox.setText(String.valueOf(1 - ant.getEvaporationRate()));
         foodAmtBox.setText(String.valueOf(ant.getNumFood()));
         obstacleType.setValue(String.valueOf(ant.getObstacleType()));
         birthRateBox.setText(String.valueOf(ant.getBirthRate()));
@@ -95,9 +95,9 @@ public class Menu_Controller {
 
     public void play(){
         if(stopped){
-            initialize();
             stopped = false;
             resetSettings();
+            initialize();
 //            Simulator.start = Instant.now();
 //            Display.timeline.play();
 //            Display.sim.beginSimulation();
@@ -143,6 +143,8 @@ public class Menu_Controller {
         while(!ready) {
             if (!antNoTextField.getText().isEmpty() && Display.isDigit(antNoTextField.getText())) {
                 ant.setInitAntAmt(Integer.parseInt(antNoTextField.getText()));
+                ant.setAntPop(0);
+                System.out.println(ant.getInitAntAmt());
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
                 errorMes += "Please enter a valid number for ants\n";
@@ -151,7 +153,7 @@ public class Menu_Controller {
             }
 
             if (!evaporationBox.getText().isEmpty() && Display.isDouble(evaporationBox.getText())) {
-                double eva = Double.valueOf(evaporationBox.getText());
+                double eva = 1 - Double.valueOf(evaporationBox.getText());
                 System.out.println(eva);
                 if (eva < 1) {
                     ant.setEvaporationRate(eva);
