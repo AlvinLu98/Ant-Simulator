@@ -1,25 +1,19 @@
-import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.time.Instant;
 
 public class Display extends Application {
-    public static AnimationTimer timer;
     public static Timeline timeline;
     public static Instant current = Instant.now();
-    public static Label time;
-    public static Text instruction = new Text("Setting up....");
-    public static Text warning =  new Text("");
     public static Stage menuStage;
     public static Stage primaryStage;
+    public static long prevTime = 0;
 
     public static Simulator sim = new Ant_Simulator(60); //Creates an ant simulator
     private Parent root;

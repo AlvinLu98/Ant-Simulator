@@ -25,6 +25,7 @@ public abstract class Simulator{
     public static final int HEIGHT = WIDTH/12*9;
     public static Instant start = Instant.now();
     public static Instant current = Instant.now();
+    public static Instant scaledCurrent = Instant.now();
     public static long elapsedTime = 0;
 
     /** JavaFX Scene */
@@ -37,6 +38,8 @@ public abstract class Simulator{
     protected static Timeline timeline;
 
     protected static AnimationTimer timer;
+
+    protected static long prevTime = 0;
 
     /** Handler for all simulation objects */
     protected Handler handler;
@@ -87,8 +90,8 @@ public abstract class Simulator{
         Simulator.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                Simulator.current = Instant.now();
-                Simulator.elapsedTime = java.time.Duration.between(Simulator.start, Simulator.current).toMillis()/1000;
+                Simulator.scaledCurrent = Instant.now();
+                Simulator.elapsedTime = java.time.Duration.between(Simulator.start, Simulator.scaledCurrent).toMillis()/1000;
             }
         };
     }

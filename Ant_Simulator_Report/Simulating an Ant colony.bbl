@@ -1,0 +1,53 @@
+\begin{thebibliography}{1}
+
+\bibitem{Swarm_Intro}
+Eric Bonabeau, Marco Dorigo, and Guy Theraulaz.
+\newblock {\em From Natural to Artificial Swarm Intelligence}.
+\newblock Oxford University Press, Inc., USA, 1999.
+
+\bibitem{Ant_Simulator}
+Liviu Panait and Sean Luke.
+\newblock Learning ant foraging behaviors.
+\newblock Citeseer.
+
+\bibitem{Ant_Simulator_Revisited}
+Liviu Panait and Sean Luke.
+\newblock Ant foraging revisited.
+
+\bibitem{Ant_Simulator_Intro}
+Liviu Panait and Sean Luke.
+\newblock A pheromone-based utility model for collaborative foraging.
+\newblock In {\em Proceedings of the Third International Joint Conference on
+  Autonomous Agents and Multiagent Systems, 2004. AAMAS 2004.}, pages 36--43.
+  IEEE, 2004.
+
+\bibitem{Swarm_Animals}
+Veysel Gazi and Kevin~M Passino.
+\newblock Stability analysis of social foraging swarms.
+\newblock {\em IEEE Transactions on Systems, Man, and Cybernetics, Part B
+  (Cybernetics)}, 34(1):539--557, 2004.
+
+\bibitem{Swarm_Explanation}
+Olaf Witkowski and Takashi Ikegami.
+\newblock Emergence of swarming behavior: foraging agents evolve collective
+  motion based on signaling.
+\newblock {\em PloS one}, 11(4):e0152756, 2016.
+
+\bibitem{Swarm_Properties}
+Gerardo Beni.
+\newblock From swarm intelligence to swarm robotics.
+\newblock In {\em International Workshop on Swarm Robotics}, pages 1--9.
+  Springer, 2004.
+
+\bibitem{Ant_Pheromones}
+Duncan~E Jackson and Francis~LW Ratnieks.
+\newblock Communication in ants.
+\newblock {\em Current biology}, 16(15):R570--R574, 2006.
+
+\bibitem{Mason}
+Sean Luke, Claudio Cioffi-Revilla, Liviu Panait, Keith Sullivan, and Gabriel
+  Balan.
+\newblock Mason: A multiagent simulation environment.
+\newblock {\em Simulation}, 81(7):517--527, 2005.
+
+\end{thebibliography}

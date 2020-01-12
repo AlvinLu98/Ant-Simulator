@@ -14,18 +14,58 @@
     <Tab text="Control">
         <GridPane hgap="10" vgap="10">
             <padding><Insets top="25" right="25" bottom="25" left="25"/> </padding>
+
+            <Text fx:id="time" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Text fx:id="scaledTime" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="3"/>
+            <Text fx:id="antPop" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+            <Label text="Speed up: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Slider fx:id="speedUp" max="4" majorTickUnit="0.5" minorTickCount="1" showTickLabels="true" value="1"
+                    showTickMarks="true" blockIncrement="0.1" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.columnSpan="3">
+
+            </Slider>
+
+            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5" prefWidth="100">
+                <Button text="Play" onAction="#play" minWidth="80"/>
+            </HBox>
+
+            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5" prefWidth="100">
+                <Button text="Pause" onAction="#pause" minWidth="80"/>
+            </HBox>
+
+            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="5" prefWidth="100">
+                <Button text="Stop" onAction="#stop"  minWidth="80"/>
+            </HBox>
+        </GridPane>
+    </Tab>
+
+    <Tab text="Ant settings">
+        <GridPane hgap="10" vgap="10">
+            <padding><Insets top="25" right="25" bottom="25" left="25"/> </padding>
             <Label text="No. of Ants: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
             <TextField fx:id="antNoTextField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
 
-            <Label text="Evaporation rate: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="evaporationBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label text="Birth rate of ants (per day): " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="birthRateBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
 
-            <Label text="Number of food item: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <TextField fx:id="foodAmtBox" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <Label text="Lifespan (days): " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <TextField fx:id="lifespanBox" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
-            <Label text="Type of obstacle: " GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        </GridPane>
+    </Tab>
+
+    <Tab text="Environment settings">
+        <GridPane hgap="10" vgap="10">
+            <padding><Insets top="25" right="25" bottom="25" left="25"/> </padding>
+            <Label text="Evaporation rate: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <TextField fx:id="evaporationBox" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+            <Label text="Number of food item: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <TextField fx:id="foodAmtBox" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+            <Label text="Type of obstacle: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <ComboBox fx:id="obstacleType" promptText="--- Choose an Obstacle ---" minWidth="200.0" GridPane.columnIndex="1"
-                      GridPane.rowIndex="4">
+                      GridPane.rowIndex="3">
                 <items>
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="No Obstacle"/>
@@ -35,30 +75,8 @@
                 </items>
             </ComboBox>
 
-            <Label text="Birth rate of ants: " GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <TextField fx:id="birthRateBox" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
-
-            <Label text="Lifespan: " GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-            <TextField fx:id="lifespanBox" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
-
-            <Label text="Time scale: " GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-            <TextField fx:id="timeScaleBox" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
-
-            <Text fx:id="time" GridPane.columnIndex="0" GridPane.rowIndex="10"/>
-            <Text fx:id="scaledTime" GridPane.columnIndex="0" GridPane.rowIndex="11"/>
-            <Text fx:id="antPop" GridPane.columnIndex="0" GridPane.rowIndex="12"/>
-
-            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="15" prefWidth="100">
-                <Button text="Play" onAction="#play" minWidth="80"/>
-            </HBox>
-
-            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="15" prefWidth="100">
-                <Button text="Pause" onAction="#pause" minWidth="80"/>
-            </HBox>
-
-            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="15" prefWidth="100">
-                <Button text="Stop" onAction="#stop"  minWidth="80"/>
-            </HBox>
+            <Label text="Time scale: " GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <TextField fx:id="timeScaleBox" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
         </GridPane>
     </Tab>
 </TabPane>

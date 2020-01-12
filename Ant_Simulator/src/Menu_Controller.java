@@ -1,5 +1,4 @@
 import javafx.animation.Animation;
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -10,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
@@ -39,6 +39,9 @@ public class Menu_Controller {
     private TextField timeScaleBox;
 
     @FXML
+    private Slider speedUp;
+
+    @FXML
     Text time;
 
     @FXML
@@ -59,9 +62,11 @@ public class Menu_Controller {
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                 event -> {
                     Ant_Simulator ant = (Ant_Simulator)Display.sim;
-                    time.setText(String.valueOf(java.time.Duration.between(Simulator.start, Display.current).toMillis()/1000));
-                    scaledTime.setText(java.time.Duration.between(ant.start, ant.current).toDays() + " days");
-                    antPop.setText(String.valueOf(Ant_Simulator.getAntPop()));
+                    time.setText(String.valueOf(java.time.Duration.between(Simulator.start, Simulator.current).toMillis()/1000));
+                    java.time.Duration diff = java.time.Duration.between(Simulator.start, Simulator.scaledCurrent);
+                    scaledTime.setText(diff.toDays() + " days " + (diff.toHours())%24 + " Hours " + (diff.toMinutes())%60 +
+                            " Minutes " + (diff.toMillis()/1000)%60 + " Seconds");
+                    antPop.setText(String.valueOf(Ant_Simulator.getAntPop()) + " ants alive");
                 });
         Display.timeline = new Timeline();
         Display.timeline.setCycleCount(Animation.INDEFINITE);
@@ -79,17 +84,13 @@ public class Menu_Controller {
         lifespanBox.setText(String.valueOf(ant.getLifespan()));
         timeScaleBox.setText(String.valueOf(ant.getScale()));
 
-        Display.timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                Display.current = Instant.now().plusMillis(totalPauseTime);
-            }
-        };
+        speedUp.valueProperty().addListener((observable, oldValue, newValue) -> {
+            Display.sim.timeline.setRate(newValue.doubleValue());
+        });
     }
 
     public static void start(){
         Display.timeline.play();
-        Display.timer.start();
     }
 
     public void play(){
@@ -102,9 +103,12 @@ public class Menu_Controller {
 //            Display.sim.beginSimulation();
         }
         if(paused){
-            totalPauseTime += java.time.Duration.between(Instant.now(), pauseStartTime).toMillis();
+            totalPauseTime = java.time.Duration.between(pauseStartTime, Instant.now()).toMillis();
+            Ant_Simulator ant = (Ant_Simulator)Display.sim;
+            Simulator.current = Simulator.current.plusMillis(-totalPauseTime);
+            Simulator.scaledCurrent = Simulator.scaledCurrent.plusMillis(ant.getScale() * -totalPauseTime);
             Display.timeline.play();
-            Display.sim.beginSimulation();
+            ((Ant_Simulator)Display.sim).playSimulation();
             paused = false;
         }
         play = true;
@@ -113,11 +117,12 @@ public class Menu_Controller {
     public void pause(){
         paused = true;
         if(play) {
+            play = false;
             pauseStartTime = Instant.now();
+            Display.timeline.pause();
+            Ant_Simulator.timeline.pause();
+            Ant_Simulator.timer.stop();
         }
-        Display.timeline.pause();
-        Ant_Simulator.timeline.pause();
-        Ant_Simulator.timer.stop();
     }
 
     public void stop(){
@@ -196,7 +201,7 @@ public class Menu_Controller {
                 ant.setLifespan(Integer.valueOf(lifespanBox.getText()));
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Birth rate should be a number!\n";
+                errorMes += "Lifespan should be a number!\n";
                 valid = false;
             }
 
@@ -204,7 +209,7 @@ public class Menu_Controller {
                 ant.setScale(Integer.valueOf(timeScaleBox.getText()));
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Birth rate should be a number!\n";
+                errorMes += "Time scale should be a number!\n";
                 valid = false;
             }
 

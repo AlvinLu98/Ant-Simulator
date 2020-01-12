@@ -134,11 +134,17 @@ public class Ant_Simulator extends Simulator{
 
     @Override
     public void beginSimulation(){
+        Simulator.start = Instant.now();
+        Simulator.scaledCurrent = Instant.now();
+        Simulator.current = Instant.now();
         Simulator.timeline.play();
         Simulator.timer.start();
         initialiseAnts();
-        Simulator.start = Instant.now();
-        Simulator.current = Instant.now();
+    }
+
+    public void playSimulation(){
+        Simulator.timeline.play();
+        Simulator.timer.start();
     }
 
     /**
@@ -164,10 +170,16 @@ public class Ant_Simulator extends Simulator{
         Simulator.timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                long diff = java.time.Duration.between(Simulator.start, Instant.now()).toMillis();
-                Simulator.current = Simulator.start.plusMillis(diff*scale);
-                long daysPassed = java.time.Duration.between(Simulator.start, Simulator.current).toDays();
-                if(elapsedTime != daysPassed){
+//                long diff = java.time.Duration.between(Simulator.start, Instant.now()).toMillis();
+                if(prevTime == 0) {
+                    prevTime = now;
+                }
+                long diff = (now - prevTime) / 1000000;
+                prevTime = now;
+                Simulator.current = Simulator.current.plusMillis((long)(diff + diff*(timeline.getRate() - 1)));
+                Simulator.scaledCurrent = Simulator.scaledCurrent.plusMillis((long) (diff * scale + diff * scale * (timeline.getRate() - 1)));
+                long daysPassed = java.time.Duration.between(Simulator.start, Simulator.scaledCurrent).toDays();
+                if (elapsedTime != daysPassed) {
                     elapsedTime = daysPassed;
                     generateAnts(birthRate, homeX, homeY, velX, velY);
                 }
@@ -533,6 +545,21 @@ public class Ant_Simulator extends Simulator{
         return smaller;
     }
 
+    public static int getVelX() {
+        return velX;
+    }
+
+    public static void setVelX(int velX) {
+        Ant_Simulator.velX = velX;
+    }
+
+    public static int getVelY() {
+        return velY;
+    }
+
+    public static void setVelY(int velY) {
+        Ant_Simulator.velY = velY;
+    }
 
     public int getInitAntAmt() {
         return initAntAmt;
