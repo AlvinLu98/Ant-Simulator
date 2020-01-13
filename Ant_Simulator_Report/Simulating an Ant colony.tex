@@ -9,7 +9,7 @@
 \newcommand{\ra}{\rightarrow}
 \newcommand{\la}{\leftarrow}
 \usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage{algpseudocode}
 \usepackage{natbib}
 \topmargin = 0pt
 \voffset = -80pt
@@ -54,6 +54,46 @@ The biological world has always been a source of inspiration for computer models
 
 This project aims to develop a realistic ant simulator that allows customisation of various biological settings to simulate different ant colonies in varying environments. It will provide a method to show an accurate representation of ant behaviours, simulate survivability or ants in different settings, and reveal emergent properties that may benefit future swarm intelligence.
 
+\section{Report structure}
+Chapter \ref{chap:intro} will provide an introduction to the topic which will be followed by chapter \ref{chap:background} that provides scientific background, previous materials and motivation of for the project. Chapter \ref{chap:design} will detail the design considerations for the solution, supported by analysis of previous literature and existing solutions. Implementation details will be explained in chapter \ref{chap:Implementation} showing figures of the solution and design modifications made. Chapter \ref{chap:Testing} will provide testing and evaluation of the final software with discussions on it's strengths and weakness and the report will end with chapter \ref{chap:conclusion} providing a conclusion to the project.
+
+\chapter{Background}
+\label{chap:background}
+\section{Motivation}
+Swarming is a behaviour that is commonly found in social animal species \citep{Swarm_Animals}. The concept of swarming is having a large group of individually operating unit (agents or individual animal) working together to achieve a task that is typically to great for a unit to complete on its own \citep{Swarm_Explanation}. Large amount of research has been conducted to explain the evolutionary benefits of such behaviour and researchers are aiming to adapt some of these properties into various computer systems. This is commonly achieved by having a group relatively simpler agents that can communicate between each other instead of a singular system to complete tasks collectively by converging individual accomplishments \citep{Swarm_Properties}.
+
+Within animals that exhibit swarming, ants are one of the insect that has been vigorously studied for their behaviour. Ants most commonly utilise swarming during the process of foraging. Certain species of ants are shown to leave pheromones to share information an individual ant has learnt \citep{Ant_Pheromones}. The two most common pheromones are home pheromones that can guide them home and also pheromones that guide other ants to food sources \citep{Ant_Pheromones}. 
+
+
+\section{Existing research and methods}
+Currently, an ant simulator was found publicly available online that uses the MASON simulation toolkit \citep{Mason}. The simulator provides a list of features listed below:
+\begin{itemize}
+	\item Allows customisation of certain values such as the ant population and evaporation rate.
+	\item Allows pausing, playing and speeding up or slowing down the simulation.
+	\item Shows the pheromone and ant data of a particular point in the map when clicked
+\end{itemize}
+
+The simulator provides quick and easy way to visualise movements of the ants however it the customisation was limited as the location of the hive, food and obstacle type can not be changed. This simulator aims only to show how ants eventually converge into a path from hive to food shown in figure \ref{MASON_Ant_Converged} which limits the flexibility of the simulator. The source code of the ant simulator is available on \textit{GitHub} for reference.
+
+\begin{figure}[htb]
+	%\begin{center}
+	\includegraphics[width=1.0 \columnwidth]{MASON_Ant.jpg}
+	\caption{Ant simulator developed by Liviu Panait \citep{Ant_Simulator}}
+	\label{MASON_Ant}
+	%\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	%\begin{center}
+	\includegraphics[width=1.0 \columnwidth]{MASON_Ant_Converged.jpg}
+	\caption{Convergence of ant in the simulator \citep{Ant_Simulator}}
+	\label{MASON_Ant_Converged}
+	%\end{center}
+\end{figure}
+
+\chapter{Design}
+\label{chap:design}
+Describe here various methods that will be used in your project. Use different sections for distinctly different subjects and use subsections for specific details on the same subject. Only use subsubsections or paragraphs (which are not numbered) if you believe this is really necessary. 
 
 \section{MoSCoW}
 \subsection{Must}
@@ -138,58 +178,43 @@ This project aims to develop a realistic ant simulator that allows customisation
 	\hline
 \end{tabular}
 
-\section{Report structure}
-Breifly describe what you will cover in the remainder of the report, chapter by chapter.
-
-\chapter{Background}
-\section{Motivation}
-Swarming is a behaviour that is commonly found in social animal species \citep{Swarm_Animals}. The concept of swarming is having a large group of individually operating unit (agents or individual animal) working together to achieve a task that is typically to great for a unit to complete on its own \citep{Swarm_Explanation}. Large amount of research has been conducted to explain the evolutionary benefits of such behaviour and researchers are aiming to adapt some of these properties into various computer systems. This is commonly achieved by having a group relatively simpler agents that can communicate between each other instead of a singular system to complete tasks collectively by converging individual accomplishments \citep{Swarm_Properties}.
-
-Within animals that exhibit swarming, ants are one of the insect that has been vigorously studied for their behaviour. Ants most commonly utilise swarming during the process of foraging. Certain species of ants are shown to leave pheromones to share information an individual ant has learnt \citep{Ant_Pheromones}. The two most common pheromones are home pheromones that can guide them home and also pheromones that guide other ants to food sources \citep{Ant_Pheromones}. 
+\section{Structure of the system}
 
 
-\section{Existing research and methods}
-Currently, an ant simulator was found publicly available online that uses the MASON simulation toolkit \citep{Mason}.
+\section{Ant movement AI}
+This section shows the pseudocode of ant movement AI.
+\begin{algorithm}[th]
+\caption{ Ant foraging algorithm }
+\begin{algorithmic}[1]
+	\If{HasFoodItem}
+		\State Find-Direction-Home
+	\ElsIf{FoundFoodPheromone}
+		\State Follow-Food-Pheromone
+	\Else
+		\State Forage
+	\EndIf
+\end{algorithmic}
+\end{algorithm}
 
-\begin{figure}[htb]
-	%\begin{center}
-	\includegraphics[width=1.0 \columnwidth]{MASON_Ant.jpg}
-	\caption{Ant simulator developed by Liviu Panait}
-	\label{MASON_Ant}
-	%\end{center}
-\end{figure}
-
-\chapter{Methodology}
-
-Describe here various methods that will be used in your project. Use different sections for distinctly different subjects and use subsections for specific details on the same subject. Only use subsubsections or paragraphs (which are not numbered) if you believe this is really necessary. 
-
-\section{Method 1}
-\subsection{Method 1 specific detail 1}
-In case you need maths, here is an example to write an equation:
-\begin{equation}\label{weak_form}
-\int_{\Omega_0} \delta u \frac{\partial \mathbf{P}}{\partial X}d\Omega_0 + \int_{\Omega_0} \delta u \mathbf{b} d\Omega_0 + \int_{\Omega_0} \delta u  \rho_0\mathbf{\ddot u} d\Omega_0 = 0
-\end{equation}
-And here we show how to write a matrix equation:
-\begin{equation}\label{Jacobian}
- \mathbf{X}  \frac{\partial N}{\partial e_c} =  \left[  \begin{array}{cccc} x_1 & x_2 & x_3 & x_4 \\  y_1 & y_2 & y_3 & y_4 \\  z_1 & z_2 & z_3 & z_4 \end{array} \right] \left[  \begin{array}{ccc} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0& 1 \\  -1 & -1 &  -1  \end{array} \right] 
-\end{equation}
-
-
-\subsection{Method 1 specific detail 2}
-blablabla
-
-\paragraph blablabla
-
-\section{Method 2}
-
-\subsection{Method 2 specific detail 1}
-
-\section{Etc.}
-
-\subsection{Etc.}
+\begin{algorithm}[th]
+	\caption{ Find-Direction-Home algorithm}
+	\begin{algorithmic}[1]
+		\If{Ant reached the hive}
+			\State Drop food 
+			\State $HasFoodItem \gets False$
+		\Else
+			\State $direction$ $\leftarrow$ front direction with highest home pheromone
+			\If{$direction$ = NULL}
+				\State $direction$ $\leftarrow$ surrounding with highest home pheromone
+			\EndIf
+		\EndIf
+		\State moveAnt($direction$)
+	\end{algorithmic}
+\end{algorithm}
+The \textit{Follow-Food-Pheromone} has a similar algorithm to \textit{Find-Direction-Home} with home pheromones changed to food pheromones.
 
 \chapter{Implementation}
-
+\label{chap:Implementation}
 In this chapter you cover the actual implementation of your project.
 This is likely to require figures such as Fig.\ \ref{Pelvis_BVH}.
 
@@ -212,28 +237,6 @@ Or better - a UML diagram (class, sequence and state diagrams are the preferred 
 \end{figure}
 
 Or perhaps an algorithm (if it does not belong in the Methodology chapter instead).
-
-\begin{algorithm}[th]
-\caption{ The projection based contact method algorithm }
-\begin{algorithmic}[1]
-\STATE Retrieve current node displacement $u$
-\\ \texttt{float3 u = m\_U\_new[nodeIndex].xyz;}
-\STATE Retrieve constraint plane equation
-\\ \texttt{float4 plane = m\_constraintMagnitude[nodeIndex];}
-\STATE Calculate dot product with plane normal
-\\ \texttt{float d = dot(u, plane.xyz);}
-\STATE Find node penetration into the plane's negative half-space
-\\ \texttt{float penetration = plane.w - d;}
-\IF {penetration is greater than zero}
-	\STATE Find projection onto the plane surface
-	
-	\texttt{float3 proj = u + plane.xyz * penetration;}
-	\STATE Prescribe new nodal position to be on the surface
-	
-	\texttt{m\_U\_new[nodeIndex] = (float4)(proj, 0.0f);}
-\ENDIF
-\end{algorithmic}
-\end{algorithm}
 
 Or perhaps a table named Table \ref{Res01} (again could be more suitable in the Methodology chapter).
 
@@ -261,29 +264,25 @@ $\mi{BPD}$  & 105.0 &  0.00 &  89.7 & -0.21 &  89.7 & -0.83 \\ \hline
 Note that code snippets or lists of crucial programming code or large UML diagrams should go in the Appendix/Appendices.
 
 
-\chapter{Experiments (or Testing)}
+\chapter{Testing and Discussion}
+\label{chap:Testing}
+As the software depends heavily on the ants interaction with the environment, testing will be conducted heavily towards the end of the development stage instead of early stages. Bugs and issue are predicted to be mostly emergent, caused by the ants interaction with its environment.
 
-Describe various experiments you designed to test your software product. In case you have protocols which cover various pages, please put them in an appendix (e.g. Appendix A).
+\section{Unit testing}
+Printing out values, Test class for different methods
 
-\chapter{Results}
+\section{Integration testing}
+parameter passing
 
-This chapter could be potentially merged with the previous one if testing is the only form of experiment that qualifies. Note that testing involves various levels. The ones which should definitely be done are unit tests, integration tests and user tests.
-
-\chapter{Discussion}
-
-Discuss the results of your software product development. This chapter could be merged with the previous one(s).
+\section{User testing}
 
 \chapter{Conclusion and Future Work}
-
+\label{chap:conclusion}
 Conclude your achievements and put them in perspective with the MoSCoW analysis you did early on. Be honest by declaring for example S categorised objectives which did not make it to the final deliverable rather than reversely modifying your MoSCoW in Chapter \ref{chap:intro}! Also discuss future developments and how you see the deliverable improving if more time could be spent. Do not put in subjective opinions or rants or excuses as to why something did not work out as planned in your report. A technical report is not a medium for complaints as there are other outlets for that typically well before you came to this stage (e.g. labs, e-mail etc.).
 
 
 \bibliographystyle{unsrt}
 \bibliography{References}
-
-\chapter*{Contributions}
-
-State here the \% contribution to the project of each individual member of the group and describe in brief what each member has done (if this corresponds to particular sections in the report then please specify these).
 
 \chapter*{Appendix A}
 
