@@ -127,7 +127,7 @@ public class Ant extends Sprite {
         }
         if(i > 0) {
             visited.add(new Coordinate(this.getCurX(), this.getCurY()));
-            if(visited.size() > 10) {
+            if(visited.size() > 50) {
                 visited.removeFirst();
             }
             behind = Math.abs(direction - 8);
@@ -224,7 +224,7 @@ public class Ant extends Sprite {
                     else if (p.getName().equals("Food") && i != 4)
                     {
                         Pheromone food = (Pheromone)p;
-                        if(food.getValue() > 0) {
+                        if(food.getValue() > 0 && !visited.contains(new Coordinate(food.getStartX(), food.getStartY()))) {
                             goingToFood();
                             direction = compareSurroundingFoodForage(pd, food, direction, i, moveX, moveY, max, d);
                             if (direction == i) {
