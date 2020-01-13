@@ -104,7 +104,6 @@ public class Ant_Simulator extends Simulator{
     /* -------------------------------------------------------------------------------------*/
 
     /* -------------------------------- Overridden methods ---------------------------------*/
-
     /**
      * Initialises the scene
      * @param primaryStage stage where the scene will be initialised
@@ -113,6 +112,7 @@ public class Ant_Simulator extends Simulator{
     public void initialize(final Stage primaryStage){
         /* ------------------------------ Load from XML ------------------------------ */
         try{
+            System.out.println();
             message = FXMLLoader.load(getClass().getResource("Map_Creation.fxml"));
         }catch (IOException e){
             System.out.println("Failed to load Set up fxml file");

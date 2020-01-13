@@ -5,6 +5,7 @@ import javafx.scene.shape.Circle;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 public class Ant extends Sprite {
@@ -23,7 +24,7 @@ public class Ant extends Sprite {
     private Instant birthTime;
     public ArrayList<Integer> blocked;
     private ArrayList<Integer> clear = new ArrayList<>();
-
+    private LinkedList<Coordinate> visited = new LinkedList<>();
     public static final double rad = 1.0; //radius of an ant
 
     /**
@@ -72,7 +73,6 @@ public class Ant extends Sprite {
         }
     }
 
-    //TODO change blocked to clear, this way randomPreferredMovement can get from only available moves
     private void resetClear(){
         clear.clear();
         for(int i=0; i < 9; i++){
@@ -95,6 +95,7 @@ public class Ant extends Sprite {
         int direction = findDirectionHome(); //Try to find the best way home
         if(direction == 4){ //If there isn't a best way home
             direction = findDirectionHomeNoPheromone(); //Find a way home based on distance
+//            direction = findDirectionHomeSurrounding();
         }
         move(direction); //move towards the decided direction
         if((this.c.getX() + node.getTranslateX()) == this.c.getX()
@@ -125,6 +126,10 @@ public class Ant extends Sprite {
             }
         }
         if(i > 0) {
+            visited.add(new Coordinate(this.getCurX(), this.getCurY()));
+            if(visited.size() > 10) {
+                visited.removeFirst();
+            }
             behind = Math.abs(direction - 8);
             switch (direction) {
                 case 0:
@@ -276,7 +281,7 @@ public class Ant extends Sprite {
                             blocked.add(i); //add to the list the direction that's been blocked
                         } else if (p.getName().equals("Home")) {
                             Pheromone home = (Pheromone) p;
-                            if (home.getValue() > 0) {
+                            if (home.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))){
                                 direction = compareSurroundingHome(pd, home, direction, i, moveX, moveY, max, front);
                                 if(direction == i) {
                                     moveX = surrounding.get(direction).getStartX();
@@ -289,14 +294,12 @@ public class Ant extends Sprite {
                 }
             }
         }
-        if(direction == 4){
-            direction = findDirectionHomeSurrounding(front);
-        }
         return direction;
     }
 
-    public int findDirectionHomeSurrounding(ArrayList<Integer> front) {
+    public int findDirectionHomeSurrounding() {
        int direction = 4;
+        ArrayList<Integer> front = prevDirection.getSide(prevDirection);
        for(int i: blocked){
            if(direction == 4) {
                if (!blocked.contains(i - 1) && (i - 1) != 4 && (i - 1) != behind) {
@@ -312,25 +315,79 @@ public class Ant extends Sprite {
        return direction;
     }
 
-    //TODO fix with obstacles
+    public int findDirectionHomeAllDirection(){
+        ArrayList<Pheromone_Data> surrounding = (Ant_Simulator.getSurrounding(this.getCurX(), this.getCurY()))
+                .getInList();
+        ArrayList<Pheromone_Data> checked = new ArrayList<>();
+        int moveX = 0;
+        int moveY = 0;
+        double max = 0;
+        int direction = 4;
+        int defaultDirection = 4;
+        double minDist = Integer.MAX_VALUE;
+        ArrayList<Integer> front = prevDirection.getSide(prevDirection);
+        double current = euclideanDist(this.getCurX(), this.getCurY(), this.getStartX(), this.getStartY());
+
+        for (int i  = 0; i < surrounding.size(); i++) { //loop through all surrounding direction
+            Pheromone_Data pd = surrounding.get(i); //obtain the current direction's pheromone data
+            if (pd != null && i != 4 ) {
+                //calculate the euclidean distance of potential move
+                double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(), this.getStartY());
+                checked.add(pd);
+                if (minDist > potential) { //if the current minimum is bigger than the current direction
+                    defaultDirection = i; //set the default direction to current move
+                    minDist = potential; // sets the minimum distance to the current move distance
+                }
+                for (Ground_Data p : pd.getPheromones()) { //loop through the data on the ground
+                    if (p.getName().equals("Obstacle")) {
+                        blocked.add(i); //add to the list the direction that's been blocked
+                    } else if (p.getName().equals("Home")) {
+                        Pheromone home = (Pheromone) p;
+                        if (home.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
+                            direction = compareSurroundingHome(pd, home, direction, i, moveX, moveY, max, front);
+                            if(direction == i) {
+                                moveX = surrounding.get(direction).getStartX();
+                                moveY = surrounding.get(direction).getStartY();
+                                max = home.getValue();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return direction;
+    }
+
     public int findDirectionHomeNoPheromone(){
         ArrayList<Pheromone_Data> surrounding = (Ant_Simulator.getSurrounding(this.getCurX(), this.getCurY()))
                 .getInList();
         int direction = 4;
         double minDist = Integer.MAX_VALUE;
         double current = euclideanDist(this.getCurX(), this.getCurY(), this.getStartX(), this.getStartY());
+        ArrayList<Integer> front = prevDirection.getSide(prevDirection);
+        Direction back = Direction.values()[behind];
+        ArrayList<Integer> backwards = back.getSurrounding(back);
+
         for (int i  = 0; i < surrounding.size(); i++) {
             Pheromone_Data pd = surrounding.get(i);
-            for(Ground_Data p: pd.getPheromones()){
-                if(!p.getName().equals("Obstacle")){
-                    Pheromone phe = (Pheromone)p;
-                    if(phe.getValue() > 0) {
-                        double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(),
-                                this.getStartY());
-                        if (potential < current) {
-                            if (minDist > potential) {
-                                direction = i;
-                                minDist = potential;
+            if(pd != null) {
+                for (Ground_Data p : pd.getPheromones()) {
+                    if (!p.getName().equals("Obstacle")) {
+                        Pheromone phe = (Pheromone) p;
+                        if (phe.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
+                            double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(),
+                                    this.getStartY());
+//                            if (front.contains(i)) {
+//                                return i;
+//                            }
+                            if (potential <= current) {
+                                if(direction == 4){
+                                    direction = i;
+                                }
+                                else if (minDist > potential) {
+                                    direction = i;
+                                    minDist = potential;
+                                }
                             }
                         }
                     }
@@ -352,13 +409,11 @@ public class Ant extends Sprite {
                 //Calculate the euclidean distance of new and old direction to home
                 double prev = euclideanDist(moveX, moveY, this.getStartX(), this.getStartY());
                 double current = euclideanDist(p.getStartX(), p.getStartY(), this.getStartX(), this.getStartY());
-                if (current > prev) { //if new direction is further away from home
-                    direction = i;
+                if (d.contains(i)) {
+                    return i;
                 }
-                else if (current == prev) {
-                    if (d.contains(i)) {
-                        direction = i;
-                    }
+                if (current >= prev && i != behind) { //if new direction is further away from home
+                    direction = i;
                 }
         }
         return direction;
@@ -368,9 +423,9 @@ public class Ant extends Sprite {
                                        ArrayList<Integer> d)
     {
         int direction = curD;
-        if (p.getValue() > max*p.getEvaporation()) {
+        if (p.getValue() > max) {
             direction = i;
-        } else if (p.getValue() == max*p.getEvaporation()) {
+        } else if (p.getValue() == max) {
             double prev = euclideanDist(pd.getStartX(), pd.getStartY(), moveX, moveY);
             double cur = euclideanDist(pd.getStartX(), pd.getStartY(), this.getCurX(), this.getCurY());
             if (cur > prev) {
@@ -417,12 +472,6 @@ public class Ant extends Sprite {
     }
 
     private void moveNW(){
-//        boundaryNegX();
-//        node.setTranslateX(getTranslateX() - velX);
-//
-//        boundaryNegY();
-//        node.setTranslateY(getTranslateY() - velY);
-
         if(boundaryNegX() && boundaryNegY()){
             moveSE();
         }
@@ -440,9 +489,6 @@ public class Ant extends Sprite {
     }
 
     private void moveN(){
-//        boundaryNegY();
-//        node.setTranslateY(getTranslateY() - velY);
-
         if(boundaryNegY()){
             moveS();
         }

@@ -144,7 +144,6 @@ public class Menu_Controller {
             if (!antNoTextField.getText().isEmpty() && Display.isDigit(antNoTextField.getText())) {
                 ant.setInitAntAmt(Integer.parseInt(antNoTextField.getText()));
                 ant.setAntPop(0);
-                System.out.println(ant.getInitAntAmt());
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
                 errorMes += "Please enter a valid number for ants\n";
@@ -154,7 +153,6 @@ public class Menu_Controller {
 
             if (!evaporationBox.getText().isEmpty() && Display.isDouble(evaporationBox.getText())) {
                 double eva = 1 - Double.valueOf(evaporationBox.getText());
-                System.out.println(eva);
                 if (eva < 1) {
                     ant.setEvaporationRate(eva);
                 }

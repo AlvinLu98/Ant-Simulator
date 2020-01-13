@@ -58,7 +58,6 @@ public class Initial_Form_Controller {
 
         if(!evaporationBox.getText().isEmpty() && Display.isDouble(evaporationBox.getText())){
             double eva = 1 - Double.valueOf(evaporationBox.getText());
-            System.out.println(eva);
             if(eva < 1) {
                 ant.setEvaporationRate(eva);
             }
