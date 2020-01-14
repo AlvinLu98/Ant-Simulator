@@ -385,6 +385,9 @@ public class Ant extends Sprite {
                         if (phe.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
                             double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(),
                                     this.getStartY());
+                            if(front.contains(i)){
+                                direction = i;
+                            }
                             if (potential <= current) {
                                 if(direction == 4){
                                     direction = i;

@@ -42,7 +42,7 @@ public class Ant_Simulator extends Simulator{
     private static int scale;
     private static int antPop = 0;
     private static int deadAntPop = 0;
-
+    private static int selectedX = -1, selectedY = -1;
     public static boolean setUpHive = false, setUpFood = false;
     private int foodCount = 0;
     private Parent message;
@@ -224,17 +224,6 @@ public class Ant_Simulator extends Simulator{
         setUpFood = false;
         foodCoordinate = new ArrayList<>();
         selectLocation();
-
-        final Duration oneFrameAmt = Duration.millis(1000/fps);
-        final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
-                event -> {
-
-                });
-        Simulator.timeline = new Timeline();
-        Simulator.timeline.setCycleCount(Animation.INDEFINITE);
-        Simulator.timeline.setAutoReverse(true);
-        Simulator.timeline.getKeyFrames().add(oneFrame);
-        Simulator.timeline.play();
     }
 
     public void selectLocation(){
@@ -259,6 +248,7 @@ public class Ant_Simulator extends Simulator{
                         foodCount++;
                         if(foodCount == numFood){
                             setUpFood = true;
+                            createEvents();
                             buildLoop();
                             begin();
                         }
@@ -268,6 +258,16 @@ public class Ant_Simulator extends Simulator{
                     Alert a = new Alert(Alert.AlertType.WARNING);
                     a.setContentText("Invalid location!");
                 }
+            }
+        });
+    }
+
+    public void createEvents(){
+        rootNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                selectedX = getKeyX((int)event.getSceneX());
+                selectedY = getKeyY((int)event.getSceneY());
             }
         });
     }
@@ -617,5 +617,21 @@ public class Ant_Simulator extends Simulator{
         if(val < 0) {
             deadAntPop -= val;
         }
+    }
+
+    public static int getSelectedX() {
+        return selectedX;
+    }
+
+    public static void setSelectedX(int selectedX) {
+        Ant_Simulator.selectedX = selectedX;
+    }
+
+    public static int getSelectedY() {
+        return selectedY;
+    }
+
+    public static void setSelectedY(int selectedY) {
+        Ant_Simulator.selectedY = selectedY;
     }
 }

@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 <?import java.lang.String?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
 <TabPane xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml"
          fx:controller="Menu_Controller"
@@ -31,15 +32,32 @@
 
             </Slider>
 
-            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="19" prefWidth="100">
+            <TableView fx:id="pheromones" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="4" GridPane.rowSpan="3">
+                <columns>
+                    <TableColumn text="Name">
+                        <cellValueFactory><PropertyValueFactory property="name"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Value">
+                        <cellValueFactory><PropertyValueFactory property="value"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="X-axis">
+                        <cellValueFactory><PropertyValueFactory property="startX"/></cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Y-axis">
+                        <cellValueFactory><PropertyValueFactory property="startY"/></cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+
+            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="10" prefWidth="100">
                 <Button text="Play" onAction="#play" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="19" prefWidth="100">
+            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="10" prefWidth="100">
                 <Button text="Pause" onAction="#pause" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="19" prefWidth="100">
+            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="10" prefWidth="100">
                 <Button text="Stop" onAction="#stop"  minWidth="80"/>
             </HBox>
         </GridPane>

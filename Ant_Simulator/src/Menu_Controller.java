@@ -7,10 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -18,6 +15,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 
 public class Menu_Controller {
     @FXML
@@ -53,6 +51,9 @@ public class Menu_Controller {
     @FXML
     Text antDeath;
 
+    @FXML
+    TableView pheromones;
+
     private boolean stopped = false, paused = false, play = false;
     Instant pauseStartTime;
     long totalPauseTime;
@@ -71,6 +72,18 @@ public class Menu_Controller {
                             " Minutes " + (diff.toMillis()/1000)%60 + " Seconds");
                     antPop.setText(String.valueOf(Ant_Simulator.getAntPop()) + " ants alive");
                     antDeath.setText(String.valueOf(Ant_Simulator.getDeadAntPop() + " ants died"));
+
+                    if(Ant_Simulator.getSelectedX() != -1){
+                        pheromones.getItems().clear();
+                        ArrayList<Pheromone_Data> pd = Ant_Simulator.getSurrounding(Ant_Simulator.getSelectedX(),
+                                Ant_Simulator.getSelectedY()).getInList();
+                        for(Ground_Data p: pd.get(4).getPheromones()){
+                            if(p instanceof Pheromone){
+                                Pheromone phe = (Pheromone)p;
+                                pheromones.getItems().add(phe);
+                            }
+                        }
+                    }
                 });
         Display.timeline = new Timeline();
         Display.timeline.setCycleCount(Animation.INDEFINITE);
