@@ -26,8 +26,8 @@ public class Handler {
     public void tick(){
         for(Sprite o:objects){
             o.tick();
-            if(o instanceof Ant){
-                if(((Ant)o).isDead()){
+            if(o instanceof Creature){
+                if(((Creature)o).isDead()){
                     addToRemove(o);
                     Simulator.rootNode.getChildren().remove(o.node);
                     Ant_Simulator.modifyAntPop(-1);

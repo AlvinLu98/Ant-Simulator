@@ -1,4 +1,3 @@
-import javafx.animation.AnimationTimer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -8,20 +7,13 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Ant extends Sprite {
+public class Ant extends Creature{
     private boolean hasFoodItem;
     private boolean knowFood;
     private boolean foundFood;
     private boolean followFood;
-    private boolean dead;
-    private long lifespan;
     private Direction prevDirection;
     private int behind;
-    private AnimationTimer timer;
-    private long startTime = System.currentTimeMillis()/1000;
-    private long elapsedTime = 0;
-    private long prevSec = 0;
-    private Instant birthTime;
     public ArrayList<Integer> blocked;
     private ArrayList<Integer> clear = new ArrayList<>();
     private LinkedList<Coordinate> visited = new LinkedList<>();
@@ -382,19 +374,21 @@ public class Ant extends Sprite {
                 for (Ground_Data p : pd.getPheromones()) {
                     if (!p.getName().equals("Obstacle")) {
                         Pheromone phe = (Pheromone) p;
-                        if (phe.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
-                            double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(),
-                                    this.getStartY());
+                        if (phe.getValue() > 0) {
                             if(front.contains(i)){
                                 direction = i;
                             }
-                            if (potential <= current) {
-                                if(direction == 4){
-                                    direction = i;
-                                }
-                                else if (minDist > potential) {
-                                    direction = i;
-                                    minDist = potential;
+                            if(!visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
+                                double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(),
+                                        this.getStartY());
+
+                                if (potential <= current) {
+                                    if (direction == 4) {
+                                        direction = i;
+                                    } else if (minDist > potential) {
+                                        direction = i;
+                                        minDist = potential;
+                                    }
                                 }
                             }
                         }
@@ -678,27 +672,11 @@ public class Ant extends Sprite {
         return this.hasFoodItem;
     }
 
-    public boolean isDead(){
-        return this.dead;
-    }
-
     public boolean isFollowingFood(){
         return this.followFood;
     }
 
     public void goingToFood(){
         this.followFood = true;
-    }
-
-    public long getLifespan() {
-        return lifespan;
-    }
-
-    public void setLifespan(long lifespan) {
-        this.lifespan = lifespan * 24 * 60 * 60;
-    }
-
-    public void setBirthTime(){
-        this.birthTime = Instant.now();
     }
 }

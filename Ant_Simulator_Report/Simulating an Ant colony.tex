@@ -11,6 +11,8 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{natbib}
+\usepackage{rotating}
+
 \topmargin = 0pt
 \voffset = -80pt
 \oddsidemargin = 15pt
@@ -73,13 +75,13 @@ Currently, an ant simulator was found publicly available online that uses the MA
 	\item Shows the pheromone and ant data of a particular point in the map when clicked
 \end{itemize}
 
-The simulator provides quick and easy way to visualise movements of the ants however it the customisation was limited as the location of the hive, food and obstacle type can not be changed. This simulator aims only to show how ants eventually converge into a path from hive to food shown in figure \ref{MASON_Ant_Converged} which limits the flexibility of the simulator. The source code of the ant simulator is available on \textit{GitHub} for reference.
+The simulator provides quick and easy way to visualise movements of the ants however it the customisation was limited as the location of the hive, food and obstacle type can not be changed. This simulator aims only to show how ants eventually converge into a path from hive to food shown in figure \ref{fig:MASON_Ant_Converged} which limits the flexibility of the simulator. The source code of the ant simulator is available on \textit{GitHub} for reference.
 
 \begin{figure}[htb]
 	%\begin{center}
 	\includegraphics[width=1.0 \columnwidth]{MASON_Ant.jpg}
 	\caption{Ant simulator developed by Liviu Panait \citep{Ant_Simulator}}
-	\label{MASON_Ant}
+	\label{fig:MASON_Ant}
 	%\end{center}
 \end{figure}
 
@@ -87,7 +89,7 @@ The simulator provides quick and easy way to visualise movements of the ants how
 	%\begin{center}
 	\includegraphics[width=1.0 \columnwidth]{MASON_Ant_Converged.jpg}
 	\caption{Convergence of ant in the simulator \citep{Ant_Simulator}}
-	\label{MASON_Ant_Converged}
+	\label{fig:MASON_Ant_Converged}
 	%\end{center}
 \end{figure}
 
@@ -177,6 +179,17 @@ The simulator provides quick and easy way to visualise movements of the ants how
 \end{tabular}
 
 \section{Structure of the system}
+The system will have different classes assigned with various responsibilities. The \textbf{Display class} will be the creator of the simulator. This class will be called first during execution of the Java executable. This class will create the windows(stages) for the simulator. All information of the simulator such as time, all sprites and are saved in the \textbf{Ant\_Simulator class} shared to other classes when required. After the simulator has been initiated, the \textbf{Menu\_Controller class} will be assigned the ability to run, modify and terminate the simulator. The system was design with a few base classes that the ant simulator inherits from such as Simulator, Sprites and Ground\_Data class. This allows the improves code re-usability if other simulators are to be built in the future. The full class diagram can be found in figure \ref{fig:Full_Class_Diagram} in the appendix.
+
+  The state diagram of individual ants are shown in figure \ref{fig:State_Diagram}. All ants have a lifespan that is set during initialisation of the simulator. Death of ants are calculated by probability, the closer they are towards the lifespan, the higher the chance of death. Dead ants are removed from the simulator through the handler.
+
+\begin{figure}[htb]
+	\begin{center}
+	\includegraphics[width=0.8 \columnwidth]{State_Diagram.jpg}
+	\caption{State diagram of an Ant}
+	\label{fig:State_Diagram}
+	\end{center}
+\end{figure}
 
 
 \section{Ant movement AI}
@@ -270,29 +283,23 @@ Algorithm \ref{Algorithm:General} shows the high level movement pattern of ants.
 \section{Platform and packages}
 The simulator is developed in Java using the IDE \textit{IntelliJ}. Using Java as the development language ensures that the solution can be run on a wide range of Operating Systems while the object-oriented paradigm allows definition of classes that's duplicable and inheritable. This would be beneficial for this project as the simulator involves creation of large amount of objects that are similar structurally but has to behave independently. The UI will also be developed using \textit{JavaFX} as its platform. JavaFX provides the ability to separate UI from the implementation logic using FXML. It allows quick development of simple user interface that can be easily expanded and updated as JavaFX also supports CSS and HTML.
 
+\section{User interface}
+pr
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=1.0 \columnwidth]{Location_Selection.jpg}
+		\caption{Selecting locations for hive and food}
+		\label{fig:Location_Selection}
+	\end{center}
+\end{figure}
 
-\begin{table}[h]
-\caption[]{Original diameters and diametral strains as reported by
-  Sorbe and Dahlgren \cite{Sorbe:1983} (columns 1-2), from a previous 
-  experiment by Lapeer and Prager and reported in \cite{Lapeer:2001}
-  (columns 3-4), and from the current experiment (columns 5-6).}
-\begin{center}
-\begin{tabular}{|l|c|c||c|c||c|c|}\hline
-& \multicolumn{2}{c||}{S-D} & \multicolumn{2}{c||}{L-P old} & \multicolumn{2}{c|}{L-P new} \\ \hline
-Diameter & length & strain & length & strain & length & strain \\ \hline
-$\mi{MaVD}$ & 140.5 & +1.90 & 129.3 & +0.30 & 129.3 & +1.43 \\
-$\mi{OrOD}$ & 131.4 & +0.10 &   -   &  -    & 119.9 & +1.85 \\
-$\mi{OrVD}$ & 126.9 & +2.20 & 119.3 & +0.25 & 119.3 & +1.24 \\
-$\mi{OFD}$  & 134.0 & +0.40 &  -    &   -   & 119.7 & +1.82 \\ 
-$\mi{SOFD}$ &  -    &   -   &  -    &   -   & 113.2 & -0.85 \\
-$\mi{SOBD}$ & 117.1 & -1.70 &  88.7 & -1.07 &  88.7 & -2.52 \\
-$\mi{BPD}$  & 105.0 &  0.00 &  89.7 & -0.21 &  89.7 & -0.83 \\ \hline
-\end{tabular}
-\label{Res01}
-\end{center}
-\end{table}
-
-Note that code snippets or lists of crucial programming code or large UML diagrams should go in the Appendix/Appendices.
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=1.0 \columnwidth]{Main_Simulator.jpg}
+		\caption{Main UI for the ant simulator}
+		\label{fig:Main_Simulator}
+	\end{center}
+\end{figure}
 
 
 \chapter{Testing and Discussion}
@@ -317,7 +324,13 @@ Conclude your achievements and put them in perspective with the MoSCoW analysis 
 
 \chapter*{Appendix A}
 
-Put in tables of data or protocols (e.g. for testing) or code listings or UML diagrams which may take up several pages and do not sit well in the main body text.
+\begin{sidewaysfigure}
+	\begin{center}
+		\includegraphics[width=1.0 \columnwidth]{Full_Class_Diagram.jpg}
+		\caption{Full class diagram of the Ant simulator}
+		\label{fig:Full_Class_Diagram}
+	\end{center}
+\end{sidewaysfigure}
 
 \end{document}
 
