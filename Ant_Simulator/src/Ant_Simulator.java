@@ -297,6 +297,7 @@ public class Ant_Simulator extends Simulator{
 
     public void reset(Stage primaryStage){
         this.handler.emptySprites();
+        deadAntPop = 0;
         this.rootNode = new Group();
         this.scene = new Scene(this.rootNode, WIDTH, HEIGHT, Color.WHITE); //creates a scene to display the objects
         primaryStage.setScene(this.scene); //add the scene to the stage

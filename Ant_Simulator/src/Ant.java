@@ -62,8 +62,8 @@ public class Ant extends Sprite {
         else{
             moveNoFood();
         }
-        elapsedTime = Duration.between(this.birthTime, Display.current).toMillis()/1000;
-        double probability = (double)elapsedTime/((double)lifespan * 1.20);
+        elapsedTime = Duration.between(this.birthTime, Ant_Simulator.scaledCurrent).toMillis()/1000;
+        double probability = (double)elapsedTime/((double)lifespan * 100);
         if(elapsedTime != prevSec) {
             prevSec = elapsedTime;
             double d = Math.random();
@@ -692,7 +692,7 @@ public class Ant extends Sprite {
     }
 
     public void setLifespan(long lifespan) {
-        this.lifespan = lifespan * 24 * 60;
+        this.lifespan = lifespan * 24 * 60 * 60;
     }
 
     public void setBirthTime(){
