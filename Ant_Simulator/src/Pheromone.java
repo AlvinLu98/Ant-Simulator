@@ -43,11 +43,6 @@ public class Pheromone extends Ground_Data {
             Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), this.value);
             r.setFill(newC);
         }
-        if(c.getOpacity() < 0.001){
-            this.value = 0;
-            Color newC = new Color(c.getRed(), c.getGreen(), c.getBlue(), this.value);
-            r.setFill(newC);
-        }
     }
 
     public void addValue(){
@@ -80,5 +75,13 @@ public class Pheromone extends Ground_Data {
 
     public void setIncrement(double increment) {
         this.increment = increment;
+    }
+
+    public int getReward() {
+        return reward;
+    }
+
+    public void setReward(int reward) {
+        this.reward = reward;
     }
 }

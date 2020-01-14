@@ -41,6 +41,7 @@ public class Ant_Simulator extends Simulator{
     private static int birthRate, lifespan;
     private static int scale;
     private static int antPop = 0;
+    private static int deadAntPop = 0;
 
     public static boolean setUpHive = false, setUpFood = false;
     private int foodCount = 0;
@@ -110,15 +111,6 @@ public class Ant_Simulator extends Simulator{
      */
     @Override
     public void initialize(final Stage primaryStage){
-        /* ------------------------------ Load from XML ------------------------------ */
-        try{
-            System.out.println();
-            message = FXMLLoader.load(getClass().getResource("Map_Creation.fxml"));
-        }catch (IOException e){
-            System.out.println("Failed to load Set up fxml file");
-        }
-        /* --------------------------------------------------------------------------- */
-
         this.rootNode = new Group();
         this.scene = new Scene(this.rootNode,WIDTH,HEIGHT,Color.WHITE); //creates a scene to display the objects
         primaryStage.setScene(this.scene); //add the scene to the stage
@@ -200,7 +192,7 @@ public class Ant_Simulator extends Simulator{
             if(c instanceof Food){
                 if(a.collision(c)){
                     ((Circle)s.getNode()).setRadius(3.0);
-                    ((Circle)s.getNode()).setFill(Color.RED);
+                    ((Circle)s.getNode()).setFill(Color.ORANGE);
                     a.obtainedFood();
                     Pheromone_Data p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
                     p.addFood();
@@ -287,10 +279,10 @@ public class Ant_Simulator extends Simulator{
             Parent root = FXMLLoader.load(getClass().getResource("Menu.fxml"));
 
             Rectangle2D screenSize = Screen.getPrimary().getBounds();
-            Scene scene = new Scene(root, 500, 500);
+            Scene scene = new Scene(root, 500, 500/12*9);
             Display.menuStage.setTitle("Settings");
-            Display.menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 700);
-            Display.menuStage.setY(screenSize.getMinY() + 20);
+            Display.menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 650);
+            Display.menuStage.setY(screenSize.getMinY() + 50);
             Display.menuStage.setScene(scene);
             Display.menuStage.show();
 
@@ -306,7 +298,7 @@ public class Ant_Simulator extends Simulator{
     public void reset(Stage primaryStage){
         this.handler.emptySprites();
         this.rootNode = new Group();
-        this.scene = new Scene(this.rootNode,WIDTH,HEIGHT,Color.WHITE); //creates a scene to display the objects
+        this.scene = new Scene(this.rootNode, WIDTH, HEIGHT, Color.WHITE); //creates a scene to display the objects
         primaryStage.setScene(this.scene); //add the scene to the stage
         primaryStage.setTitle("Ant simulator"); //Set the title of the window
 
@@ -315,7 +307,7 @@ public class Ant_Simulator extends Simulator{
         primaryStage.setY(screenSize.getMinY() + 20);
 
         pheromoneLoc = new LinkedHashMap<>();
-        this.od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
+        this.od = new Obstacle_Data((Simulator.WIDTH / velX) + velX, (Simulator.HEIGHT / velY) + velY);
 
         generateMap(velX, velY);
 
@@ -329,24 +321,6 @@ public class Ant_Simulator extends Simulator{
     /* --------------------------------------------------------------------------------*/
 
     private void updatePheromone() {
-        for (Sprite s : this.handler.getObjects()) {
-            if (s instanceof Ant) {
-                Ant a = (Ant) s;
-                Pheromone_Data p = pheromoneLoc.get(new Coordinate(getKeyX(a.getCurX()), getKeyY(a.getCurY())));
-                if(p != null) {
-                    if (a.hasFood()) {
-                        p.addFood();
-                    }
-                    else if(!a.isFollowingFood()) {
-                        p.addHome();
-                    }
-                }
-                else{
-                    System.out.println(a.getCurX() + " " + a.getCurY());
-                }
-            }
-        }
-
         for (Map.Entry<Coordinate, Pheromone_Data> coordinatePheromoneDataEntry : pheromoneLoc.entrySet()) {
             Pheromone_Data pd = (Pheromone_Data) ((Map.Entry) coordinatePheromoneDataEntry).getValue();
             for (Ground_Data p : pd.getPheromones()) {
@@ -466,7 +440,7 @@ public class Ant_Simulator extends Simulator{
 
     private Pheromone_Data createPheromones(int x, int y, int velX, int velY){
         Pheromone_Data p = new Pheromone_Data(x, y, velX, velY);
-        Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.3,255,0,0, 10,
+        Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.2,255,0,0, 10,
                 evaporationRate);
         Pheromone home = new Pheromone(x, y, velX, velY, "Home",0.05, 0,0,255, 1,
                 evaporationRate);
@@ -629,7 +603,18 @@ public class Ant_Simulator extends Simulator{
         antPop = ant;
     }
 
+    public static int getDeadAntPop() {
+        return deadAntPop;
+    }
+
+    public static void setDeadAntPop(int deadAntPop) {
+        Ant_Simulator.deadAntPop = deadAntPop;
+    }
+
     public static void modifyAntPop(int val) {
         antPop += val;
+        if(val < 0) {
+            deadAntPop -= val;
+        }
     }
 }

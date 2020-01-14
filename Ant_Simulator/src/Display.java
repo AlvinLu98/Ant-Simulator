@@ -29,13 +29,14 @@ public class Display extends Application {
     @Override
     public void start(Stage primaryStage){
         primaryStage.setResizable(false); //Set Window size to be not resizeable
+        Display.primaryStage = primaryStage;
         initialize(primaryStage);
         primaryStage.show();
     }
 
     //https://docs.oracle.com/javafx/2/get_started/form.htm
-    public void initialize(Stage menuStage){
-        createAntForm(menuStage);
+    public void initialize(Stage primaryStage){
+        createAntForm(primaryStage);
     }
 
     private void createAntForm(Stage primaryStage){
@@ -65,7 +66,6 @@ public class Display extends Application {
     private void setUpMenu(){
         //https://coderanch.com/t/620036/java/Stage-corner-screen
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
-
         Display.menuStage = new Stage();
         Display.menuStage.setTitle("Set up");
         Display.menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 700);
@@ -75,8 +75,10 @@ public class Display extends Application {
 
         try {
             Parent menu = FXMLLoader.load(getClass().getResource("Map_Creation.fxml"));
-            menuScene = new Scene(menu, 500, 500);
+            menuScene = new Scene(menu, 500, 500/12*9);
             createMenuEvents();
+            Display.menuStage.setX(screenSize.getMinX() + screenSize.getMaxX() - 650);
+            Display.menuStage.setY(screenSize.getMinY() + 50);
             Display.menuStage.setScene(menuScene);
         }catch (IOException e){
             System.out.println("Failed to load set up fxml file");

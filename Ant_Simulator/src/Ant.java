@@ -127,7 +127,7 @@ public class Ant extends Sprite {
         }
         if(i > 0) {
             visited.add(new Coordinate(this.getCurX(), this.getCurY()));
-            if(visited.size() > 50) {
+            if(visited.size() > 70) {
                 visited.removeFirst();
             }
             behind = Math.abs(direction - 8);
@@ -217,20 +217,23 @@ public class Ant extends Sprite {
         for (int i  = 0; i < surrounding.size(); i++) {
             Pheromone_Data pd = surrounding.get(i);
             if(pd != null){
-                for (Ground_Data p : pd.getPheromones()) {
-                    if(p.getName().equals("Obstacle")){
-                        blocked.add(i);
-                    }
-                    else if (p.getName().equals("Food") && i != 4)
-                    {
-                        Pheromone food = (Pheromone)p;
-                        if(food.getValue() > 0 && !visited.contains(new Coordinate(food.getStartX(), food.getStartY()))) {
-                            goingToFood();
-                            direction = compareSurroundingFoodForage(pd, food, direction, i, moveX, moveY, max, d);
-                            if (direction == i) {
-                                moveX = surrounding.get(direction).getStartX();
-                                moveY = surrounding.get(direction).getStartY();
-                                max = food.getValue();
+                if(i == 4){
+                    pd.addHome();
+                }
+                else {
+                    for (Ground_Data p : pd.getPheromones()) {
+                        if (p.getName().equals("Obstacle")) {
+                            blocked.add(i);
+                        } else if (p.getName().equals("Food") && i != 4) {
+                            Pheromone food = (Pheromone) p;
+                            if (food.getValue() > 0 && !visited.contains(new Coordinate(food.getStartX(), food.getStartY()))) {
+                                goingToFood();
+                                direction = compareSurroundingFoodForage(pd, food, direction, i, moveX, moveY, max, d);
+                                if (direction == i) {
+                                    moveX = surrounding.get(direction).getStartX();
+                                    moveY = surrounding.get(direction).getStartY();
+                                    max = food.getValue();
+                                }
                             }
                         }
                     }
@@ -266,27 +269,32 @@ public class Ant extends Sprite {
 
         for (int i  = 0; i < surrounding.size(); i++) { //loop through all surrounding direction
             Pheromone_Data pd = surrounding.get(i); //obtain the current direction's pheromone data
-            if (pd != null && i != 4 && i != behind) {
-                //calculate the euclidean distance of potential move
-                double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(), this.getStartY());
-                //if the ant's current location is further from the hive than the current move
-                if (potential <= current) {
-                    checked.add(pd);
-                    if (minDist > potential) { //if the current minimum is bigger than the current direction
-                        defaultDirection = i; //set the default direction to current move
-                        minDist = potential; // sets the minimum distance to the current move distance
-                    }
-                    for (Ground_Data p : pd.getPheromones()) { //loop through the data on the ground
-                        if (p.getName().equals("Obstacle")) {
-                            blocked.add(i); //add to the list the direction that's been blocked
-                        } else if (p.getName().equals("Home")) {
-                            Pheromone home = (Pheromone) p;
-                            if (home.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))){
-                                direction = compareSurroundingHome(pd, home, direction, i, moveX, moveY, max, front);
-                                if(direction == i) {
-                                    moveX = surrounding.get(direction).getStartX();
-                                    moveY = surrounding.get(direction).getStartY();
-                                    max = home.getValue();
+            if (pd != null && i != behind) {
+                if(i == 4){
+                    pd.addFood();
+                }
+                else {
+                    //calculate the euclidean distance of potential move
+                    double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(), this.getStartY());
+                    //if the ant's current location is further from the hive than the current move
+                    if (potential <= current) {
+                        checked.add(pd);
+                        if (minDist > potential) { //if the current minimum is bigger than the current direction
+                            defaultDirection = i; //set the default direction to current move
+                            minDist = potential; // sets the minimum distance to the current move distance
+                        }
+                        for (Ground_Data p : pd.getPheromones()) { //loop through the data on the ground
+                            if (p.getName().equals("Obstacle")) {
+                                blocked.add(i); //add to the list the direction that's been blocked
+                            } else if (p.getName().equals("Home")) {
+                                Pheromone home = (Pheromone) p;
+                                if (home.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
+                                    direction = compareSurroundingHome(pd, home, direction, i, moveX, moveY, max, front);
+                                    if (direction == i) {
+                                        moveX = surrounding.get(direction).getStartX();
+                                        moveY = surrounding.get(direction).getStartY();
+                                        max = home.getValue();
+                                    }
                                 }
                             }
                         }
@@ -377,9 +385,6 @@ public class Ant extends Sprite {
                         if (phe.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
                             double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(),
                                     this.getStartY());
-//                            if (front.contains(i)) {
-//                                return i;
-//                            }
                             if (potential <= current) {
                                 if(direction == 4){
                                     direction = i;
@@ -405,13 +410,16 @@ public class Ant extends Sprite {
         if (max == 0) { //if ant currently has no selected direction
             direction = i;
         }
-        else if(p.getValue() >= (max - (p.getValue() * p.getEvaporation()))) {
+        else if(p.getValue() > max){
+            direction = i;
+        }
+        else if(p.getValue() == max) {
                 //Calculate the euclidean distance of new and old direction to home
                 double prev = euclideanDist(moveX, moveY, this.getStartX(), this.getStartY());
                 double current = euclideanDist(p.getStartX(), p.getStartY(), this.getStartX(), this.getStartY());
-                if (d.contains(i)) {
-                    return i;
-                }
+//                if (d.contains(i)) {
+//                    return i;
+//                }
                 if (current >= prev && i != behind) { //if new direction is further away from home
                     direction = i;
                 }

@@ -59,13 +59,13 @@ Chapter \ref{chap:intro} will provide an introduction to the topic which will be
 
 \chapter{Background}
 \label{chap:background}
-\section{Motivation}
+\section{Background information}
 Swarming is a behaviour that is commonly found in social animal species \citep{Swarm_Animals}. The concept of swarming is having a large group of individually operating unit (agents or individual animal) working together to achieve a task that is typically to great for a unit to complete on its own \citep{Swarm_Explanation}. Large amount of research has been conducted to explain the evolutionary benefits of such behaviour and researchers are aiming to adapt some of these properties into various computer systems. This is commonly achieved by having a group relatively simpler agents that can communicate between each other instead of a singular system to complete tasks collectively by converging individual accomplishments \citep{Swarm_Properties}.
 
-Within animals that exhibit swarming, ants are one of the insect that has been vigorously studied for their behaviour. Ants most commonly utilise swarming during the process of foraging. Certain species of ants are shown to leave pheromones to share information an individual ant has learnt \citep{Ant_Pheromones}. The two most common pheromones are home pheromones that can guide them home and also pheromones that guide other ants to food sources \citep{Ant_Pheromones}. 
+Within animals that exhibit swarming, ants are one of the insect that has been vigorously studied for their behaviour. Ants most commonly utilise swarming during the process of foraging. Certain species of ants are shown to leave pheromones to share information an individual ant has learnt \citep{Ant_Pheromones}. The two most common pheromones are home pheromones that can guide them home and also pheromones that guide other ants to food sources \citep{Ant_Pheromones}. The pheromones can vary in their duration and potency, which allows transfer of information such as recency and importance of the information \citep{Ant_Pheromones}. Aside from pheromones, ants are shown to retain memories of places it has seen, using visual cues to guide them to their destination \citep{Ant_Memory_1} \cite{Ant_Memory_2} \cite{Ant_Memory_3}.
 
 
-\section{Existing research and methods}
+\section{Existing methods}
 Currently, an ant simulator was found publicly available online that uses the MASON simulation toolkit \citep{Mason}. The simulator provides a list of features listed below:
 \begin{itemize}
 	\item Allows customisation of certain values such as the ant population and evaporation rate.
@@ -93,8 +93,6 @@ The simulator provides quick and easy way to visualise movements of the ants how
 
 \chapter{Design}
 \label{chap:design}
-Describe here various methods that will be used in your project. Use different sections for distinctly different subjects and use subsections for specific details on the same subject. Only use subsubsections or paragraphs (which are not numbered) if you believe this is really necessary. 
-
 \section{MoSCoW}
 \subsection{Must}
 \begin{tabular}{|| p{3.5cm} | p{10.5cm} ||} 
@@ -182,63 +180,96 @@ Describe here various methods that will be used in your project. Use different s
 
 
 \section{Ant movement AI}
-This section shows the pseudocode of ant movement AI.
+All ants can move to the 8 potential directions shown in figure \ref{fig:Ant_Direction}. If there isn't any pheromone data found in their surroundings, the ants will move in random directions but they will prioritise the three direction that the ant is in front. 
+
+During analysis of MASON ant simulator and literatures associated, It was found that the the ants in the simulator relies purely on pheromones for navigation  which might result in ants being stuck in in a cyclic movement if the food source is located further away from the hive where surrounding home pheromones may have evaporated or the density of ants are not high enough to ensure navigation back to the hive. Due to this, individual ants are designed to retain a set amount of locations that it has  recently visited and will avoid moving back to the locations unless necessary. 
+
+Algorithm \ref{Algorithm:General} shows the high level movement pattern of ants. Algorithm \ref{Algorithm:Find_Home}, \ref{Algorithm:Home_Pheromone} and \ref{Algorithm:Home_Distance} shows the algorithm used for ants to find their way back to their hive when carrying food. Movement patterns when ants are following food pheromones to food source are similar to following home pheromones back to the hive.
+
+\begin{figure}[htb]
+	\begin{center}
+	\includegraphics[width=0.35 \columnwidth]{Ant_direction.png}
+	\caption{Directions an ant can move to if unobstructed. Ants will prioritise moving towards the three directions in front of them (Ant facing NW). Ant image sourced from \textit{Stockio}}
+	\label{fig:Ant_Direction}
+	\end{center}
+\end{figure}
+
 \begin{algorithm}[th]
-\caption{ Ant foraging algorithm }
-\begin{algorithmic}[1]
+\caption{ Ant foraging algorithm } \label{Algorithm:General}
+\begin{algorithmic}[1] 
 	\If{HasFoodItem}
 		\State Find-Direction-Home
 	\ElsIf{FoundFoodPheromone}
 		\State Follow-Food-Pheromone
 	\Else
-		\State Forage
+		\State Random-prioritised-movement
 	\EndIf
 \end{algorithmic}
 \end{algorithm}
 
 \begin{algorithm}[th]
-	\caption{ Find-Direction-Home algorithm}
+	\caption{ Find-Direction-Home algorithm}  \label{Algorithm:Find_Home}
 	\begin{algorithmic}[1]
 		\If{Ant reached the hive}
 			\State Drop food 
 			\State $HasFoodItem \gets False$
 		\Else
-			\State $direction$ $\leftarrow$ front direction with highest home pheromone
-			\If{$direction$ = NULL}
-				\State $direction$ $\leftarrow$ surrounding with highest home pheromone
+			\State direction $\leftarrow$ Decide-Direction-Home-With-Pheromone
+			\If{direction = NULL}
+				\State direction $\leftarrow$ Decide-Direction-Home-Without-Pheromone
 			\EndIf
 		\EndIf
 		\State moveAnt($direction$)
 	\end{algorithmic}
 \end{algorithm}
-The \textit{Follow-Food-Pheromone} has a similar algorithm to \textit{Find-Direction-Home} with home pheromones changed to food pheromones.
+
+\begin{algorithm}[th]
+	\caption{ Decide-Direction-With-Pheromone algorithm}  \label{Algorithm:Home_Pheromone}
+	\begin{algorithmic}[1]
+		\State potential-directions $\leftarrow$ \{ \}
+		\While{there's possible directions}
+			\If{direction is not blocked}
+				\If{direction is closer to hive \& direction wasn't visited recently}
+					\If{direction-contains-pheromone}
+						\State potential-directions $\overset{+}{\leftarrow}$ direction
+					\EndIf
+				\EndIf
+			\EndIf
+		\EndWhile
+		\If{potential-directions = NULL}
+			\State return NULL
+		
+		\Else
+			\State direction $\leftarrow$ direction-maximum-pheromone$(potential-directions)$
+			\State return direction
+		\EndIf
+	\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[th]
+	\caption{ Decide-Direction-Without-Pheromone algorithm}
+	 \label{Algorithm:Home_Distance}
+	\begin{algorithmic}[1]
+		\State potential-directions $\leftarrow$ \{ \}
+		\While{there's possible directions}
+		\If{direction is not blocked}
+			\If{potential-directions = NULL \& direction wasn't visited recently}
+				\State potential-directions $\overset{+}{\leftarrow}$ direction
+			\ElsIf{direction is closer to hive}
+				\State potential-directions $\overset{+}{\leftarrow}$ direction
+			\EndIf
+		\EndIf
+		\EndWhile
+		\State direction $\leftarrow$ direction-closest-to-home$(potential-directions)$
+		\State return direction
+	\end{algorithmic}
+\end{algorithm}
 
 \chapter{Implementation}
 \label{chap:Implementation}
-In this chapter you cover the actual implementation of your project.
-This is likely to require figures such as Fig.\ \ref{Pelvis_BVH}.
+\section{Platform and packages}
+The simulator is developed in Java using the IDE \textit{IntelliJ}. Using Java as the development language ensures that the solution can be run on a wide range of Operating Systems while the object-oriented paradigm allows definition of classes that's duplicable and inheritable. This would be beneficial for this project as the simulator involves creation of large amount of objects that are similar structurally but has to behave independently. The UI will also be developed using \textit{JavaFX} as its platform. JavaFX provides the ability to separate UI from the implementation logic using FXML. It allows quick development of simple user interface that can be easily expanded and updated as JavaFX also supports CSS and HTML.
 
-\begin{figure}[htb]
-%\begin{center}
-\includegraphics[width=1.0 \columnwidth]{pelvis_octree.png}
-\caption{The bony pelvis model with octree based AABBs (Axis Aligned Bounding Boxes).}
-\label{Pelvis_BVH}
-%\end{center}
-\end{figure}
-
-Or better - a UML diagram (class, sequence and state diagrams are the preferred ones) as shown in Fig.\ \ref{class}:
-
-\begin{figure}[htb]
-%\begin{center}
-\includegraphics[width=1.0 \columnwidth]{class.png}
-\caption{A UML class diagram.}
-\label{class}
-%\end{center}
-\end{figure}
-
-Or perhaps an algorithm (if it does not belong in the Methodology chapter instead).
-
-Or perhaps a table named Table \ref{Res01} (again could be more suitable in the Methodology chapter).
 
 \begin{table}[h]
 \caption[]{Original diameters and diametral strains as reported by
@@ -269,7 +300,7 @@ Note that code snippets or lists of crucial programming code or large UML diagra
 As the software depends heavily on the ants interaction with the environment, testing will be conducted heavily towards the end of the development stage instead of early stages. Bugs and issue are predicted to be mostly emergent, caused by the ants interaction with its environment.
 
 \section{Unit testing}
-Printing out values, Test class for different methods
+For unit testing, a test class was created within the package to test advanced method implemented in all classes. Values that are passed to and object are checked using console output to print out the values.
 
 \section{Integration testing}
 parameter passing

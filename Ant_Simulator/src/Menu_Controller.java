@@ -50,6 +50,9 @@ public class Menu_Controller {
     @FXML
     Text antPop;
 
+    @FXML
+    Text antDeath;
+
     private boolean stopped = false, paused = false, play = false;
     Instant pauseStartTime;
     long totalPauseTime;
@@ -67,6 +70,7 @@ public class Menu_Controller {
                     scaledTime.setText(diff.toDays() + " days " + (diff.toHours())%24 + " Hours " + (diff.toMinutes())%60 +
                             " Minutes " + (diff.toMillis()/1000)%60 + " Seconds");
                     antPop.setText(String.valueOf(Ant_Simulator.getAntPop()) + " ants alive");
+                    antDeath.setText(String.valueOf(Ant_Simulator.getDeadAntPop() + " ants died"));
                 });
         Display.timeline = new Timeline();
         Display.timeline.setCycleCount(Animation.INDEFINITE);
@@ -98,9 +102,9 @@ public class Menu_Controller {
             stopped = false;
             resetSettings();
             initialize();
-//            Simulator.start = Instant.now();
-//            Display.timeline.play();
-//            Display.sim.beginSimulation();
+            Simulator.start = Instant.now();
+            Display.timeline.play();
+            Display.sim.beginSimulation();
         }
         if(paused){
             totalPauseTime = java.time.Duration.between(pauseStartTime, Instant.now()).toMillis();
@@ -215,6 +219,7 @@ public class Menu_Controller {
 
             if (valid) {
                 ((Ant_Simulator)Display.sim).reset(Display.primaryStage);
+                Display.menuStage.close();
                 setUpMap();
 
                 Display.sim.buildLoop();
@@ -240,7 +245,6 @@ public class Menu_Controller {
         Display.menuStage.setY(screenSize.getMinY() + 20);
 
         Scene menuScene;
-
         try {
             Parent menu = FXMLLoader.load(getClass().getResource("Map_Creation.fxml"));
             menuScene = new Scene(menu, 500, 500);

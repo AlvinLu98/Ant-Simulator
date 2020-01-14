@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{Swarm_Intro}
 Eric Bonabeau, Marco Dorigo, and Guy Theraulaz.
@@ -43,6 +43,23 @@ Gerardo Beni.
 Duncan~E Jackson and Francis~LW Ratnieks.
 \newblock Communication in ants.
 \newblock {\em Current biology}, 16(15):R570--R574, 2006.
+
+\bibitem{Ant_Memory_1}
+Rudiger Wehner and F~R{\"a}ber.
+\newblock Visual spatial memory in desert ants, cataglyphis bicolor
+  (hymenoptera: Formicidae).
+\newblock {\em Experientia}, 35(12):1569--1571, 1979.
+
+\bibitem{Ant_Memory_2}
+Robert~A Harris, Natalie~Hempel de~Ibarra, Paul Graham, and Thomas~S Collett.
+\newblock Ant navigation: Priming of visual route memories.
+\newblock {\em Nature}, 438(7066):302, 2005.
+
+\bibitem{Ant_Memory_3}
+Sophie~EF Evison, Owen~L Petchey, Andrew~P Beckerman, and Francis~LW Ratnieks.
+\newblock Combined use of pheromone trails and visual landmarks by the common
+  garden ant lasius niger.
+\newblock {\em Behavioral Ecology and Sociobiology}, 63(2):261, 2008.
 
 \bibitem{Mason}
 Sean Luke, Claudio Cioffi-Revilla, Liviu Panait, Keith Sullivan, and Gabriel

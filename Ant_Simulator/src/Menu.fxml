@@ -15,9 +15,15 @@
         <GridPane hgap="10" vgap="10">
             <padding><Insets top="25" right="25" bottom="25" left="25"/> </padding>
 
-            <Text fx:id="time" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <Text fx:id="scaledTime" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="3"/>
-            <Text fx:id="antPop" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label text="Time elapsed (secconds): " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Text fx:id="time" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="3"/>
+
+            <Label text="Scaled time: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Text fx:id="scaledTime" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="3"/>
+
+            <Label text="Ant population: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Text fx:id="antPop" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Text fx:id="antDeath" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
 
             <Label text="Speed up: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <Slider fx:id="speedUp" max="4" majorTickUnit="0.5" minorTickCount="1" showTickLabels="true" value="1"
@@ -25,15 +31,15 @@
 
             </Slider>
 
-            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5" prefWidth="100">
+            <HBox fx:id="playBox" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="19" prefWidth="100">
                 <Button text="Play" onAction="#play" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5" prefWidth="100">
+            <HBox fx:id="pauseBox" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="19" prefWidth="100">
                 <Button text="Pause" onAction="#pause" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="5" prefWidth="100">
+            <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="19" prefWidth="100">
                 <Button text="Stop" onAction="#stop"  minWidth="80"/>
             </HBox>
         </GridPane>
@@ -51,6 +57,17 @@
             <Label text="Lifespan (days): " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
             <TextField fx:id="lifespanBox" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
 
+            <HBox fx:id="playAnt" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="19" prefWidth="100">
+                <Button text="Play" onAction="#play" minWidth="80"/>
+            </HBox>
+
+            <HBox fx:id="pauseAnt" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="19" prefWidth="100">
+                <Button text="Pause" onAction="#pause" minWidth="80"/>
+            </HBox>
+
+            <HBox fx:id="stopAnt" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="19" prefWidth="100">
+                <Button text="Stop" onAction="#stop"  minWidth="80"/>
+            </HBox>
         </GridPane>
     </Tab>
 
@@ -77,6 +94,18 @@
 
             <Label text="Time scale: " GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <TextField fx:id="timeScaleBox" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <HBox fx:id="playEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="19" prefWidth="100">
+                <Button text="Play" onAction="#play" minWidth="80"/>
+            </HBox>
+
+            <HBox fx:id="pauseEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="19" prefWidth="100">
+                <Button text="Pause" onAction="#pause" minWidth="80"/>
+            </HBox>
+
+            <HBox fx:id="stopEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="19" prefWidth="100">
+                <Button text="Stop" onAction="#stop"  minWidth="80"/>
+            </HBox>
         </GridPane>
     </Tab>
 </TabPane>
