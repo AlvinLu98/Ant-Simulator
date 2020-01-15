@@ -249,7 +249,6 @@ public class Ant_Simulator extends Simulator{
                         if(foodCount == numFood){
                             setUpFood = true;
                             createEvents();
-                            buildLoop();
                             begin();
                         }
                     }
@@ -633,5 +632,18 @@ public class Ant_Simulator extends Simulator{
 
     public static void setSelectedY(int selectedY) {
         Ant_Simulator.selectedY = selectedY;
+    }
+
+    @Override
+    public String toString(){
+        String s = "";
+        s += "Initial ants:     " + initAntAmt + "\n";
+        s += "Number of food:   " + numFood + "\n";
+        s += "Evaporation rate: " + evaporationRate + "\n";
+        s += "Birth rate:       " + birthRate + "\n";
+        s += "Lifespan:         " + lifespan + "\n";
+        s += "Ant population:   " + antPop + "\n";
+        s += "Ants dead:        " + deadAntPop + "\n";
+        return s;
     }
 }

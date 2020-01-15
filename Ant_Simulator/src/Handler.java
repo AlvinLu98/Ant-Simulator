@@ -1,6 +1,6 @@
 import java.util.LinkedList;
 
-public class Handler {
+public class Handler{
     private LinkedList<Sprite> objects = new LinkedList<>(); //list containing all sprite objects
 
     private LinkedList<Sprite> collisionCheck = new LinkedList<>(); //list containing objects to check for collision
@@ -11,6 +11,7 @@ public class Handler {
      * Default constructor
      */
     public Handler(){}
+
 
     /**
      * Generates a Handler given the objects

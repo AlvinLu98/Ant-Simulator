@@ -90,6 +90,8 @@ public class Menu_Controller {
         Display.timeline.setAutoReverse(true);
         Display.timeline.getKeyFrames().add(oneFrame);
         play = true;
+        paused = false;
+        stopped = false;
         totalPauseTime = 0;
 
         Ant_Simulator ant = (Ant_Simulator)Display.sim;
@@ -137,17 +139,18 @@ public class Menu_Controller {
             play = false;
             pauseStartTime = Instant.now();
             Display.timeline.pause();
-            Ant_Simulator.timeline.pause();
-            Ant_Simulator.timer.stop();
+            Display.sim.timeline.pause();
+            Display.sim.timer.stop();
         }
     }
 
     public void stop(){
         paused = false;
+        play = false;
         stopped = true;
         Display.timeline.stop();
-        Ant_Simulator.timeline.stop();
-        Ant_Simulator.timer.stop();
+        Display.sim.timeline.stop();
+        Display.sim.timer.stop();
     }
 
     public void resetSettings(){

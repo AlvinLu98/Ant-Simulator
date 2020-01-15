@@ -10,7 +10,6 @@ import java.util.Random;
 public class Ant extends Creature{
     private boolean hasFoodItem;
     private boolean knowFood;
-    private boolean foundFood;
     private boolean followFood;
     private Direction prevDirection;
     private int behind;
@@ -29,7 +28,6 @@ public class Ant extends Creature{
     public Ant(int x, int y, int velX, int velY) {
         super(x,y,velX, velY);
         this.hasFoodItem = false;
-        this.foundFood = false;
         this.prevDirection = Direction.C;
         this.dead = false;
         this.blocked = new ArrayList<>();
@@ -678,5 +676,17 @@ public class Ant extends Creature{
 
     public void goingToFood(){
         this.followFood = true;
+    }
+
+    @Override
+    public String toString(){
+        String s = "";
+        s += "Birth time         :" + birthTime + "\n";
+        s += "Carrying food      :" + hasFoodItem + "\n";
+        s += "Following food     :" + knowFood + "\n";
+        s += "Blocked directions :" + blocked.toString() + "\n";
+        s += "Previous direction :" + prevDirection.toString() + "\n";
+
+        return s;
     }
 }

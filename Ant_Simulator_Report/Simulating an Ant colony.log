@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.9.12)  14 JAN 2020 17:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.9.12)  15 JAN 2020 02:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -383,63 +383,80 @@ Package pdftex.def Info: State_Diagram.jpg  used on input line 188.
 <Ant_direction.png, id=35, 427.8384pt x 427.8384pt>
 File: Ant_direction.png Graphic file (type png)
 <use Ant_direction.png>
-Package pdftex.def Info: Ant_direction.png  used on input line 204.
+Package pdftex.def Info: Ant_direction.png  used on input line 206.
 (pdftex.def)             Requested size: 148.7526pt x 148.75337pt.
- [6 <./State_Diagram.jpg> <./Ant_direction.png>] [7]
+ [6 <./State_Diagram.jpg> <./Ant_direction.png>] [7] [8]
 Chapter 4.
-<Location_Selection.jpg, id=47, 918.80766pt x 393.34453pt>
+<Location_Selection.jpg, id=50, 918.80766pt x 393.34453pt>
 File: Location_Selection.jpg Graphic file (type jpg)
 <use Location_Selection.jpg>
-Package pdftex.def Info: Location_Selection.jpg  used on input line 290.
+Package pdftex.def Info: Location_Selection.jpg  used on input line 292.
 (pdftex.def)             Requested size: 425.0pt x 181.943pt.
-<Main_Simulator.jpg, id=48, 910.90312pt x 392.96812pt>
+<Main_Simulator.jpg, id=51, 910.90312pt x 392.96812pt>
 File: Main_Simulator.jpg Graphic file (type jpg)
 <use Main_Simulator.jpg>
-Package pdftex.def Info: Main_Simulator.jpg  used on input line 298.
+Package pdftex.def Info: Main_Simulator.jpg  used on input line 300.
 (pdftex.def)             Requested size: 425.0pt x 183.35188pt.
-[8
+[9
 
- <./Location_Selection.jpg>] [9 <./Main_Simulator.jpg>]
+ <./Location_Selection.jpg>] [10 <./Main_Simulator.jpg>]
 Chapter 5.
-[10
+[11
 
 ]
 Chapter 6.
-(./Simulating an Ant colony.bbl [11
+(./Simulating an Ant colony.bbl [12
 
-]) [12
+] [13
 
-]
-<Full_Class_Diagram.jpg, id=65, 2164.085pt x 1525.7pt>
+]) [14]
+<Ant_Simulator_Values.jpg, id=71, 316.18124pt x 187.82672pt>
+File: Ant_Simulator_Values.jpg Graphic file (type jpg)
+<use Ant_Simulator_Values.jpg>
+Package pdftex.def Info: Ant_Simulator_Values.jpg  used on input line 330.
+(pdftex.def)             Requested size: 255.0026pt x 151.48535pt.
+<Ant_Values.jpg, id=72, 228.855pt x 242.78203pt>
+File: Ant_Values.jpg Graphic file (type jpg)
+<use Ant_Values.jpg>
+Package pdftex.def Info: Ant_Values.jpg  used on input line 338.
+(pdftex.def)             Requested size: 255.0026pt x 270.53221pt.
+<Test_Class.jpg, id=73, 252.19218pt x 117.81516pt>
+File: Test_Class.jpg Graphic file (type jpg)
+<use Test_Class.jpg>
+Package pdftex.def Info: Test_Class.jpg  used on input line 346.
+(pdftex.def)             Requested size: 255.0026pt x 119.12898pt.
+<Full_Class_Diagram.jpg, id=74, 2164.085pt x 1525.7pt>
 File: Full_Class_Diagram.jpg Graphic file (type jpg)
 <use Full_Class_Diagram.jpg>
-Package pdftex.def Info: Full_Class_Diagram.jpg  used on input line 329.
+Package pdftex.def Info: Full_Class_Diagram.jpg  used on input line 355.
 (pdftex.def)             Requested size: 750.0pt x 528.74167pt.
- [13
+ [15
 
-] [14 <./Full_Class_Diagram.jpg>] (./Simulating an Ant colony.aux) ) 
+ <./Ant_Simulator_Values.jpg> <./Ant_Values.jpg>] [16 <./Test_Class.jpg>] [17 <
+./Full_Class_Diagram.jpg>]
+(./Simulating an Ant colony.aux) ) 
 Here is how much of TeX's memory you used:
- 3623 strings out of 492641
- 48840 string characters out of 6133116
- 122585 words of memory out of 5000000
- 7425 multiletter control sequences out of 15000+600000
+ 3658 strings out of 492641
+ 49678 string characters out of 6133116
+ 122699 words of memory out of 5000000
+ 7457 multiletter control sequences out of 15000+600000
  12652 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,8n,27p,954b,331s stack positions out of 5000i,500n,10000p,200000b,80000s
-<c:/texlive
-/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2018/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2018/texmf-dist/f
-onts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2018/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/a
-msfonts/cm/cmr12.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmr17.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb>
-<c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/texlive
-/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2018/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on "Simulating an Ant colony.pdf" (16 pages, 2384913 bytes).
+ 41i,8n,27p,1142b,329s stack positions out of 5000i,500n,10000p,200000b,80000s
+<c:/texlive/2018/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmbx10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmbx12.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
+10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:
+/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2
+018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2018/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2018/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2018/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmsy10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmti10.pfb>
+Output written on "Simulating an Ant colony.pdf" (19 pages, 2528680 bytes).
 PDF statistics:
- 105 PDF objects out of 1000 (max. 8388607)
- 68 compressed objects within 1 object stream
+ 118 PDF objects out of 1000 (max. 8388607)
+ 75 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 51 words of extra memory for PDF output out of 10000 (max. 10000000)
 

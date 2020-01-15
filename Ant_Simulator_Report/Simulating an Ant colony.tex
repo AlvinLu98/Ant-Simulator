@@ -64,7 +64,7 @@ Chapter \ref{chap:intro} will provide an introduction to the topic which will be
 \section{Background information}
 Swarming is a behaviour that is commonly found in social animal species \citep{Swarm_Animals}. The concept of swarming is having a large group of individually operating unit (agents or individual animal) working together to achieve a task that is typically to great for a unit to complete on its own \citep{Swarm_Explanation}. Large amount of research has been conducted to explain the evolutionary benefits of such behaviour and researchers are aiming to adapt some of these properties into various computer systems. This is commonly achieved by having a group relatively simpler agents that can communicate between each other instead of a singular system to complete tasks collectively by converging individual accomplishments \citep{Swarm_Properties}.
 
-Within animals that exhibit swarming, ants are one of the insect that has been vigorously studied for their behaviour. Ants most commonly utilise swarming during the process of foraging. Certain species of ants are shown to leave pheromones to share information an individual ant has learnt \citep{Ant_Pheromones}. The two most common pheromones are home pheromones that can guide them home and also pheromones that guide other ants to food sources \citep{Ant_Pheromones}. The pheromones can vary in their duration and potency, which allows transfer of information such as recency and importance of the information \citep{Ant_Pheromones}. Aside from pheromones, ants are shown to retain memories of places it has seen, using visual cues to guide them to their destination \citep{Ant_Memory_1} \cite{Ant_Memory_2} \cite{Ant_Memory_3}.
+Within animals that exhibit swarming, ants are one of the insect that has been vigorously studied for their behaviour. Ants most commonly utilise swarming during the process of foraging. Certain species of ants are shown to leave pheromones to share information an individual ant has learnt \citep{Ant_Pheromones}. The two most common pheromones are home pheromones that can guide them home and also pheromones that guide other ants to food sources \citep{Ant_Pheromones}. The pheromones can vary in their duration and potency, which allows transfer of information such as recency and importance of the information \citep{Ant_Pheromones}. Ants are also shown to retain memories of places it has seen, using visual cues to guide them to their destination \citep{Ant_Memory_1} \cite{Ant_Memory_2} \cite{Ant_Memory_3}. Within certain species of ants, they are shown to have extra ways to find their ways such as using polarized light \citep{Ant_Navigation_Light}, magnetic \citep{Ant_Navigation_Magnetic_1} \cite{Ant_Navigation_Magnetic_2} and sun \citep{Ant_Navigation_Wind} compass.
 
 
 \section{Existing methods}
@@ -193,6 +193,8 @@ The system will have different classes assigned with various responsibilities. T
 
 
 \section{Ant movement AI}
+The ants rely on two type of pheromones, home pheromone that is used by ants carrying food to find their way home and food pheromone which is left my ants carrying food and followed by foraging ants to the food source. Aside from pheromones, the ants will also rely on the distance between their location and the hive and will try to move closer to the hive if possible, mimicking the process of path integration \citep{Ant_Path_Integration}.
+
 All ants can move to the 8 potential directions shown in figure \ref{fig:Ant_Direction}. If there isn't any pheromone data found in their surroundings, the ants will move in random directions but they will prioritise the three direction that the ant is in front. 
 
 During analysis of MASON ant simulator and literatures associated, It was found that the the ants in the simulator relies purely on pheromones for navigation  which might result in ants being stuck in in a cyclic movement if the food source is located further away from the hive where surrounding home pheromones may have evaporated or the density of ants are not high enough to ensure navigation back to the hive. Due to this, individual ants are designed to retain a set amount of locations that it has  recently visited and will avoid moving back to the locations unless necessary. 
@@ -283,12 +285,15 @@ Algorithm \ref{Algorithm:General} shows the high level movement pattern of ants.
 \section{Platform and packages}
 The simulator is developed in Java using the IDE \textit{IntelliJ}. Using Java as the development language ensures that the solution can be run on a wide range of Operating Systems while the object-oriented paradigm allows definition of classes that's duplicable and inheritable. This would be beneficial for this project as the simulator involves creation of large amount of objects that are similar structurally but has to behave independently. The UI will also be developed using \textit{JavaFX} as its platform. JavaFX provides the ability to separate UI from the implementation logic using FXML. It allows quick development of simple user interface that can be easily expanded and updated as JavaFX also supports CSS and HTML.
 
+\section{Implementation stages}
+
+
 \section{User interface}
-pr
+The user interface contains two windows, the simulator window and control window (figure \ref{fig:Main_Simulator}). The simulator window contains all the sprites and will be showing the ant movements when the simulator is initiated. The window responds to mouse clicks and will add the home location and food location during set up and returns the pheromone data at the clicked point when the simulator is running. The control window will provide instructions during setup, prompting the user to select the locations of hive and foods. After the simulation has started, the window provides settings that can be modified and simulator controls. Figure \ref{fig:Location_Selection} and \ref{fig:Main_Simulator} shows the user interface.
 \begin{figure}[htb]
 	\begin{center}
 		\includegraphics[width=1.0 \columnwidth]{Location_Selection.jpg}
-		\caption{Selecting locations for hive and food}
+		\caption{Selecting locations for hive and food.}
 		\label{fig:Location_Selection}
 	\end{center}
 \end{figure}
@@ -296,7 +301,7 @@ pr
 \begin{figure}[htb]
 	\begin{center}
 		\includegraphics[width=1.0 \columnwidth]{Main_Simulator.jpg}
-		\caption{Main UI for the ant simulator}
+		\caption{Main UI for the ant simulator. The simulator window is located on the left and the control window is on the right.}
 		\label{fig:Main_Simulator}
 	\end{center}
 \end{figure}
@@ -304,15 +309,15 @@ pr
 
 \chapter{Testing and Discussion}
 \label{chap:Testing}
-As the software depends heavily on the ants interaction with the environment, testing will be conducted heavily towards the end of the development stage instead of early stages. Bugs and issue are predicted to be mostly emergent, caused by the ants interaction with its environment.
+As the design of the static classes are straightforward, testing is conducted heavily towards the end of the development prioritising Dynamic black box and white box testing. Bugs and issue are predicted to be mostly emergent, caused by the ants interaction with its environment.
 
 \section{Unit testing}
-For unit testing, a test class was created within the package to test advanced method implemented in all classes. Values that are passed to and object are checked using console output to print out the values.
+For unit testing, values that are passed to and object are checked using console output to print out the values. Values printed out on the console are shown in figure \ref{fig:Ant_Simulator_Values} and \ref{fig:Ant_Values} in the appendix. A test class was also created to test out  new methods and packages before integrating it into the system (Figure \ref{fig:Test_Class}). In these unit tests, expected and unexpected values are entered to the methods to test if the return values are expected.
 
 \section{Integration testing}
-parameter passing
+Integration testing focuses on parameter passing from the UI to back-end and vice-versa. This is achieved by firstly outputting the values passed from the UI to other classes to the console and checking if the input matches the output.
 
-\section{User testing}
+\section{Usability testing}
 
 \chapter{Conclusion and Future Work}
 \label{chap:conclusion}
@@ -323,6 +328,30 @@ Conclude your achievements and put them in perspective with the MoSCoW analysis 
 \bibliography{References}
 
 \chapter*{Appendix A}
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.6 \columnwidth]{Ant_Simulator_Values.jpg}
+		\caption{Values added into the ant simulator printed out to the console}
+		\label{fig:Ant_Simulator_Values}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.6 \columnwidth]{Ant_Values.jpg}
+		\caption{Values added into the ants printed out to the console}
+		\label{fig:Ant_Values}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.6 \columnwidth]{Test_Class.jpg}
+		\caption{Using the test class to test the \textit{Instant} and \textit{Duration} class}
+		\label{fig:Test_Class}
+	\end{center}
+\end{figure}
+
 
 \begin{sidewaysfigure}
 	\begin{center}

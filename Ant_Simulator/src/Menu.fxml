@@ -113,15 +113,15 @@
             <Label text="Time scale: " GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <TextField fx:id="timeScaleBox" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
 
-            <HBox fx:id="playEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="19" prefWidth="100">
+            <HBox fx:id="playEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="18" prefWidth="100">
                 <Button text="Play" onAction="#play" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="pauseEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="19" prefWidth="100">
+            <HBox fx:id="pauseEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="18" prefWidth="100">
                 <Button text="Pause" onAction="#pause" minWidth="80"/>
             </HBox>
 
-            <HBox fx:id="stopEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="19" prefWidth="100">
+            <HBox fx:id="stopEnv" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="18" prefWidth="100">
                 <Button text="Stop" onAction="#stop"  minWidth="80"/>
             </HBox>
         </GridPane>

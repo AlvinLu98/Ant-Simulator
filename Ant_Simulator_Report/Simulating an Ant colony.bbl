@@ -61,10 +61,38 @@ Sophie~EF Evison, Owen~L Petchey, Andrew~P Beckerman, and Francis~LW Ratnieks.
   garden ant lasius niger.
 \newblock {\em Behavioral Ecology and Sociobiology}, 63(2):261, 2008.
 
+\bibitem{Ant_Navigation_Light}
+Rudolf Jander and Ursula Jander.
+\newblock The light and magnetic compass of the weaver ant, oecophylla
+  smaragdina (hymenoptera: Formicidae).
+\newblock {\em Ethology}, 104(9):743--758, 1998.
+
+\bibitem{Ant_Navigation_Magnetic_1}
+Eliane Wajnberg, Geraldo Cernicchiaro, and Darci~Motta de~Souza~Esquivel.
+\newblock Antennae: the strongest magnetic part of the migratory ant.
+\newblock {\em Biometals}, 17(4):467--470, 2004.
+
+\bibitem{Ant_Navigation_Magnetic_2}
+Darci~MS Esquivel, Daniel Acosta-Avalos, L{\'e}a~J El-Jaick, Alexandra~DM
+  Cunha, Maria~G Malheiros, Eliane Wajnberg, and Marilia~P Linhares.
+\newblock Evidence for magnetic material in the fire ant solenopsis sp. by
+  electron paramagnetic resonance measurements.
+\newblock {\em Naturwissenschaften}, 86(1):30--32, 1999.
+
+\bibitem{Ant_Navigation_Wind}
+Martin M{\"u}ller and R{\"u}diger Wehner.
+\newblock Wind and sky as compass cues in desert ant navigation.
+\newblock {\em Naturwissenschaften}, 94(7):589--594, 2007.
+
 \bibitem{Mason}
 Sean Luke, Claudio Cioffi-Revilla, Liviu Panait, Keith Sullivan, and Gabriel
   Balan.
 \newblock Mason: A multiagent simulation environment.
 \newblock {\em Simulation}, 81(7):517--527, 2005.
+
+\bibitem{Ant_Path_Integration}
+Allen Cheung, Lex Hiby, and Ajay Narendra.
+\newblock Ant navigation: fractional use of the home vector.
+\newblock {\em PLoS One}, 7(11):e50451, 2012.
 
 \end{thebibliography}
