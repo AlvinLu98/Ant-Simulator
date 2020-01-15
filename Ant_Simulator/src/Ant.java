@@ -216,13 +216,15 @@ public class Ant extends Creature{
                             blocked.add(i);
                         } else if (p.getName().equals("Food") && i != 4) {
                             Pheromone food = (Pheromone) p;
-                            if (food.getValue() > 0 && !visited.contains(new Coordinate(food.getStartX(), food.getStartY()))) {
+                            if (food.getValue() > 0) {
                                 goingToFood();
-                                direction = compareSurroundingFoodForage(pd, food, direction, i, moveX, moveY, max, d);
-                                if (direction == i) {
-                                    moveX = surrounding.get(direction).getStartX();
-                                    moveY = surrounding.get(direction).getStartY();
-                                    max = food.getValue();
+                                if(!visited.contains(new Coordinate(food.getStartX(), food.getStartY()))) {
+                                    direction = compareSurroundingFoodForage(pd, food, direction, i, moveX, moveY, max, d);
+                                    if (direction == i) {
+                                        moveX = surrounding.get(direction).getStartX();
+                                        moveY = surrounding.get(direction).getStartY();
+                                        max = food.getValue();
+                                    }
                                 }
                             }
                         }
@@ -230,7 +232,27 @@ public class Ant extends Creature{
                 }
             }
         }
+        return direction;
+    }
 
+    private int compareSurroundingFoodForage(Pheromone_Data pd, Pheromone p, int curD, int i, int moveX, int moveY,
+                                             double max, ArrayList<Integer> d)
+    {
+        int direction = curD;
+        if (max == 0) { //if ant currently has no selected direction
+            direction = i;
+        }
+        else if(p.getValue() > max){
+            direction = i;
+        }
+        else if(p.getValue() == max) {
+            //Calculate the euclidean distance of new and old direction to home
+            double prev = euclideanDist(moveX, moveY, this.getStartX(), this.getStartY());
+            double current = euclideanDist(p.getStartX(), p.getStartY(), this.getStartX(), this.getStartY());
+            if (current >= prev && i != behind) { //if new direction is further away from home
+                direction = i;
+            }
+        }
         return direction;
     }
 
@@ -393,31 +415,6 @@ public class Ant extends Creature{
                     }
                 }
             }
-        }
-        return direction;
-    }
-
-    private int compareSurroundingFoodForage(Pheromone_Data pd, Pheromone p, int curD, int i, int moveX, int moveY,
-                                             double max, ArrayList<Integer> d)
-    {
-        int direction = curD;
-//        System.out.println("Value: " + p.getValue() + " max: " + max);
-        if (max == 0) { //if ant currently has no selected direction
-            direction = i;
-        }
-        else if(p.getValue() > max){
-            direction = i;
-        }
-        else if(p.getValue() == max) {
-                //Calculate the euclidean distance of new and old direction to home
-                double prev = euclideanDist(moveX, moveY, this.getStartX(), this.getStartY());
-                double current = euclideanDist(p.getStartX(), p.getStartY(), this.getStartX(), this.getStartY());
-//                if (d.contains(i)) {
-//                    return i;
-//                }
-                if (current >= prev && i != behind) { //if new direction is further away from home
-                    direction = i;
-                }
         }
         return direction;
     }
@@ -656,6 +653,7 @@ public class Ant extends Creature{
     public void obtainedFood(){
         this.hasFoodItem = true;
         this.followFood = false;
+        visited.clear();
     }
 
     public void droppedFood(){

@@ -46,7 +46,7 @@
 
 
 \begin{abstract}
-An abstract is a brief summary (maximum 250 words) of your entire project. It should cover your objectives, your methodology used, how you implemented the methodology for your specific results and what your final results are, your final outcome or deliverable and conclusion. You do not cover literature reviews or background in an abstract nor should you use abbreviations or acronyms. In the remainder of the report the chapter titles are suggestions and can be changed (or you can add more chapters if you wish to do so). This template is designed to help you write a clear report but you are welcome to modify it (at your peril ...). Finally, a guideline in size is approximately 3,500 words (not including abstract, captions and references) but no real limit on figures, tables, etc.
+Ants have always been a popular animal that was researched for it's behaviour. Findings from it has benefited areas such as machine learning, algorithm discovery and server optimisation. This project aims to create a realistic ant simulator that can be used be researchers and educators to discover potential behaviours or run simple simulations for demonstrations and research. It used an intelligent ant path-finding algorithm that utilises surrounding pheromone data, distance from hive and individual memory. The result was an Ant simulator that provides customisation of various environmental and ant values that can be controlled at the users pace. The software is flexible, replicable and portable which promotes future expansion and reuse.
 \end{abstract}
 
 \chapter{Introduction}
@@ -57,7 +57,7 @@ The biological world has always been a source of inspiration for computer models
 This project aims to develop a realistic ant simulator that allows customisation of various biological settings to simulate different ant colonies in varying environments. It will provide a method to show an accurate representation of ant behaviours, simulate survivability or ants in different settings, and reveal emergent properties that may benefit future swarm intelligence.
 
 \section{Report structure}
-Chapter \ref{chap:intro} will provide an introduction to the topic which will be followed by chapter \ref{chap:background} that provides scientific background, previous materials and motivation of for the project. Chapter \ref{chap:design} will detail the design considerations for the solution, supported by analysis of previous literature and existing solutions. Implementation details will be explained in chapter \ref{chap:Implementation} showing figures of the solution and design modifications made. Chapter \ref{chap:Testing} will provide testing and evaluation of the final software with discussions on it's strengths and weakness and the report will end with chapter \ref{chap:conclusion} providing a conclusion to the project.
+Chapter \ref{chap:intro} will provide an introduction to the topic which will be followed by chapter \ref{chap:background} that provides scientific background, previous materials and motivation of for the project. Chapter \ref{chap:design} will detail the design considerations for the solution, supported by analysis of previous literature and existing solutions. Implementation details will be explained in chapter \ref{chap:Implementation} showing figures of the solution and design modifications made. Chapter \ref{chap:Testing} will provide testing and evaluation of the final software with discussions on it's strengths and weakness will be provided in chapter \ref{chap:discussion}. The report will the be summarised within chapter \ref{chap:conclusion} providing a conclusion to the project.
 
 \chapter{Background}
 \label{chap:background}
@@ -285,10 +285,26 @@ Algorithm \ref{Algorithm:General} shows the high level movement pattern of ants.
 \section{Platform and packages}
 The simulator is developed in Java using the IDE \textit{IntelliJ}. Using Java as the development language ensures that the solution can be run on a wide range of Operating Systems while the object-oriented paradigm allows definition of classes that's duplicable and inheritable. This would be beneficial for this project as the simulator involves creation of large amount of objects that are similar structurally but has to behave independently. The UI will also be developed using \textit{JavaFX} as its platform. JavaFX provides the ability to separate UI from the implementation logic using FXML. It allows quick development of simple user interface that can be easily expanded and updated as JavaFX also supports CSS and HTML.
 
-\section{Implementation stages}
+\section{Development stages}
+Figures of development stages are included in the appendix
 
+\subsection{Stage 1}
+Stage 1 focuses on creation ants that can move and stay within the boundaries and moves randomly with prioritisation of the three directions in front of them. All values in the simulator are preset. Figure \ref{fig:Stage 1} in the appendix shows a screen capture of stage 1 development
 
-\section{User interface}
+\subsection{Stage 2}
+Stage 2 implements the ants capability of locating food and brining it back home. During this stage, the ants will rely on path integration and attempt to move closer to the hive on each tick. The distance to the hive is calculated by euclidean distance. This stage focuses on the ants capability of state change.
+
+\subsection{Stage 3}
+Stage 3 focuses on pheromone deposition. According to the state the ants is in, they will deposit either home or food pheromone and the pheromones will evaporate at a fixed rate over time. Movement of ants was also modified to rely on pheromones for path finding.
+
+\subsection{Stage 4}
+Obstacles was implemented during stage 4. Additional obstacle data was added onto the ground data which is has a unique property that stops ants from moving across or over it. To adapt to it, ant movement algorithm was further expanded to include obstacle avoidance.
+
+\subsection{Stage 5}
+Stage 5 involves the implementation of controller window, modifiable values and extra attributes such as birth rate and death rate. Ant movement algorithm was further improved to include local memory to improve the efficiency.
+
+\section{Final product}
+\subsection{User interface}
 The user interface contains two windows, the simulator window and control window (figure \ref{fig:Main_Simulator}). The simulator window contains all the sprites and will be showing the ant movements when the simulator is initiated. The window responds to mouse clicks and will add the home location and food location during set up and returns the pheromone data at the clicked point when the simulator is running. The control window will provide instructions during setup, prompting the user to select the locations of hive and foods. After the simulation has started, the window provides settings that can be modified and simulator controls. Figure \ref{fig:Location_Selection} and \ref{fig:Main_Simulator} shows the user interface.
 \begin{figure}[htb]
 	\begin{center}
@@ -307,7 +323,7 @@ The user interface contains two windows, the simulator window and control window
 \end{figure}
 
 
-\chapter{Testing and Discussion}
+\chapter{Testing}
 \label{chap:Testing}
 As the design of the static classes are straightforward, testing is conducted heavily towards the end of the development prioritising Dynamic black box and white box testing. Bugs and issue are predicted to be mostly emergent, caused by the ants interaction with its environment.
 
@@ -315,19 +331,78 @@ As the design of the static classes are straightforward, testing is conducted he
 For unit testing, values that are passed to and object are checked using console output to print out the values. Values printed out on the console are shown in figure \ref{fig:Ant_Simulator_Values} and \ref{fig:Ant_Values} in the appendix. A test class was also created to test out  new methods and packages before integrating it into the system (Figure \ref{fig:Test_Class}). In these unit tests, expected and unexpected values are entered to the methods to test if the return values are expected.
 
 \section{Integration testing}
-Integration testing focuses on parameter passing from the UI to back-end and vice-versa. This is achieved by firstly outputting the values passed from the UI to other classes to the console and checking if the input matches the output.
+Integration testing focuses on parameter passing from the UI to back-end and vice-versa. This is achieved by firstly outputting the values passed from the UI to other classes to the console and checking if the input matches the output. Integration testing was also conducted with each stage of implementation. The simulation was executed a left for a duration to reveal potential bugs with each addition of features. 
 
-\section{Usability testing}
+\section{User testing}
+Three users were selected to conduct black box testing on the finished software. The users were initially not given any information on the software except the main aim and was tasked to interact with the software. Most users managed to utilise the simple function of the software (e.g. pausing and playing) however they struggled with modifying the values. Descriptions of the value were then modified to provide better guidance for the types of input a user can put in. The users were then instructed to complete the tasks listed below:
+\begin{itemize}
+	\item Speed up the ants movement
+	\item Modify the ants settings
+	\item Increase the time scale of the simulator
+	\item Get the pheromone values of a particular coordinate
+\end{itemize} 
+All bugs encountered during testing was recorded and fixed after the test.
 
-\chapter{Conclusion and Future Work}
+\chapter{Discussion and Evaluation}
+\label{chap:discussion}
+
+From s review of the MoSCoW analysis, the ant simulator has managed to fulfil all the requirements in must and should. It also managed to achieve a requirement in the could section such as obtaining pheromone data at a point on the map. The simulator is able to provide simulations with a range of different values. 
+
+However, during stress testing, the simulator is shown to slow down significantly or freeze when the population of ants goes past 2000. Future improvements could introduce parallel programming for processing of ant movements to allow the simulator to accommodate larger ant populations. Although the ants doesn't show cases of cyclic movement in the tests, there are cases where ants struggle to find a path home. Ants will trace the sides of obstacle when attempting to locate the path home which consumed time and affected the results of when converging to an optimum path. Future improvements can be made to improve the decision making of the ants during movements to include more factors described in chapter \ref{chap:background} to ensure that optimum paths can be found more efficiently. Additionally, some values in the simulator are currently not customisable such as the potency of pheromones and individual rates, future improvements could consider implementing these as customisable values.
+
+Due to the structure simulator was built, this software provides high flexibility when it comes to scaling and reusing. Similar simulators can potentially be built using this software as it's base, providing opportunities for large amount of future work.
+
+\chapter{Conclusion and future work}
 \label{chap:conclusion}
-Conclude your achievements and put them in perspective with the MoSCoW analysis you did early on. Be honest by declaring for example S categorised objectives which did not make it to the final deliverable rather than reversely modifying your MoSCoW in Chapter \ref{chap:intro}! Also discuss future developments and how you see the deliverable improving if more time could be spent. Do not put in subjective opinions or rants or excuses as to why something did not work out as planned in your report. A technical report is not a medium for complaints as there are other outlets for that typically well before you came to this stage (e.g. labs, e-mail etc.).
+This ant simulator provided a simple implementation for running a small scale ant colony that behaves similarly to real life ants. It utilises path utilisation, pheromone trails and visual memory to create an intelligent movement pattern for the ants. The simulator also showcased the interaction of different simplistic agents to complete a task together.
+
+For future work, I intent to to improve the ant path-finding algorithm to better match it's biological counterparts and expanding it's features to accommodate a larger range of values, environments and species.
 
 
 \bibliographystyle{unsrt}
 \bibliography{References}
 
 \chapter*{Appendix A}
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.65 \columnwidth]{Stage_1.jpg}
+		\caption{Stage 1 of development. The black dots shows the ants and the red dots are the hive and food.}
+		\label{fig:Stage 1}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.65 \columnwidth]{Stage_2.jpg}
+		\caption{Stage 2 of development. Ants are able to locate food and bring it back to the hive.}
+		\label{fig:Stage 2}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.65 \columnwidth]{Stage_3.jpg}
+		\caption{Stage 3 of development. Ants leave pheromones while foraging.}
+		\label{fig:Stage 3}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=0.65 \columnwidth]{Stage_4.jpg}
+		\caption{Stage 4 of development. Ants movement involves avoiding obstacles.}
+		\label{fig:Stage 4}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+		\includegraphics[width=1.0 \columnwidth]{Stage_5.jpg}
+		\caption{Stage 5 of development. Implementation of control UI and improving ant path-finding.}
+		\label{fig:Stage 5}
+	\end{center}
+\end{figure}
+
 \begin{figure}[htb]
 	\begin{center}
 		\includegraphics[width=0.6 \columnwidth]{Ant_Simulator_Values.jpg}

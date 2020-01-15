@@ -17,7 +17,7 @@ public class Hive extends Sprite {
         circle.setCenterX(x);
         circle.setCenterY(y);
         circle.setRadius(rad);
-        circle.setFill(Color.BROWN);
+        circle.setFill(Color.GREEN);
 
         this.node = circle;
     }

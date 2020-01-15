@@ -440,9 +440,9 @@ public class Ant_Simulator extends Simulator{
 
     private Pheromone_Data createPheromones(int x, int y, int velX, int velY){
         Pheromone_Data p = new Pheromone_Data(x, y, velX, velY);
-        Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.2,255,0,0, 10,
+        Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.05,255,0,0, 10,
                 evaporationRate);
-        Pheromone home = new Pheromone(x, y, velX, velY, "Home",0.05, 0,0,255, 1,
+        Pheromone home = new Pheromone(x, y, velX, velY, "Home",0.01, 0,0,255, 1,
                 evaporationRate);
 
         p.addData(food);
