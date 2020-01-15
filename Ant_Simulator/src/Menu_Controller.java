@@ -52,6 +52,9 @@ public class Menu_Controller {
     Text antDeath;
 
     @FXML
+    Text status;
+
+    @FXML
     TableView pheromones;
 
     private boolean stopped = false, paused = false, play = false;
@@ -66,12 +69,14 @@ public class Menu_Controller {
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt,
                 event -> {
                     Ant_Simulator ant = (Ant_Simulator)Display.sim;
-                    time.setText(String.valueOf(java.time.Duration.between(Simulator.start, Simulator.current).toMillis()/1000));
-                    java.time.Duration diff = java.time.Duration.between(Simulator.start, Simulator.scaledCurrent);
-                    scaledTime.setText(diff.toDays() + " days " + (diff.toHours())%24 + " Hours " + (diff.toMinutes())%60 +
-                            " Minutes " + (diff.toMillis()/1000)%60 + " Seconds");
-                    antPop.setText(String.valueOf(Ant_Simulator.getAntPop()) + " ants alive");
-                    antDeath.setText(String.valueOf(Ant_Simulator.getDeadAntPop() + " ants died"));
+                    if(!paused) {
+                        time.setText(String.valueOf(java.time.Duration.between(Simulator.start, Simulator.current).toMillis() / 1000));
+                        java.time.Duration diff = java.time.Duration.between(Simulator.start, Simulator.scaledCurrent);
+                        scaledTime.setText(diff.toDays() + " days " + (diff.toHours()) % 24 + " Hours " + (diff.toMinutes()) % 60 +
+                                " Minutes " + (diff.toMillis() / 1000) % 60 + " Seconds");
+                        antPop.setText(String.valueOf(Ant_Simulator.getAntPop()) + " ants alive");
+                        antDeath.setText(String.valueOf(Ant_Simulator.getDeadAntPop() + " ants died"));
+                    }
 
                     if(Ant_Simulator.getSelectedX() != -1){
                         pheromones.getItems().clear();
@@ -83,6 +88,16 @@ public class Menu_Controller {
                                 pheromones.getItems().add(phe);
                             }
                         }
+                    }
+
+                    if(play){
+                        status.setText("Running");
+                    }
+                    else if(paused){
+                        status.setText("Paused");
+                    }
+                    else if(stopped){
+                        status.setText("Stopped");
                     }
                 });
         Display.timeline = new Timeline();
@@ -99,12 +114,12 @@ public class Menu_Controller {
         evaporationBox.setText(String.valueOf(1 - ant.getEvaporationRate()));
         foodAmtBox.setText(String.valueOf(ant.getNumFood()));
         obstacleType.setValue(String.valueOf(ant.getObstacleType()));
-        birthRateBox.setText(String.valueOf(ant.getBirthRate()));
-        lifespanBox.setText(String.valueOf(ant.getLifespan()));
-        timeScaleBox.setText(String.valueOf(ant.getScale()));
+        birthRateBox.setText(String.valueOf(Ant_Simulator.getBirthRate()));
+        lifespanBox.setText(String.valueOf(Ant_Simulator.getLifespan()));
+        timeScaleBox.setText(String.valueOf(Ant_Simulator.getScale()));
 
         speedUp.valueProperty().addListener((observable, oldValue, newValue) -> {
-            Display.sim.timeline.setRate(newValue.doubleValue());
+            Simulator.timeline.setRate(newValue.doubleValue());
         });
     }
 
@@ -118,15 +133,14 @@ public class Menu_Controller {
             resetSettings();
             initialize();
             Simulator.start = Instant.now();
-            Display.timeline.play();
             Display.sim.beginSimulation();
         }
         if(paused){
             totalPauseTime = java.time.Duration.between(pauseStartTime, Instant.now()).toMillis();
             Ant_Simulator ant = (Ant_Simulator)Display.sim;
             Simulator.current = Simulator.current.plusMillis(-totalPauseTime);
-            Simulator.scaledCurrent = Simulator.scaledCurrent.plusMillis(ant.getScale() * -totalPauseTime);
-            Display.timeline.play();
+            Simulator.scaledCurrent = Simulator.scaledCurrent.plusMillis(Ant_Simulator.getScale() * -totalPauseTime);
+//            Display.timeline.play();
             ((Ant_Simulator)Display.sim).playSimulation();
             paused = false;
         }
@@ -138,9 +152,9 @@ public class Menu_Controller {
         if(play) {
             play = false;
             pauseStartTime = Instant.now();
-            Display.timeline.pause();
-            Display.sim.timeline.pause();
-            Display.sim.timer.stop();
+            Simulator.timeline.pause();
+            Simulator.timer.stop();
+//            Display.timeline.stop();
         }
     }
 
@@ -148,14 +162,15 @@ public class Menu_Controller {
         paused = false;
         play = false;
         stopped = true;
-        Display.timeline.stop();
-        Display.sim.timeline.stop();
-        Display.sim.timer.stop();
+        Simulator.timeline.stop();
+        Simulator.timer.stop();
+//        Display.timeline.stop();
     }
 
     public void resetSettings(){
         boolean valid = true;
         boolean ready = false;
+        Display.timeline.stop();
         Alert a = new Alert(Alert.AlertType.NONE);
         String errorMes = "";
         Ant_Simulator ant = (Ant_Simulator)Display.sim;
@@ -163,7 +178,7 @@ public class Menu_Controller {
         while(!ready) {
             if (!antNoTextField.getText().isEmpty() && Display.isDigit(antNoTextField.getText())) {
                 ant.setInitAntAmt(Integer.parseInt(antNoTextField.getText()));
-                ant.setAntPop(0);
+                Ant_Simulator.setAntPop(0);
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
                 errorMes += "Please enter a valid number for ants\n";
@@ -210,7 +225,7 @@ public class Menu_Controller {
             }
 
             if (!birthRateBox.getText().isEmpty() && Display.isDigit(birthRateBox.getText())) {
-                ant.setBirthRate(Integer.valueOf(birthRateBox.getText()));
+                Ant_Simulator.setBirthRate(Integer.valueOf(birthRateBox.getText()));
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
                 errorMes += "Birth rate should be a number!\n";
@@ -218,7 +233,7 @@ public class Menu_Controller {
             }
 
             if (!lifespanBox.getText().isEmpty() && Display.isDigit(lifespanBox.getText())) {
-                ant.setLifespan(Integer.valueOf(lifespanBox.getText()));
+                Ant_Simulator.setLifespan(Integer.valueOf(lifespanBox.getText()));
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
                 errorMes += "Lifespan should be a number!\n";
@@ -226,7 +241,7 @@ public class Menu_Controller {
             }
 
             if (!timeScaleBox.getText().isEmpty() && Display.isDigit(timeScaleBox.getText())) {
-                ant.setScale(Integer.valueOf(timeScaleBox.getText()));
+                Ant_Simulator.setScale(Integer.valueOf(timeScaleBox.getText()));
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
                 errorMes += "Time scale should be a number!\n";

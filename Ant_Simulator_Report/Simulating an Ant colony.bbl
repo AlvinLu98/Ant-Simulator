@@ -5,6 +5,22 @@ Eric Bonabeau, Marco Dorigo, and Guy Theraulaz.
 \newblock {\em From Natural to Artificial Swarm Intelligence}.
 \newblock Oxford University Press, Inc., USA, 1999.
 
+\bibitem{Ant_Implementation_Tech_1}
+Sabine Hauert, Laurent Winkler, Jean-Christophe Zufferey, and Dario Floreano.
+\newblock Ant-based swarming with positionless micro air vehicles for
+  communication relay.
+\newblock {\em Swarm Intelligence}, 2(2-4):167--188, 2008.
+
+\bibitem{Ant_Implementation_Tech_2}
+Eugene Thacker.
+\newblock Networks, swarms, multitudes (part two).
+\newblock {\em CTheory}, pages 5--18, 2004.
+
+\bibitem{Ant_Implementation_ML}
+Julia Handl and Bernd Meyer.
+\newblock Ant-based and swarm-based clustering.
+\newblock {\em Swarm Intelligence}, 1(2):95--113, 2007.
+
 \bibitem{Ant_Simulator}
 Liviu Panait and Sean Luke.
 \newblock Learning ant foraging behaviors.

@@ -7,45 +7,45 @@ Warning--empty booktitle in Ant_Simulator
 Warning--empty year in Ant_Simulator
 Warning--empty booktitle in Ant_Simulator_Revisited
 Warning--empty year in Ant_Simulator_Revisited
-You've used 17 entries,
+You've used 20 entries,
             1791 wiz_defined-function locations,
-            576 strings with 6667 characters,
-and the built_in function-call counts, 4116 in all, are:
-= -- 367
-> -- 177
-< -- 2
-+ -- 65
-- -- 48
-* -- 307
-:= -- 647
-add.period$ -- 52
-call.type$ -- 17
-change.case$ -- 16
+            594 strings with 7140 characters,
+and the built_in function-call counts, 4859 in all, are:
+= -- 440
+> -- 203
+< -- 3
++ -- 75
+- -- 55
+* -- 360
+:= -- 761
+add.period$ -- 61
+call.type$ -- 20
+change.case$ -- 19
 chr.to.int$ -- 0
-cite$ -- 21
-duplicate$ -- 176
-empty$ -- 415
-format.name$ -- 48
-if$ -- 910
+cite$ -- 24
+duplicate$ -- 208
+empty$ -- 486
+format.name$ -- 55
+if$ -- 1075
 int.to.chr$ -- 0
-int.to.str$ -- 17
-missing$ -- 18
-newline$ -- 87
-num.names$ -- 17
-pop$ -- 48
+int.to.str$ -- 20
+missing$ -- 21
+newline$ -- 102
+num.names$ -- 20
+pop$ -- 53
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 70
+skip$ -- 86
 stack$ -- 0
-substring$ -- 306
-swap$ -- 31
-text.length$ -- 2
+substring$ -- 372
+swap$ -- 39
+text.length$ -- 3
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 4
-while$ -- 43
-width$ -- 19
-write$ -- 185
+while$ -- 53
+width$ -- 22
+write$ -- 218
 (There were 4 warnings)

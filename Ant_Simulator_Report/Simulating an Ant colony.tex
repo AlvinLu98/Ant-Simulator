@@ -35,7 +35,7 @@
 \vspace{10.0cm}
 \\{\large School of Computing Sciences, University of East Anglia}
 \\ \rule{12cm}{0.5mm}
-\\ \hspace{8.5cm} {\large Version 1.0}
+\\ \hspace{8.5cm} {\large Version 3.1}
 \end{center}
 \end{titlepage}
 
@@ -46,18 +46,18 @@
 
 
 \begin{abstract}
-Ants have always been a popular animal that was researched for it's behaviour. Findings from it has benefited areas such as machine learning, algorithm discovery and server optimisation. This project aims to create a realistic ant simulator that can be used be researchers and educators to discover potential behaviours or run simple simulations for demonstrations and research. It used an intelligent ant path-finding algorithm that utilises surrounding pheromone data, distance from hive and individual memory. The result was an Ant simulator that provides customisation of various environmental and ant values that can be controlled at the users pace. The software is flexible, replicable and portable which promotes future expansion and reuse.
+Ants have always been a popular animal that was researched for it's behaviour. Findings from it has benefited areas such as machine learning, algorithm discovery and server optimisation. This project aims to create a realistic ant simulator that can be used be researchers and educators to discover potential behaviours or run simple simulations for demonstrations and research.  The result was an Ant simulator that provides customisation of various environmental and ant values that can be controlled at the users pace. Variables such as birth rate and death rate can be changed before the start of a simulation. It uses an intelligent ant path-finding algorithm that utilises surrounding pheromone data, distance from hive and individual memory. The system is replicable and flexible, which could potentially encourage reuse and expansion in the future.
 \end{abstract}
 
 \chapter{Introduction}
 \label{chap:intro}
 
-The biological world has always been a source of inspiration for computer models and algorithms. Within successful model developed, swarm intelligence have always been a topic of interest spanning across wide range of disciplines \citep{Swarm_Intro}. In computing, swarms are usually associated with ants that exhibits large amount of behaviours that can potentially be used to optimise algorithms. Whilst there exist techniques and simulations \citep{Ant_Simulator} \citep{Ant_Simulator_Revisited} \citep{Ant_Simulator_Intro}  that mimics the certain behaviour of ants, there aren't software available that simulate ants realistically in  the biological world.
+The biological world has always been a source of inspiration for computer models and algorithms. Within successful model developed, swarm intelligence have always been a topic of interest spanning across wide range of disciplines \citep{Swarm_Intro}. Swarming are commonly associated with ants that exhibits large amount of behaviours that can potentially be used to optimise algorithms. Current implementations has managed to replicate certain behaviours of swarming in ants in technologies \citep{Ant_Implementation_Tech_1} \citep{Ant_Implementation_Tech_2} and machine learning \citep{Ant_Implementation_ML}. To provide visualisation and convenience, simulators \citep{Ant_Simulator} \citep{Ant_Simulator_Revisited} \citep{Ant_Simulator_Intro}  that mimics the certain behaviour of ants are being developed to aid in the research of ants. Although these implementations have successfully replicated a a case or a portion of ant behaviour, there aren't software available that simulate ants realistically in the biological world.
 
-This project aims to develop a realistic ant simulator that allows customisation of various biological settings to simulate different ant colonies in varying environments. It will provide a method to show an accurate representation of ant behaviours, simulate survivability or ants in different settings, and reveal emergent properties that may benefit future swarm intelligence.
+To tackle the gap, this project aims to develop a realistic ant simulator that allows customisation of various biological values to allow simulation of different ant colonies in varying environments. It will provide a method to visualise an accurate representation of ant behaviours, simulate survivability, behaviour and interaction of ants in different settings. The solution aims to provide biological and software researchers a tool to visualise different ant colonies and reveal emergent properties that may benefit future swarm intelligence.
 
 \section{Report structure}
-Chapter \ref{chap:intro} will provide an introduction to the topic which will be followed by chapter \ref{chap:background} that provides scientific background, previous materials and motivation of for the project. Chapter \ref{chap:design} will detail the design considerations for the solution, supported by analysis of previous literature and existing solutions. Implementation details will be explained in chapter \ref{chap:Implementation} showing figures of the solution and design modifications made. Chapter \ref{chap:Testing} will provide testing and evaluation of the final software with discussions on it's strengths and weakness will be provided in chapter \ref{chap:discussion}. The report will the be summarised within chapter \ref{chap:conclusion} providing a conclusion to the project.
+This report will provide a description of the design and implementation considerations of the solution. Chapter \ref{chap:intro} will provide an introduction to the topic which will be followed by chapter \ref{chap:background} that provides scientific background, previous materials and motivation of for the project. Chapter \ref{chap:design} will detail the design considerations for the solution, supported by analysis of previous literature and existing solutions. Implementation details will be explained in chapter \ref{chap:Implementation} showing figures of the solution and design modifications made. Chapter \ref{chap:Testing} will provide testing and evaluation of the final software with discussions on it's strengths and weakness will be provided in chapter \ref{chap:discussion}. The report will the be summarised within chapter \ref{chap:conclusion} providing a conclusion to the project.
 
 \chapter{Background}
 \label{chap:background}
@@ -68,7 +68,7 @@ Within animals that exhibit swarming, ants are one of the insect that has been v
 
 
 \section{Existing methods}
-Currently, an ant simulator was found publicly available online that uses the MASON simulation toolkit \citep{Mason}. The simulator provides a list of features listed below:
+According to Liviu \citep{Ant_Simulator},here were several simulators that were developed in the past. Liviu have also developed an ant simulator that is available online publicly that uses the MASON simulation toolkit \citep{Mason}. The simulator replicates ants movements using pheromones alongside with the list of features below:
 \begin{itemize}
 	\item Allows customisation of certain values such as the ant population and evaporation rate.
 	\item Allows pausing, playing and speeding up or slowing down the simulation.
@@ -179,7 +179,7 @@ The simulator provides quick and easy way to visualise movements of the ants how
 \end{tabular}
 
 \section{Structure of the system}
-The system will have different classes assigned with various responsibilities. The \textbf{Display class} will be the creator of the simulator. This class will be called first during execution of the Java executable. This class will create the windows(stages) for the simulator. All information of the simulator such as time, all sprites and are saved in the \textbf{Ant\_Simulator class} shared to other classes when required. After the simulator has been initiated, the \textbf{Menu\_Controller class} will be assigned the ability to run, modify and terminate the simulator. The system was design with a few base classes that the ant simulator inherits from such as Simulator, Sprites and Ground\_Data class. This allows the improves code re-usability if other simulators are to be built in the future. The full class diagram can be found in figure \ref{fig:Full_Class_Diagram} in the appendix.
+The system will have different classes assigned with various responsibilities. The \textbf{Display class} will be the creator of the simulator. This class will be called first during execution of the Java executable. This class will create the windows(stages) during instantiation of the simulator. All information of the simulator such as time, all sprites and are saved in the \textbf{Ant\_Simulator class} shared to other classes when required. After the simulator has been initiated, the \textbf{Menu\_Controller class} will be assigned the ability to run, modify and terminate the simulator. Inheritance was also taken into consideration during the design. Operating classes within the simulator were developed from a few base classes such as Simulator, Sprites and Ground\_Data class. This allows the improves code re-usability if other simulators are to be built in the future. The full class diagram can be found in figure \ref{fig:Full_Class_Diagram} in the appendix.
 
   The state diagram of individual ants are shown in figure \ref{fig:State_Diagram}. All ants have a lifespan that is set during initialisation of the simulator. Death of ants are calculated by probability, the closer they are towards the lifespan, the higher the chance of death. Dead ants are removed from the simulator through the handler.
 
@@ -193,11 +193,11 @@ The system will have different classes assigned with various responsibilities. T
 
 
 \section{Ant movement AI}
-The ants rely on two type of pheromones, home pheromone that is used by ants carrying food to find their way home and food pheromone which is left my ants carrying food and followed by foraging ants to the food source. Aside from pheromones, the ants will also rely on the distance between their location and the hive and will try to move closer to the hive if possible, mimicking the process of path integration \citep{Ant_Path_Integration}.
+The ants rely on two type of pheromones, home pheromone that is used by ants carrying food to find their way home and food pheromone which is left my ants carrying food and followed by foraging ants to the food source. The pheromones will be the main source of navigation however, the ants will also rely on the distance between their location and the hive and will try to move closer to the hive if possible, mimicking the process of path integration \citep{Ant_Path_Integration}. Relying on hive distance will ensure that ants that are trying to navigate home will not get stuck following the trails of other foraging ants that has moved further away from the hive.
 
 All ants can move to the 8 potential directions shown in figure \ref{fig:Ant_Direction}. If there isn't any pheromone data found in their surroundings, the ants will move in random directions but they will prioritise the three direction that the ant is in front. 
 
-During analysis of MASON ant simulator and literatures associated, It was found that the the ants in the simulator relies purely on pheromones for navigation  which might result in ants being stuck in in a cyclic movement if the food source is located further away from the hive where surrounding home pheromones may have evaporated or the density of ants are not high enough to ensure navigation back to the hive. Due to this, individual ants are designed to retain a set amount of locations that it has  recently visited and will avoid moving back to the locations unless necessary. 
+During initial prototype and testing, It was found that ants in the simulator that relies purely on pheromones for navigation might result in ants being stuck in a cyclic movement if the food source is located further away from the hive where surrounding home pheromones may have evaporated or the density of ants are not high enough to ensure navigation back to the hive. Due to this, individual ants are designed to retain a set amount of locations that it has  recently visited and will avoid moving back to the locations unless necessary. 
 
 Algorithm \ref{Algorithm:General} shows the high level movement pattern of ants. Algorithm \ref{Algorithm:Find_Home}, \ref{Algorithm:Home_Pheromone} and \ref{Algorithm:Home_Distance} shows the algorithm used for ants to find their way back to their hive when carrying food. Movement patterns when ants are following food pheromones to food source are similar to following home pheromones back to the hive.
 
@@ -255,7 +255,7 @@ Algorithm \ref{Algorithm:General} shows the high level movement pattern of ants.
 			\State return NULL
 		
 		\Else
-			\State direction $\leftarrow$ direction-maximum-pheromone$(potential-directions)$
+			\State direction $\leftarrow$ direction-with-maximum-pheromone$($potential-directions$)$
 			\State return direction
 		\EndIf
 	\end{algorithmic}
@@ -286,7 +286,7 @@ Algorithm \ref{Algorithm:General} shows the high level movement pattern of ants.
 The simulator is developed in Java using the IDE \textit{IntelliJ}. Using Java as the development language ensures that the solution can be run on a wide range of Operating Systems while the object-oriented paradigm allows definition of classes that's duplicable and inheritable. This would be beneficial for this project as the simulator involves creation of large amount of objects that are similar structurally but has to behave independently. The UI will also be developed using \textit{JavaFX} as its platform. JavaFX provides the ability to separate UI from the implementation logic using FXML. It allows quick development of simple user interface that can be easily expanded and updated as JavaFX also supports CSS and HTML.
 
 \section{Development stages}
-Figures of development stages are included in the appendix
+The solution will be developed from scratch in stages. The details of different stages is detailed within this section and screen captures of different versions are located in the appendix.
 
 \subsection{Stage 1}
 Stage 1 focuses on creation ants that can move and stay within the boundaries and moves randomly with prioritisation of the three directions in front of them. All values in the simulator are preset. Figure \ref{fig:Stage 1} in the appendix shows a screen capture of stage 1 development
@@ -306,6 +306,16 @@ Stage 5 involves the implementation of controller window, modifiable values and 
 \section{Final product}
 \subsection{User interface}
 The user interface contains two windows, the simulator window and control window (figure \ref{fig:Main_Simulator}). The simulator window contains all the sprites and will be showing the ant movements when the simulator is initiated. The window responds to mouse clicks and will add the home location and food location during set up and returns the pheromone data at the clicked point when the simulator is running. The control window will provide instructions during setup, prompting the user to select the locations of hive and foods. After the simulation has started, the window provides settings that can be modified and simulator controls. Figure \ref{fig:Location_Selection} and \ref{fig:Main_Simulator} shows the user interface.
+
+\subsection{Features}
+The simulator will initially be created with default values. Prompting the user to pick a location for the hive and food. After first instantiation of the simulator, the users are allowed to change the settings listed below:
+\begin{itemize}
+	\item Individual ant settings - The lifespans, birthrate and number of ants can be modified according to values of different ant species.
+	\item Environmental values - Evaporation rate, number of food source, types of obstacle and the scale of time can be modified to simulate different weathers and conditions of the environment the ant is living in.
+	\item Speeding up the simulation - Whilst the user can implement a fixed time scaling value for the simulator, the speed can be dynamically sped up and slowed down.
+	\item Obtaining pheromone data - Dynamic pheromone data can be obtained by clicking on points on the map.
+\end{itemize}
+
 \begin{figure}[htb]
 	\begin{center}
 		\includegraphics[width=1.0 \columnwidth]{Location_Selection.jpg}

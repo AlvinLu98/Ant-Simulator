@@ -60,6 +60,7 @@
             <HBox fx:id="stopBox" spacing="10" alignment="CENTER" GridPane.columnIndex="2" GridPane.rowIndex="10" prefWidth="100">
                 <Button text="Stop" onAction="#stop"  minWidth="80"/>
             </HBox>
+            <Text fx:id="status" GridPane.columnIndex="3" GridPane.rowIndex="10"/>
         </GridPane>
     </Tab>
 
