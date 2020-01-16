@@ -14,7 +14,6 @@ public class Ant extends Creature{
     private Direction prevDirection;
     private int behind;
     public ArrayList<Integer> blocked;
-    private ArrayList<Integer> clear = new ArrayList<>();
     private LinkedList<Coordinate> visited = new LinkedList<>();
     public static final double rad = 1.0; //radius of an ant
 
@@ -60,13 +59,6 @@ public class Ant extends Creature{
             if (d < probability) {
                 dead = true;
             }
-        }
-    }
-
-    private void resetClear(){
-        clear.clear();
-        for(int i=0; i < 9; i++){
-            clear.add(i);
         }
     }
 
@@ -259,16 +251,16 @@ public class Ant extends Creature{
                                              double max, ArrayList<Integer> d)
     {
         int direction = curD;
+        //Calculate the euclidean distance of new and old direction to home
+        double prev = euclideanDist(moveX, moveY, this.getStartX(), this.getStartY());
+        double current = euclideanDist(p.getStartX(), p.getStartY(), this.getStartX(), this.getStartY());
         if (max == 0) { //if ant currently has no selected direction
             direction = i;
         }
-        else if(p.getValue() > max){
+        else if(p.getValue() > max && current >= prev){
             direction = i;
         }
         else if(p.getValue() == max) {
-            //Calculate the euclidean distance of new and old direction to home
-            double prev = euclideanDist(moveX, moveY, this.getStartX(), this.getStartY());
-            double current = euclideanDist(p.getStartX(), p.getStartY(), this.getStartX(), this.getStartY());
             if (current >= prev && i != behind) { //if new direction is further away from home
                 direction = i;
             }
