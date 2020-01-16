@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.9.12)  15 JAN 2020 23:40
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018/W32TeX) (preloaded format=pdflatex 2018.9.12)  16 JAN 2020 11:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -440,55 +440,59 @@ File: Stage_5.jpg Graphic file (type jpg)
 <use Stage_5.jpg>
 Package pdftex.def Info: Stage_5.jpg  used on input line 410.
 (pdftex.def)             Requested size: 425.0pt x 183.61546pt.
-<Ant_Simulator_Values.jpg, id=76, 316.18124pt x 187.82672pt>
+<Ant_Sim_Convergence.jpg, id=76, 892.45921pt x 388.45125pt>
+File: Ant_Sim_Convergence.jpg Graphic file (type jpg)
+<use Ant_Sim_Convergence.jpg>
+Package pdftex.def Info: Ant_Sim_Convergence.jpg  used on input line 418.
+(pdftex.def)             Requested size: 425.0pt x 184.98451pt.
+<Ant_Simulator_Values.jpg, id=77, 316.18124pt x 187.82672pt>
 File: Ant_Simulator_Values.jpg Graphic file (type jpg)
 <use Ant_Simulator_Values.jpg>
-Package pdftex.def Info: Ant_Simulator_Values.jpg  used on input line 418.
+Package pdftex.def Info: Ant_Simulator_Values.jpg  used on input line 426.
 (pdftex.def)             Requested size: 255.0026pt x 151.48535pt.
-<Ant_Values.jpg, id=77, 228.855pt x 242.78203pt>
+<Ant_Values.jpg, id=78, 228.855pt x 242.78203pt>
 File: Ant_Values.jpg Graphic file (type jpg)
 <use Ant_Values.jpg>
-Package pdftex.def Info: Ant_Values.jpg  used on input line 426.
+Package pdftex.def Info: Ant_Values.jpg  used on input line 434.
 (pdftex.def)             Requested size: 255.0026pt x 270.53221pt.
-<Test_Class.jpg, id=78, 252.19218pt x 117.81516pt>
+<Test_Class.jpg, id=79, 252.19218pt x 117.81516pt>
 File: Test_Class.jpg Graphic file (type jpg)
 <use Test_Class.jpg>
-Package pdftex.def Info: Test_Class.jpg  used on input line 434.
+Package pdftex.def Info: Test_Class.jpg  used on input line 442.
 (pdftex.def)             Requested size: 255.0026pt x 119.12898pt.
-<Full_Class_Diagram.jpg, id=79, 2164.085pt x 1525.7pt>
+<Full_Class_Diagram.jpg, id=80, 2164.085pt x 1525.7pt>
 File: Full_Class_Diagram.jpg Graphic file (type jpg)
 <use Full_Class_Diagram.jpg>
-Package pdftex.def Info: Full_Class_Diagram.jpg  used on input line 443.
+Package pdftex.def Info: Full_Class_Diagram.jpg  used on input line 451.
 (pdftex.def)             Requested size: 750.0pt x 528.74167pt.
  [15
 
  <./MASON_Ant.jpg> <./MASON_Ant_Converged.jpg>] [16 <./Stage_1.jpg> <./Stage_2.
-jpg>] [17 <./Stage_3.jpg> <./Stage_4.jpg>] [18 <./Stage_5.jpg> <./Ant_Simulator
-_Values.jpg> <./Ant_Values.jpg>] [19 <./Test_Class.jpg>] [20 <./Full_Class_Diag
-ram.jpg>]
-(./Simulating an Ant colony.aux) ) 
+jpg>] [17 <./Stage_3.jpg> <./Stage_4.jpg>] [18 <./Stage_5.jpg> <./Ant_Sim_Conve
+rgence.jpg> <./Ant_Simulator_Values.jpg>] [19 <./Ant_Values.jpg> <./Test_Class.
+jpg>] [20 <./Full_Class_Diagram.jpg>] (./Simulating an Ant colony.aux) ) 
 Here is how much of TeX's memory you used:
- 3698 strings out of 492641
- 50415 string characters out of 6133116
- 122814 words of memory out of 5000000
- 7492 multiletter control sequences out of 15000+600000
+ 3705 strings out of 492641
+ 50578 string characters out of 6133116
+ 122836 words of memory out of 5000000
+ 7498 multiletter control sequences out of 15000+600000
  12652 words of font info for 46 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,8n,27p,1142b,329s stack positions out of 5000i,500n,10000p,200000b,80000s
-<c:/texlive/2018/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmbx10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmbx12.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi
-10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:
-/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/texlive/2
-018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><c:/texlive/2018/texmf-
-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/texlive/2018/texmf-dist/fonts/
-type1/public/amsfonts/cm/cmr9.pfb><c:/texlive/2018/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmsy10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmti10.pfb>
-Output written on "Simulating an Ant colony.pdf" (22 pages, 3455083 bytes).
+ 41i,8n,27p,1205b,329s stack positions out of 5000i,500n,10000p,200000b,80000s
+<c:/tex
+live/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2018
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><c:/texlive/2018/texmf-di
+st/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2018/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2018/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmr12.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr17.pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.
+pfb><c:/texlive/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/tex
+live/2018/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2018
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on "Simulating an Ant colony.pdf" (22 pages, 3716234 bytes).
 PDF statistics:
- 132 PDF objects out of 1000 (max. 8388607)
+ 133 PDF objects out of 1000 (max. 8388607)
  81 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 76 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 

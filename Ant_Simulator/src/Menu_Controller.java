@@ -60,6 +60,7 @@ public class Menu_Controller {
     private boolean stopped = false, paused = false, play = false;
     Instant pauseStartTime;
     long totalPauseTime;
+    boolean ready = false;
 
 
 
@@ -140,11 +141,14 @@ public class Menu_Controller {
      */
     public void play(){
         if(stopped){
-            stopped = false;
             resetSettings();
-            initialize();
-            Simulator.start = Instant.now();
-            Display.sim.beginSimulation();
+            if(ready) {
+                stopped = false;
+                initialize();
+                Simulator.start = Instant.now();
+                Display.sim.beginSimulation();
+                play = true;
+            }
         }
         if(paused){
             totalPauseTime = java.time.Duration.between(pauseStartTime, Instant.now()).toMillis();
@@ -153,12 +157,12 @@ public class Menu_Controller {
             Simulator.scaledCurrent = Simulator.scaledCurrent.plusMillis(Ant_Simulator.getScale() * -totalPauseTime);
             ((Ant_Simulator)Display.sim).playSimulation();
             paused = false;
+            play = true;
         }
-        play = true;
     }
 
     /**
-     * Pauses the simluation
+     * Pauses the simulation
      */
     public void pause(){
         paused = true;
@@ -179,7 +183,6 @@ public class Menu_Controller {
         stopped = true;
         Simulator.timeline.stop();
         Simulator.timer.stop();
-//        Display.timeline.stop();
     }
 
     /**
@@ -187,101 +190,98 @@ public class Menu_Controller {
      */
     public void resetSettings(){
         boolean valid = true;
-        boolean ready = false;
-        Display.timeline.stop();
         Alert a = new Alert(Alert.AlertType.NONE);
         String errorMes = "";
         Ant_Simulator ant = (Ant_Simulator)Display.sim;
 
-        while(!ready) {
-            if (!antNoTextField.getText().isEmpty() && Display.isDigit(antNoTextField.getText())) {
-                ant.setInitAntAmt(Integer.parseInt(antNoTextField.getText()));
-                Ant_Simulator.setAntPop(0);
-            } else {
-                a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Please enter a valid number for ants\n";
-                antNoTextField.clear();
-                valid = false;
-            }
+        if (!antNoTextField.getText().isEmpty() && Display.isDigit(antNoTextField.getText())) {
+            ant.setInitAntAmt(Integer.parseInt(antNoTextField.getText()));
+            Ant_Simulator.setAntPop(0);
+        } else {
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Please enter a valid number for ants\n";
+            antNoTextField.clear();
+            valid = false;
+        }
 
-            if (!evaporationBox.getText().isEmpty() && Display.isDouble(evaporationBox.getText())) {
-                double eva = 1 - Double.valueOf(evaporationBox.getText());
-                if (eva < 1) {
-                    ant.setEvaporationRate(eva);
-                }
-            } else {
-                a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Please enter a valid number for evaporation constant" +
-                        " (number must be smaller than 1)\n";
-                evaporationBox.clear();
-                valid = false;
+        if (!evaporationBox.getText().isEmpty() && Display.isDouble(evaporationBox.getText())) {
+            double eva = 1 - Double.valueOf(evaporationBox.getText());
+            if (eva < 1) {
+                ant.setEvaporationRate(eva);
             }
+        } else {
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Please enter a valid number for evaporation constant" +
+                    " (number must be smaller than 1)\n";
+            evaporationBox.clear();
+            valid = false;
+        }
 
-            if (!foodAmtBox.getText().isEmpty() && Display.isDigit(foodAmtBox.getText())) {
-                int amt = Integer.valueOf(foodAmtBox.getText());
-                if (amt <= 10 && amt >= 0) {
-                    ant.setNumFood(amt);
-                } else {
-                    a.setAlertType(Alert.AlertType.ERROR);
-                    errorMes += "Please enter a number between 0 - 10 for food!\n";
-                    foodAmtBox.clear();
-                    valid = false;
-                }
+        if (!foodAmtBox.getText().isEmpty() && Display.isDigit(foodAmtBox.getText())) {
+            int amt = Integer.valueOf(foodAmtBox.getText());
+            if (amt <= 10 && amt >= 0) {
+                ant.setNumFood(amt);
             } else {
                 a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Please enter a valid number for food\n";
+                errorMes += "Please enter a number between 0 - 10 for food!\n";
                 foodAmtBox.clear();
                 valid = false;
             }
+        } else {
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Please enter a valid number for food\n";
+            foodAmtBox.clear();
+            valid = false;
+        }
 
-            if (obstacleType.getValue() != null) {
-                ant.setObstacleType(String.valueOf(obstacleType.getValue()));
-            } else {
-                a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Select an Obstacle type\n";
-                valid = false;
-            }
+        if (obstacleType.getValue() != null) {
+            ant.setObstacleType(String.valueOf(obstacleType.getValue()));
+        } else {
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Select an Obstacle type\n";
+            valid = false;
+        }
 
-            if (!birthRateBox.getText().isEmpty() && Display.isDigit(birthRateBox.getText())) {
-                Ant_Simulator.setBirthRate(Integer.valueOf(birthRateBox.getText()));
-            } else {
-                a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Birth rate should be a number!\n";
-                valid = false;
-            }
+        if (!birthRateBox.getText().isEmpty() && Display.isDigit(birthRateBox.getText())) {
+            Ant_Simulator.setBirthRate(Integer.valueOf(birthRateBox.getText()));
+        } else {
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Birth rate should be a number!\n";
+            valid = false;
+        }
 
-            if (!lifespanBox.getText().isEmpty() && Display.isDigit(lifespanBox.getText())) {
-                Ant_Simulator.setLifespan(Integer.valueOf(lifespanBox.getText()));
-            } else {
-                a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Lifespan should be a number!\n";
-                valid = false;
-            }
+        if (!lifespanBox.getText().isEmpty() && Display.isDigit(lifespanBox.getText())) {
+            Ant_Simulator.setLifespan(Integer.valueOf(lifespanBox.getText()));
+        } else {
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Lifespan should be a number!\n";
+            valid = false;
+        }
 
-            if (!timeScaleBox.getText().isEmpty() && Display.isDigit(timeScaleBox.getText())) {
-                Ant_Simulator.setScale(Integer.valueOf(timeScaleBox.getText()));
-            } else {
-                a.setAlertType(Alert.AlertType.ERROR);
-                errorMes += "Time scale should be a number!\n";
-                valid = false;
-            }
+        if (!timeScaleBox.getText().isEmpty() && Display.isDigit(timeScaleBox.getText())) {
+            Ant_Simulator.setScale(Integer.valueOf(timeScaleBox.getText()));
+        } else {
+            a.setAlertType(Alert.AlertType.ERROR);
+            errorMes += "Time scale should be a number!\n";
+            valid = false;
+        }
 
-            if (valid) {
-                ((Ant_Simulator)Display.sim).reset(Display.primaryStage);
-                Display.menuStage.close();
-                setUpMap();
+        if (valid) {
+            Display.timeline.stop();
+            ((Ant_Simulator)Display.sim).reset(Display.primaryStage);
+            Display.menuStage.close();
+            setUpMap();
 
-                Display.sim.buildLoop();
+            Display.sim.buildLoop();
 
-                Display.primaryStage.show();
-                Display.menuStage.show();
+            Display.primaryStage.show();
+            Display.menuStage.show();
 
-                ((Ant_Simulator)Display.sim).setUp();
-                ready = true;
-            } else {
-                a.setContentText(errorMes);
-                a.show();
-            }
+            ((Ant_Simulator)Display.sim).setUp();
+            ready = true;
+        } else {
+            a.setContentText(errorMes);
+            a.show();
         }
     }
 
