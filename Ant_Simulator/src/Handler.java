@@ -96,10 +96,17 @@ public class Handler{
         this.collisionCheck.addAll(this.objects);
     }
 
+    /**
+     * Returns all sprites that are dead
+     * @return a list of sprites to be removed
+     */
     public LinkedList<Sprite> getCleanUp() {
         return cleanUp;
     }
 
+    /**
+     * Removes all sprites from the list
+     */
     public void emptySprites(){
         this.objects.clear();
     }

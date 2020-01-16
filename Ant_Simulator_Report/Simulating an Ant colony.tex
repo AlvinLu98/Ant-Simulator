@@ -77,22 +77,6 @@ According to Liviu \citep{Ant_Simulator},here were several simulators that were 
 
 The simulator provides quick and easy way to visualise movements of the ants however it the customisation was limited as the location of the hive, food and obstacle type can not be changed. This simulator aims only to show how ants eventually converge into a path from hive to food shown in figure \ref{fig:MASON_Ant_Converged} which limits the flexibility of the simulator. The source code of the ant simulator is available on \textit{GitHub} for reference.
 
-\begin{figure}[htb]
-	%\begin{center}
-	\includegraphics[width=1.0 \columnwidth]{MASON_Ant.jpg}
-	\caption{Ant simulator developed by Liviu Panait \citep{Ant_Simulator}}
-	\label{fig:MASON_Ant}
-	%\end{center}
-\end{figure}
-
-\begin{figure}[htb]
-	%\begin{center}
-	\includegraphics[width=1.0 \columnwidth]{MASON_Ant_Converged.jpg}
-	\caption{Convergence of ant in the simulator \citep{Ant_Simulator}}
-	\label{fig:MASON_Ant_Converged}
-	%\end{center}
-\end{figure}
-
 \chapter{Design}
 \label{chap:design}
 \section{MoSCoW}
@@ -356,7 +340,7 @@ All bugs encountered during testing was recorded and fixed after the test.
 \chapter{Discussion and Evaluation}
 \label{chap:discussion}
 
-From s review of the MoSCoW analysis, the ant simulator has managed to fulfil all the requirements in must and should. It also managed to achieve a requirement in the could section such as obtaining pheromone data at a point on the map. The simulator is able to provide simulations with a range of different values. 
+From s review of the MoSCoW analysis, the ant simulator has managed to fulfil all the requirements in must and should. It also managed to achieve a requirement in the could section such as obtaining pheromone data at a point on the map. The simulator is able to provide simulations with a range of different values. Compared to the MASON Ant simulator \citep{Ant_Simulator}, this solution provided a more customisable ants simulator with a larger map. This allows a wider variation of simulations within a larger area.
 
 However, during stress testing, the simulator is shown to slow down significantly or freeze when the population of ants goes past 2000. Future improvements could introduce parallel programming for processing of ant movements to allow the simulator to accommodate larger ant populations. Although the ants doesn't show cases of cyclic movement in the tests, there are cases where ants struggle to find a path home. Ants will trace the sides of obstacle when attempting to locate the path home which consumed time and affected the results of when converging to an optimum path. Future improvements can be made to improve the decision making of the ants during movements to include more factors described in chapter \ref{chap:background} to ensure that optimum paths can be found more efficiently. Additionally, some values in the simulator are currently not customisable such as the potency of pheromones and individual rates, future improvements could consider implementing these as customisable values.
 
@@ -373,6 +357,22 @@ For future work, I intent to to improve the ant path-finding algorithm to better
 \bibliography{References}
 
 \chapter*{Appendix A}
+\begin{figure}[htb]
+	\begin{center}
+	\includegraphics[width=0.95 \columnwidth]{MASON_Ant.jpg}
+	\caption{Ant simulator developed by Liviu Panait \citep{Ant_Simulator}}
+	\label{fig:MASON_Ant}
+	\end{center}
+\end{figure}
+
+\begin{figure}[htb]
+	\begin{center}
+	\includegraphics[width=0.95 \columnwidth]{MASON_Ant_Converged.jpg}
+	\caption{Convergence of ant in the simulator \citep{Ant_Simulator}}
+	\label{fig:MASON_Ant_Converged}
+	\end{center}
+\end{figure}
+
 \begin{figure}[htb]
 	\begin{center}
 		\includegraphics[width=0.65 \columnwidth]{Stage_1.jpg}

@@ -98,8 +98,8 @@ public class Ant extends Creature{
     }
 
     /**
-     *
-     * @param direction
+     * Moves the ant to the given direction
+     * @param direction direction to move towards
      */
     private void move(int direction){
         Random r = new Random();
@@ -164,6 +164,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Prints the direction representation of the integer
+     * @param direction movement direction in int
+     */
     private void printMove(int direction){
         switch (direction) {
             case 0:
@@ -196,6 +200,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Find the direction during foraging, attempts to locate food pheromones
+     * @return direction to move towards
+     */
     public int findDirectionFood(){
         ArrayList<Pheromone_Data> surrounding = (Ant_Simulator.getSurrounding(this.getCurX(), this.getCurY()))
                 .getInList();
@@ -235,6 +243,18 @@ public class Ant extends Creature{
         return direction;
     }
 
+    /**
+     * Compares the food pheromones of the current location to a surrounding location
+     * @param pd pheromone data
+     * @param p pheromone
+     * @param curD current direction
+     * @param i new direction
+     * @param moveX x to increment
+     * @param moveY y to increment
+     * @param max current maximum pheromone
+     * @param d frontward directions
+     * @return direction with the greatest home pheromone
+     */
     private int compareSurroundingFoodForage(Pheromone_Data pd, Pheromone p, int curD, int i, int moveX, int moveY,
                                              double max, ArrayList<Integer> d)
     {
@@ -256,6 +276,10 @@ public class Ant extends Creature{
         return direction;
     }
 
+    /**
+     * Find direction home with pheromones
+     * @return direction to move towards
+     */
     public int findDirectionHome(){
         /*
          * surrounding --> the data of the ants surroundings
@@ -317,67 +341,10 @@ public class Ant extends Creature{
         return direction;
     }
 
-    public int findDirectionHomeSurrounding() {
-       int direction = 4;
-        ArrayList<Integer> front = prevDirection.getSide(prevDirection);
-       for(int i: blocked){
-           if(direction == 4) {
-               if (!blocked.contains(i - 1) && (i - 1) != 4 && (i - 1) != behind) {
-                   direction = i - 1;
-               }
-           }
-           else if(front.contains(i)){
-               if (!blocked.contains(i - 1) && (i - 1) != 4 && (i - 1) != behind) {
-                   direction = i - 1;
-               }
-           }
-       }
-       return direction;
-    }
-
-    public int findDirectionHomeAllDirection(){
-        ArrayList<Pheromone_Data> surrounding = (Ant_Simulator.getSurrounding(this.getCurX(), this.getCurY()))
-                .getInList();
-        ArrayList<Pheromone_Data> checked = new ArrayList<>();
-        int moveX = 0;
-        int moveY = 0;
-        double max = 0;
-        int direction = 4;
-        int defaultDirection = 4;
-        double minDist = Integer.MAX_VALUE;
-        ArrayList<Integer> front = prevDirection.getSide(prevDirection);
-        double current = euclideanDist(this.getCurX(), this.getCurY(), this.getStartX(), this.getStartY());
-
-        for (int i  = 0; i < surrounding.size(); i++) { //loop through all surrounding direction
-            Pheromone_Data pd = surrounding.get(i); //obtain the current direction's pheromone data
-            if (pd != null && i != 4 ) {
-                //calculate the euclidean distance of potential move
-                double potential = euclideanDist(pd.getStartX(), pd.getStartY(), this.getStartX(), this.getStartY());
-                checked.add(pd);
-                if (minDist > potential) { //if the current minimum is bigger than the current direction
-                    defaultDirection = i; //set the default direction to current move
-                    minDist = potential; // sets the minimum distance to the current move distance
-                }
-                for (Ground_Data p : pd.getPheromones()) { //loop through the data on the ground
-                    if (p.getName().equals("Obstacle")) {
-                        blocked.add(i); //add to the list the direction that's been blocked
-                    } else if (p.getName().equals("Home")) {
-                        Pheromone home = (Pheromone) p;
-                        if (home.getValue() > 0 && !visited.contains(new Coordinate(p.getStartX(), p.getStartY()))) {
-                            direction = compareSurroundingHome(pd, home, direction, i, moveX, moveY, max, front);
-                            if(direction == i) {
-                                moveX = surrounding.get(direction).getStartX();
-                                moveY = surrounding.get(direction).getStartY();
-                                max = home.getValue();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return direction;
-    }
-
+    /**
+     * Find direction home without using the pheromones
+     * @return direction to move towards
+     */
     public int findDirectionHomeNoPheromone(){
         ArrayList<Pheromone_Data> surrounding = (Ant_Simulator.getSurrounding(this.getCurX(), this.getCurY()))
                 .getInList();
@@ -419,6 +386,18 @@ public class Ant extends Creature{
         return direction;
     }
 
+    /**
+     * Compares the home pheromones of the current location to a surrounding location
+     * @param pd pheromone data
+     * @param p pheromone
+     * @param curD current direction
+     * @param i new direction
+     * @param moveX x to increment
+     * @param moveY y to increment
+     * @param max current maximum pheromone
+     * @param d frontward directions
+     * @return direction with the greatest home pheromone
+     */
     private int compareSurroundingHome(Pheromone_Data pd, Pheromone p, int curD, int i, int moveX, int moveY, double max,
                                        ArrayList<Integer> d)
     {
@@ -435,6 +414,9 @@ public class Ant extends Creature{
         return direction;
     }
 
+    /**
+     * Total random movement of ants
+     */
     private void randomMovement(){
         Random r = new Random();
         int x = r.nextInt() % 3;
@@ -457,6 +439,9 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Movement of ants prioritising moving frontwards
+     */
     private void randomPreferredMovement(){
         Random r = new Random();
         int direction = r.nextInt(Integer.MAX_VALUE)%10;
@@ -471,6 +456,9 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant NW
+     */
     private void moveNW(){
         if(boundaryNegX() && boundaryNegY()){
             moveSE();
@@ -488,6 +476,9 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant N
+     */
     private void moveN(){
         if(boundaryNegY()){
             moveS();
@@ -498,12 +489,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant NE
+     */
     private void moveNE(){
-//        boundaryX();
-//        node.setTranslateX(getTranslateX() + velX);
-//        boundaryNegY();
-//        node.setTranslateY(getTranslateY() - velY);
-
         if(boundaryX() && boundaryNegY()){
             moveSW();
         }
@@ -520,10 +509,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant W
+     */
     private void moveW(){
-//        boundaryNegX();
-//        node.setTranslateX(getTranslateX() - velX);
-
         if(boundaryNegX()){
             moveE();
         }
@@ -533,10 +522,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant E
+     */
     private void moveE(){
-//        boundaryX();
-//        node.setTranslateX(getTranslateX() + velX);
-
         if(boundaryX()){
             moveW();
         }
@@ -546,12 +535,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant SW
+     */
     private void moveSW(){
-//        boundaryNegX();
-//        node.setTranslateX(getTranslateX() - velX);
-//        boundaryY();
-//        node.setTranslateY(getTranslateY() + velY);
-
         if(boundaryNegX() && boundaryY()){
             moveNE();
         }
@@ -568,10 +555,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant S
+     */
     private void  moveS(){
-//        boundaryY();
-//        node.setTranslateY(getTranslateY() + velY);
-
         if(boundaryY()){
             moveN();
         }
@@ -581,12 +568,10 @@ public class Ant extends Creature{
         }
     }
 
+    /**
+     * Moves the ant SE
+     */
     private void  moveSE(){
-//        boundaryX();
-//        node.setTranslateX(getTranslateX() + velX);
-//        boundaryY();
-//        node.setTranslateY(getTranslateY() + velY);
-
         if(boundaryX() && boundaryY()){
             moveNW();
         }
@@ -641,6 +626,11 @@ public class Ant extends Creature{
         return thisAnt.getBoundsInParent().intersects(food.getBoundsInParent());
     }
 
+    /**
+     * Check if the ants collided with the hive
+     * @param other
+     * @return
+     */
     public boolean hiveCollision(Hive other){
         Circle thisAnt = this.getBounds(rad);
         Circle hive = other.getBounds(Food.rad);

@@ -61,7 +61,12 @@ public class Menu_Controller {
     Instant pauseStartTime;
     long totalPauseTime;
 
-    //https://stackoverflow.com/questions/32806068/how-to-change-fxml-lable-text-by-id
+
+
+    /**
+     * //https://stackoverflow.com/questions/32806068/how-to-change-fxml-lable-text-by-id
+     * Initialises the controller
+     */
     @FXML
     private void initialize(){
         //https://asgteach.com/2011/10/javafx-animation-and-binding-simple-countdown-timer-2/
@@ -123,10 +128,16 @@ public class Menu_Controller {
         });
     }
 
+    /**
+     * Starts the timeline
+     */
     public static void start(){
         Display.timeline.play();
     }
 
+    /**
+     * PLays the simulation if paused and restarts the simulation if stopped
+     */
     public void play(){
         if(stopped){
             stopped = false;
@@ -140,13 +151,15 @@ public class Menu_Controller {
             Ant_Simulator ant = (Ant_Simulator)Display.sim;
             Simulator.current = Simulator.current.plusMillis(-totalPauseTime);
             Simulator.scaledCurrent = Simulator.scaledCurrent.plusMillis(Ant_Simulator.getScale() * -totalPauseTime);
-//            Display.timeline.play();
             ((Ant_Simulator)Display.sim).playSimulation();
             paused = false;
         }
         play = true;
     }
 
+    /**
+     * Pauses the simluation
+     */
     public void pause(){
         paused = true;
         if(play) {
@@ -154,10 +167,12 @@ public class Menu_Controller {
             pauseStartTime = Instant.now();
             Simulator.timeline.pause();
             Simulator.timer.stop();
-//            Display.timeline.stop();
         }
     }
 
+    /**
+     * Stops the simulation
+     */
     public void stop(){
         paused = false;
         play = false;
@@ -167,6 +182,9 @@ public class Menu_Controller {
 //        Display.timeline.stop();
     }
 
+    /**
+     * Resets the settings of the simulator to the values entered in the controller
+     */
     public void resetSettings(){
         boolean valid = true;
         boolean ready = false;
@@ -267,6 +285,9 @@ public class Menu_Controller {
         }
     }
 
+    /**
+     * Creates the map creation prompter
+     */
     public void setUpMap(){
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
 

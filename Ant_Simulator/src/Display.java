@@ -26,6 +26,10 @@ public class Display extends Application {
         Application.launch(args);
     }
 
+    /**
+     * Creates and shows the stage
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage){
         primaryStage.setResizable(false); //Set Window size to be not resizeable
@@ -34,12 +38,20 @@ public class Display extends Application {
         primaryStage.show();
     }
 
-    //https://docs.oracle.com/javafx/2/get_started/form.htm
+    /**
+     * Initialises the stage
+     * //https://docs.oracle.com/javafx/2/get_started/form.htm
+     * @param primaryStage
+     */
     public void initialize(Stage primaryStage){
-        createAntForm(primaryStage);
+        defaultSettings(primaryStage);
     }
 
-    private void createAntForm(Stage primaryStage){
+    /**
+     * Creates an ant simulator with default settings
+     * @param primaryStage
+     */
+    private void defaultSettings(Stage primaryStage){
         Ant_Simulator ant = (Ant_Simulator)Display.sim;
         ant.setInitAntAmt(500);
         ant.setEvaporationRate(0.999);
@@ -51,6 +63,10 @@ public class Display extends Application {
         setUpSimulation(primaryStage);
     }
 
+    /**
+     * Set up the simulation
+     * @param primaryStage
+     */
     private void setUpSimulation(Stage primaryStage){
         sim.initialize(primaryStage);
         setUpMenu();
@@ -63,6 +79,9 @@ public class Display extends Application {
         ((Ant_Simulator)sim).setUp();
     }
 
+    /**
+     * Creates the set up menu for map creation
+     */
     private void setUpMenu(){
         //https://coderanch.com/t/620036/java/Stage-corner-screen
         Rectangle2D screenSize = Screen.getPrimary().getBounds();
@@ -85,8 +104,11 @@ public class Display extends Application {
         }
     }
 
+    /**
+     * Creates the events on the menus
+     * //https://www.programcreek.com/java-api-examples/?class=javafx.stage.Stage&method=setOnCloseRequest
+     */
     private void createMenuEvents(){
-        //https://www.programcreek.com/java-api-examples/?class=javafx.stage.Stage&method=setOnCloseRequest
         Display.menuStage.setOnCloseRequest(event -> {
             Platform.exit();
         });
@@ -94,7 +116,12 @@ public class Display extends Application {
         Display.menuStage.setResizable(false);
     }
 
-    //https://www.geeksforgeeks.org/program-check-input-integer-string/
+    /**
+     * Check if a given string is a digit
+     * //https://www.geeksforgeeks.org/program-check-input-integer-string/
+     * @param s String to be checked
+     * @return true if the string is a digit
+     */
     public static boolean isDigit(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isDigit(s.charAt(i))) {
@@ -104,6 +131,12 @@ public class Display extends Application {
         return true;
     }
 
+    /**
+     * Check if a given string is a double
+     * //https://www.geeksforgeeks.org/program-check-input-integer-string/
+     * @param s String to be checked
+     * @return true if the string is a double
+     */
     public static boolean isDouble(String s) {
         for (int i = 0; i < s.length(); i++) {
             if (!Character.isDigit(s.charAt(i))) {

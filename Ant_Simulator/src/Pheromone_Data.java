@@ -3,7 +3,6 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.LinkedList;
 
-//create a square according to size?
 public class Pheromone_Data extends Sprite{
     private LinkedList<Ground_Data> pheromones;
 
@@ -18,10 +17,17 @@ public class Pheromone_Data extends Sprite{
 
     }
 
+    /**
+     * Adds a ground_data to the pheromone data
+     * @param p ground data
+     */
     public void addData(Ground_Data p){
         this.pheromones.add(p);
     }
 
+    /**
+     * Updates the food pheromone
+     */
     public void addFood(){
         for(Ground_Data p: this.pheromones){
             if(p.getName().equals("Food")){
@@ -38,6 +44,9 @@ public class Pheromone_Data extends Sprite{
         }
     }
 
+    /**
+     * updates the home pheromone
+     */
     public void addHome(){
         for(Ground_Data p: this.pheromones){
             if(p.getName().equals("Home")){
@@ -53,6 +62,10 @@ public class Pheromone_Data extends Sprite{
         }
     }
 
+    /**
+     * Gets all the pheromones in the list
+     * @return LinkedList containing the ground data
+     */
     public LinkedList<Ground_Data> getPheromones() {
         return pheromones;
     }

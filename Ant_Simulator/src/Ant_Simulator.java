@@ -9,10 +9,7 @@ import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
@@ -28,7 +25,7 @@ import java.util.Random;
 
 public class Ant_Simulator extends Simulator{
 
-    /* ---------------------------------- Simulator data ----------------------------------*/
+    /* ------------------------------------------------ Simulator data -----------------------------------------------*/
 
     private static int initAntAmt, numFood = 1; //number of ants to create
     private static int homeX, homeY; //location of hive
@@ -47,9 +44,9 @@ public class Ant_Simulator extends Simulator{
     private int foodCount = 0;
     private Parent message;
 
-    /* ------------------------------------------------------------------------------------*/
+    /* ---------------------------------------------------------------------------------------------------------------*/
 
-    /* ----------------------------------- Constructors -----------------------------------*/
+    /* ------------------------------------------------ Constructors -------------------------------------------------*/
 
     /**
      * Default constructor for Ant simulator
@@ -102,9 +99,9 @@ public class Ant_Simulator extends Simulator{
         od = new Obstacle_Data((Simulator.WIDTH/velX)+velX, (Simulator.HEIGHT/velY)+velY);
     }
 
-    /* -------------------------------------------------------------------------------------*/
+    /* ---------------------------------------------------------------------------------------------------------------*/
 
-    /* -------------------------------- Overridden methods ---------------------------------*/
+    /* --------------------------------------------- Overidden methods -----------------------------------------------*/
     /**
      * Initialises the scene
      * @param primaryStage stage where the scene will be initialised
@@ -124,6 +121,9 @@ public class Ant_Simulator extends Simulator{
         generateMap(velX, velY);
     }
 
+    /**
+     * Begin the simulation
+     */
     @Override
     public void beginSimulation(){
         Simulator.start = Instant.now();
@@ -132,11 +132,6 @@ public class Ant_Simulator extends Simulator{
         Simulator.timeline.play();
         Simulator.timer.start();
         initialiseAnts();
-    }
-
-    public void playSimulation(){
-        Simulator.timeline.play();
-        Simulator.timer.start();
     }
 
     /**
@@ -216,9 +211,13 @@ public class Ant_Simulator extends Simulator{
         return false;
     }
 
-    /* -------------------------------------------------------------------------------------*/
+    /* ---------------------------------------------------------------------------------------------------------------*/
 
-    /* ------------------------------------ Setting up -------------------------------------*/
+    /* --------------------------------------------------- Setting up ------------------------------------------------*/
+
+    /**
+     * Sets-up the map of the simulator
+     */
     public void setUp(){
         setUpHive = false;
         setUpFood = false;
@@ -226,6 +225,9 @@ public class Ant_Simulator extends Simulator{
         selectLocation();
     }
 
+    /**
+     * Selects the location for food and the hive
+     */
     public void selectLocation(){
         rootNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -261,6 +263,9 @@ public class Ant_Simulator extends Simulator{
         });
     }
 
+    /**
+     * Creates the events for the simulator
+     */
     public void createEvents(){
         rootNode.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -271,6 +276,9 @@ public class Ant_Simulator extends Simulator{
         });
     }
 
+    /**
+     * Begins the simulation and loads the controller
+     */
     public void begin(){
         timeline.stop();
         generateAnts(initAntAmt, homeX, homeY, velX, velY);
@@ -294,6 +302,10 @@ public class Ant_Simulator extends Simulator{
         beginSimulation();
     }
 
+    /**
+     * Resets the simulator
+     * @param primaryStage the stage the simulator will be built in
+     */
     public void reset(Stage primaryStage){
         this.handler.emptySprites();
         deadAntPop = 0;
@@ -318,8 +330,20 @@ public class Ant_Simulator extends Simulator{
         selectLocation();
     }
 
-    /* --------------------------------------------------------------------------------*/
+    /**
+     * Plays the simulator
+     */
+    public void playSimulation(){
+        Simulator.timeline.play();
+        Simulator.timer.start();
+    }
 
+    /* ---------------------------------------------------------------------------------------------------------------*/
+
+    /* ------------------------------------------------ Helper methods -----------------------------------------------*/
+    /**
+     * Updates the pheromones on the map
+     */
     private void updatePheromone() {
         for (Map.Entry<Coordinate, Pheromone_Data> coordinatePheromoneDataEntry : pheromoneLoc.entrySet()) {
             Pheromone_Data pd = (Pheromone_Data) ((Map.Entry) coordinatePheromoneDataEntry).getValue();
@@ -327,18 +351,6 @@ public class Ant_Simulator extends Simulator{
                 p.tick();
             }
         }
-    }
-
-    private void generateMenuBar(){
-        MenuBar menu = new MenuBar();
-
-        Menu file = new Menu("File");
-        Menu edit = new Menu("Edit");
-        Menu view = new Menu("View");
-
-        menu.getMenus().addAll(file, edit, view);
-        VBox box = new VBox(menu);
-        this.rootNode.getChildren().add(box);
     }
 
     /**
@@ -358,6 +370,9 @@ public class Ant_Simulator extends Simulator{
         }
     }
 
+    /**
+     * Initialises the ants and sets the birth-time
+     */
     private void initialiseAnts(){
         for(Sprite s: this.handler.getObjects()){
             if(s instanceof Ant){
@@ -393,6 +408,12 @@ public class Ant_Simulator extends Simulator{
         }
     }
 
+    /**
+     * Generates food at the selected location
+     * @param x x-axis location
+     * @param y y-axis location
+     * @return true if the food was generated
+     */
     public boolean generateFood(int x, int y){
         if(!isWithinObstacle(x, y)){
             Food food = new Food(x, y);
@@ -404,6 +425,12 @@ public class Ant_Simulator extends Simulator{
         return false;
     }
 
+    /**
+     * Check if the point is within an obstacle
+     * @param x x-axis location
+     * @param y y-axis location
+     * @return true if the point is within the obstacle
+     */
     private boolean isWithinObstacle(int x, int y){
         boolean[][] points = od.getPoints();
         return points[getKeyX(x)/velX][getKeyY(y)/velY];
@@ -438,6 +465,14 @@ public class Ant_Simulator extends Simulator{
         }
     }
 
+    /**
+     * Creates a pheromone data object on a point on the map
+     * @param x x-asxis location
+     * @param y y-axis location
+     * @param velX velocity-x of the ants
+     * @param velY valocity-y of the ants
+     * @return a pheromone data object
+     */
     private Pheromone_Data createPheromones(int x, int y, int velX, int velY){
         Pheromone_Data p = new Pheromone_Data(x, y, velX, velY);
         Pheromone food = new Pheromone(x, y, velX, velY, "Food",0.05,255,0,0, 10,
@@ -500,6 +535,11 @@ public class Ant_Simulator extends Simulator{
         return surrounding;
     }
 
+    /**
+     * Gets the key of x according to the ants velocity
+     * @param x x-axis location
+     * @return x value relative to x velocity
+     */
     private static int getKeyX(int x){
         int smaller = (x/velX) *velX;
         int bigger = smaller + velX;
@@ -510,6 +550,11 @@ public class Ant_Simulator extends Simulator{
 
     }
 
+    /**
+     * Gets the key of y according to the ants velocity
+     * @param  y-axis location
+     * @return y value relative to y velocity
+     */
     private static int getKeyY(int y){
         int smaller = (y/velY) *velY;
         int bigger = smaller + velY;
@@ -519,6 +564,7 @@ public class Ant_Simulator extends Simulator{
         return smaller;
     }
 
+    /*----------------------------------------------- Getter/Setter methods ----------------------------------------- */
     public static int getVelX() {
         return velX;
     }
